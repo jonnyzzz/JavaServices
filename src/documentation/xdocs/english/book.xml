@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<book software="Wrapper" 
+      title="Java Service Wrapper" 
+      copyright="TanukiSoftware.org">
+    
+    <menu label="Essentials">
+        <menu-item label="Introduction"               href="introduction.html"/>
+        <menu-item label="Integration Methods"        href="integrate.html"/>
+        <menu-item label="Configuration Properties"   href="properties.html"/>
+        <menu-item label="Launching Your Application" href="launch.html"/>
+        <menu-item label="Show Your Support"          href="donate.html" highlight="true"/>
+        <menu-item label="Sponsors"                   href="sponsors.html"/>
+    </menu>
+        
+    <menu label="Documentation">
+        <menu-item label="JMX Control"                href="jmx.html"/>
+        <menu-item label="Security Model"             href="security-model.html"/>
+        <menu-item label="Feature Examples"           href="example.html"/>
+        <menu-item label="Debugging Your Application" href="debugging.html"/>
+        <menu-item label="Troubleshooting"            href="troubleshooting.html"/>
+        <menu-item label="FAQ"                        href="faq.html"/>
+        
+        <menu-item label="Release Notes"              href="release-notes.html"/>
+        <menu-item label="Project History"            href="history.html"/>
+        <menu-item label="Javadocs API"               href="javadocs.html"/>
+        <menu-item label="Buttons"                    href="buttons.html"/>
+        <menu-item label="Authors"                    href="authors.html"/>
+        <menu-item label="License"                    href="license.html"/>
+    </menu>
+    
+    <menu label="Download">
+        <menu-item label="Binaries"                   href="http://sourceforge.net/project/showfiles.php?group_id=39428&amp;package_id=31591"/>
+        <menu-item label="Source Code"                href="http://sourceforge.net/project/showfiles.php?group_id=39428&amp;package_id=33658"/>
+    </menu>
+    
+    <menu label="Get Involved">
+        <menu-item label="Source Forge"               href="http://sourceforge.net/projects/wrapper/"/>
+        <menu-item label="Subversion Repository"      href="http://svn.sourceforge.net/viewvc/wrapper/"/>
+        <menu-item label="Issue Tracking"             href="http://sourceforge.net/tracker/?group_id=39428"/>
+        <menu-item label="Mailing Lists and Archives" href="http://sourceforge.net/mail/?group_id=39428"/>
+        <menu-item label="Forums (Old)"               href="http://sourceforge.net/forum/?group_id=39428"/>
+    </menu>
+</book>
+
+

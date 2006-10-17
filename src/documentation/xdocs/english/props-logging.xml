@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="props-logging">
+    <title>Logging Configuration Properties</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#category">Property List by Category</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>Logging Configuration Properties</title>
+        <para>
+            Logging properties are used to configure how where the Java
+            Service Wrapper logs internal output as well as JVM output which
+            would normally show up in the console used to launch a Java
+            application..  Wrapper Logging properties do not in any way
+            control nor replace Logging tools within the Java application.
+        </para>
+        <itemizedlist>
+            <listproperty version="3.1.0">
+                <ulink url="prop-adviser.html">wrapper.adviser</ulink>
+            </listproperty>
+            <listproperty version="3.2.0">
+                <ulink url="prop-console-flush.html">wrapper.console.flush</ulink>
+            </listproperty>
+            <listproperty>
+                <ulink url="prop-console-format.html">wrapper.console.format</ulink>
+            </listproperty>
+            <listproperty>
+                <ulink url="prop-console-loglevel.html">wrapper.console.loglevel</ulink>
+            </listproperty>
+            <listproperty>
+                <ulink url="prop-debug.html">wrapper.debug</ulink>
+            </listproperty>
+            <listproperty version="3.0.0">
+                <ulink url="prop-filter-x-n.html">wrapper.filter.action.&lt;n&gt;</ulink>
+            </listproperty>
+            <listproperty version="3.0.0">
+                <ulink url="prop-filter-x-n.html">wrapper.filter.trigger.&lt;n&gt;</ulink>
+            </listproperty>
+            <listproperty version="3.1.2">
+                <ulink url="prop-java-command-loglevel.html">wrapper.java.command.loglevel</ulink>
+            </listproperty>
+            <listproperty>
+                <ulink url="prop-logfile.html">wrapper.logfile</ulink>
+            </listproperty>
+            <listproperty version="2.2.5">
+                <ulink url="prop-logfile-format.html">wrapper.logfile.format</ulink>
+            </listproperty>
+            <listproperty version="3.2.0">
+                <ulink url="prop-logfile-inactivity-timeout.html">wrapper.logfile.inactivity.timeout</ulink>
+            </listproperty>
+            <listproperty version="2.2.5">
+                <ulink url="prop-logfile-loglevel.html">wrapper.logfile.loglevel</ulink>
+            </listproperty>
+            <listproperty version="2.2.5">
+                <ulink url="prop-logfile-maxfiles.html">wrapper.logfile.maxfiles</ulink>
+            </listproperty>
+            <listproperty version="2.2.5">
+                <ulink url="prop-logfile-maxsize.html">wrapper.logfile.maxsize</ulink>
+            </listproperty>
+            <listproperty version="3.2.0">
+                <ulink url="prop-logfile-rollmode.html">wrapper.logfile.rollmode</ulink>
+            </listproperty>
+            <listproperty version="3.2.0">
+                <ulink url="prop-umask.html">wrapper.logfile.umask</ulink>
+            </listproperty>
+            <listproperty version="3.2.1">
+                <ulink url="prop-syslog-facility.html">wrapper.syslog.facility</ulink>
+            </listproperty>
+            <listproperty version="3.2.0">
+                <ulink url="prop-syslog-ident.html">wrapper.syslog.ident</ulink>
+            </listproperty>
+            <listproperty version="2.2.5">
+                <ulink url="prop-syslog-loglevel.html">wrapper.syslog.loglevel</ulink>
+            </listproperty>
+        </itemizedlist>
+    </section>
+</chapter>

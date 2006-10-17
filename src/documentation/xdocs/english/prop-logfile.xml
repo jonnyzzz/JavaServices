@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-logfile">
+    <title>wrapper.logfile Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-logging.html">Logging Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.logfile</title>
+        <para>
+            Log file to which all output to the console will be logged.  If the
+            logfile is not specified, then file logging will be written to a
+            file called <literal moreinfo="none">"wrapper.log"</literal> in the
+            same directory as the Wrapper executable.  Providing a blank value
+            will cause file logging to be disabled.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.logfile=../logs/wrapper.log]]></screen>
+        </informalexample>
+        <para>
+            The specified log file name may contain one or both of the tokens;
+            <literal moreinfo="none">ROLLNUM</literal> and <literal moreinfo="none">YYYYMMDD</literal>.
+        </para>
+        <para>
+            The <literal moreinfo="none">ROLLNUM</literal> token is used when the log file
+            is rolled.  A wrapper.logfile of "wrapper.log.ROLLNUM" will result in a logfile
+            named "wrapper.log".  The first rolled log file will be "wrapper.log.1", the
+            second "wrapper.log.2", etc.  Larger roll number values indicate older files.
+            The most recently rolled log file will always have a roll number of "1".
+        </para>
+        <para>
+            If a ROLLNUM is not included in the specified logfile, ".ROLLNUM" will be
+            appended by default.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Examples:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.logfile=../logs/wrapper.log.ROLLNUM
+wrapper.logfile=../logs/wrapper-ROLLNUM.log]]></screen>
+        </informalexample>
+        <para>
+            The <literal moreinfo="none">YYYYMMDD</literal> token is required when the
+            <ulink url="prop-logfile-rollmode.html">wrapper.logfile.rollmode</ulink>
+            property has a value of DATE.  This token will be replaced by the date of
+            the log entries contained in the file.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Examples:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.logfile=../logs/wrapper.YYYYMMDD.log
+wrapper.logfile=../logs/wrapper-YYYYMMDD.log
+wrapper.logfile=../logs/wrapper_YYYYMMDD.log]]></screen>
+        </informalexample>
+        <para>
+            Whenever either token does not apply to a given file name, it will be
+            stripped from the generated file name.  When a token is stripped, the
+            preceding character will also be stripped if it is a ".", "-", or "_".
+        </para>
+        <para>
+            Please review the <ulink url="prop-logfile-rollmode.html">wrapper.logfile.rollmode</ulink>
+            property for details on what possible log rolling modes are available.
+        </para>
+    </section>
+</chapter>

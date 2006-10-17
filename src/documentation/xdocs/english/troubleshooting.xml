@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="euc-jp"?>
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+$Id$
+******************************************************************** -->
+
+<article id="index">
+    <title>Troubleshooting</title>
+    <section>
+        <title>
+            My Program is not running as fast as I would like.
+        </title>
+        <para>
+            In general an application should run as fast under the Wrapper as it does
+            when running standalone.  Here are a few places to start looking.
+        </para>
+        <section>
+            <title>Console Output</title>
+            <para>
+                On some platforms, including Windows, sending large quantities of text to
+                System.out or System.err will cause the program to slow down.  This is because
+                all of that output is being rendered to the screen in a graphics environment.
+                This is actually the OS eating the CPU rather than the Wrapper or your
+                application but the end result is the same.
+            </para>
+            <para>
+                To significantly reduce this effect, use a logging tool which will output to
+                a file rather than to stdout.  By doing so the output is never sent to the
+                Wrapper or the user console.
+            </para>
+            <para>
+                Another option which is almost as good is to configure the Wrapper's console
+                log level, using the <ulink url="prop-console-loglevel.html">wrapper.console.loglevel</ulink>
+                property, so that the output is only sent to the Wrapper's log file.  Console
+                output is disabled by default when running as an NT service and the console has
+                not been enabled.
+            </para>
+        </section>
+        <section>
+            <title>Memory</title>
+            <para>
+                Make sure that your system has plenty of memory for the JVM to run without
+                doing any disk swapping.   Because of the way Java manages memory.  A very
+                significant speed hit is common simply because Java is forced to do paging
+                of large amounts of its memory as it attempted to perform garbage collection.
+            </para>
+        </section>
+        <section>
+            <title>Sun's Documentation</title>
+            <para>
+                Another good place to look is the
+                <ulink url="http://java.sun.com/docs/hotspot/index.html">Performance Documentation for the Java HotSpot VM</ulink>
+                page on Sun's site.  In addition, there was a very informative JDC Tech Tip talking
+                about <ulink url="http://java.sun.com/developer/JDCTechTips/2004/tt0420.html#2">garbage collection</ulink>
+                issues.
+            </para>
+        </section>
+    </section>
+    <section>
+        <title>
+            I get an error about not being able to write a pid file when starting the Wrapper.
+        </title>
+        <para>
+            Strarting with version 3.0.5 of the Java Service Wrapper, the
+            <ulink url="prop-wrapper-pidfile.html">wrapper.pidfile</ulink> property was
+            implemented on the Windows platform.  Previous versions of the Wrapper
+            ignored this property when running under Windows.  However, if the wrapper.conf
+            file that you are using was created using a version of the Wrapper prior to
+            3.0.0 then you may have this property defined as a holdout from when you
+            copied the file from the example wrapper.conf.  This will lead to an error
+            like the following:
+        </para>
+        <informalexample>
+            <screen format="linespecific"><![CDATA[ERROR: Could not write pid file /var/run/testwrapper.pid: The
+system cannot find the path specified. (0x3)]]></screen>
+        </informalexample>
+        <para>
+            To resolve this simply edit your wrapper.conf file and remove the
+            wrapper.pidfile property.
+        </para>
+    </section>
+    <section>
+        <title>
+            I am getting a warning that the Wrapper can not load its native library.  What do I do?
+        </title>
+        <para>
+            A few users have asked about the following message showing up in their wrapper.log file:
+            <informalexample>
+                <screen format="linespecific"><![CDATA[WARNING - Unable to load native library 'wrapper' for class WrapperManager.
+          System signals will not be handled correctly.]]></screen>
+            </informalexample>
+            This message is being shown because the Java component of the Wrapper was unable to
+            load its native libraries during initialization.  If you look in your wrapper.conf
+            file, you will see a property, <literal moreinfo="none">wrapper.java.library.path</literal>.
+            This is used to specify the directory that the Wrapper will look in to find its native
+            library. (Wrapper.DLL on Windows, or libwrapper.so on Unix systems)  You should place
+            the library file in the specified directory or change the property to point to the
+            directory where it is located.
+        </para>
+        <para>
+            As of version 2.2.9 this error message was improved.  You will now see something like
+            the following (Depending on your platform of course):
+            <informalexample>
+                <screen format="linespecific"><![CDATA[WARNING - Unable to load native library 'wrapper' because the
+          file 'Wrapper.DLL' could not be located in the following
+          java.library.path:
+            C:\SourceForge\wrapper\bin\..\lib
+          Please see the documentation for the wrapper.java.library.path
+          configuration property.
+          System signals will not be handled correctly.]]></screen>
+            </informalexample>
+        </para>
+    </section>
+    <section>
+        <title>I am unable to install my application as a service under Windows 2000 or NT.</title>
+        <para>
+            On Windows 2000 or NT, you will see the following error message if you attempt to
+            install a service when logged in as a user without Administrator privileges.
+            <informalexample>
+                <screen format="linespecific"><![CDATA[OpenSCManager failed - access denied.]]></screen>
+            </informalexample>
+        </para>
+        <para>
+            Solution.  Contact your system administrator and beg them to install the service for
+            you.  Easy if that is you.
+        </para>
+    </section>
+    <section>
+        <title>My Application will not start.  What can I do to narrow down the problem?</title>
+        <para>
+            Output describing the problem should be displayed in the console as well as the
+            configured log file.  To get more detailed output, edit your wrapper.conf file and
+            enable debugging by uncommenting the wrapper.debug property.  This will display very
+            detailed output at every step in the process of launching and monitoring your
+            application.
+        </para>
+        <para>
+            If your application works when not using the Wrapper, but fails with the Wrapper,
+            then it is very likely that there is a problem in the way you set up your wrapper.conf
+            file.  Please look closely at the command used to launch java, in the debug output.
+            It is possible that there is a mistake in the classpath or something.
+        </para>
+    </section>
+    <section>
+        <title>I am not getting any output in my configured log file.</title>
+        <para>
+            It is possible that the Wrapper is not able to locate the specified wrapper
+            configuration file, or it is not able to open the configured log file for some reason.
+            In either case, the Wrapper will log output to a file called wrapper.log in the current
+            working directory.  The current working directory will most likely be the directory
+            containing the binary.  However, in some cases, when running as an NT service, the
+            wrapper.log file may be placed in your WinNT\System32 directory.
+        </para>
+    </section>
+    <section>
+        <title>My application is hanging while it is shutting down.</title>
+        <para>
+            If you call System.exit() in your application then Wrapper will catch this and attempt
+            to shutdown the application cleanly.  If during the shutdown process, your application
+            once again calls System.exit() then the call will block indefinitely causing your
+            application to hang.  There are also problems with calling the destroy() method on an
+            AWT frame or window from within a shutdown hoot thread.  Please take a look at the
+            wrapper.disable_shutdown_hook property in the Configuration File Overview for details
+            on how to avoid this problem.
+        </para>
+    </section>
+    <section>
+        <title>My 1.2.x JVM crashes when I run my application with the Wrapper.</title>
+        <para>
+            Most of the features of the Wrapper will work with 1.2.x JVMs so the JVM is
+            included on the list of supported JVMs.  However, the released version of
+            the wrapper is built using a 1.4.x version of Java.  1.2.x versions of the
+            JVM have problems with the generated jar and will crash with very low level
+            JNI errors.  This appears to be a bug in the 1.4.x versions of the compiler
+            as it happens even if the "1.1" JVM target is specified when compiling the
+            classes.
+        </para>
+        <para>
+            Here is an example of the errors that I have seen:
+        </para>
+        <informalexample>
+            <screen format="linespecific"><![CDATA[A nonfatal internal JIT (3.10.107(x)) error 'chgTarg: Conditional' has occurred in :
+  'org/tanukisoftware/wrapper/WrapperManager.stopCommon (II)V': Interpreting method.
+  Please report this error in detail to http://java.sun.com/cgi-bin/bugreport.cgi]]></screen>
+        </informalexample>
+        <para>
+            I get help from several people to be able to produce the releases for all
+            of the various supported platforms and it is not really possible to force
+            everyone to use old JDKs to build the Wrapper distributions.
+        </para>
+        <para>
+            If you are experiencing crash problems with 1.2.x JVMs and the Wrapper
+            please try downloading a source distribution and building the wrapper.jar
+            file using your 1.2.x JDK.  This will fix the problem.
+        </para>
+        <para>
+            If you are running into this, please post a note to the wrapper-user mailing
+            list.  I am not sure how many people are still using 1.2.x JVMs.  But if
+            it is still fairly common, I may reconsider the above policy and look into
+            what it will take to get the releases built using an older JVM.
+        </para>
+    </section>
+    <section>
+        <title>My JVM is sometimes restarted when the system is heavily loaded.</title>
+        <para>
+            Because the Wrapper is using a pinging mechanism to check on the health of the JVM, it
+            is possible that the Wrapper will think that the JVM is hung when it isn't if another
+            process is taking 100% of the CPU for longer than 30 seconds.  This will result in an
+            entry like the following in your log file, and the JVM being restarted:
+            <informalexample>
+                <screen format="linespecific"><![CDATA[jvm 1    | 2001/12/01 12:23:23 | start()
+wrapper  | 2001/12/01 12:23:44 | Startup failed: Timed out waiting for signal from JVM.
+wrapper  | 2001/12/01 12:23:44 | Java Virtual Machine did not exit on request, terminated
+wrapper  | 2001/12/01 12:23:49 | Launching a JVM...
+jvm 2    | 2001/12/01 12:23:50 | Initializing...]]></screen>
+            </informalexample>
+        </para>
+        <para>
+            The property <literal moreinfo="none">wrapper.ping.timeout=30</literal> in
+            <literal moreinfo="none">conf/wrapper.log</literal> can be used to extend this timeout.
+            But be aware that this will also lengthen the amount of time that your application will
+            remain hung in the event of a real problem.
+        </para>
+    </section>
+</article>

@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-logfile-format">
+    <title>wrapper.logfile.format Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-logging.html">Logging Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.logfile.format</title>
+        <para>
+            Format to use for logging to the log file.  Logging was
+            intentionally kept simple.  The format consists of the tokens
+            <literal moreinfo="none">'L'</literal> for log level,
+            <literal moreinfo="none">'P'</literal> for prefix,
+            <literal moreinfo="none">'D'</literal> for thread,
+            <literal moreinfo="none">'T'</literal> for time,
+            <literal moreinfo="none">'Z'</literal> for millisecond time, and
+            <literal moreinfo="none">'M'</literal> for message.
+            If the format contains these values then it will be included in the
+            format.  The order of the tokens does not affect the way the log
+            appears, but the <literal moreinfo="none">'M'</literal> token
+            should usually be placed last as it is the only column without a
+            uniform width.  If the property is missing or commented out, then
+            the default value <literal moreinfo="none">'LPTM'</literal> will
+            be used.  Setting the property to a blank value will cause file
+            logging to be disabled.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.console.format=PM]]></screen>
+        </informalexample>
+        <para>
+            The following examples demonstrate the output with various settings.
+            Note that the first two lines are output from the Wrapper, while the
+            last is output from the JVM.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example output where <literal moreinfo="none">wrapper.console.format=LPZM</literal></emphasis></simpara>
+            <screen format="linespecific"><![CDATA[STATUS | wrapper  | 2001/12/11 13:45:33.560 | --> Wrapper Started as Console
+STATUS | wrapper  | 2001/12/11 13:45:33.560 | Launching a JVM...
+INFO   | jvm 1    | 2001/12/11 13:45:35.575 | Initializing...]]></screen>
+        </informalexample>
+        <informalexample>
+            <simpara><emphasis>Example output where <literal moreinfo="none">wrapper.console.format=LPTM</literal></emphasis></simpara>
+            <screen format="linespecific"><![CDATA[STATUS | wrapper  | 2001/12/11 13:45:33 | --> Wrapper Started as Console
+STATUS | wrapper  | 2001/12/11 13:45:33 | Launching a JVM...
+INFO   | jvm 1    | 2001/12/11 13:45:35 | Initializing...]]></screen>
+        </informalexample>
+        <informalexample>
+            <simpara><emphasis>Example output where <literal moreinfo="none">wrapper.console.format=PTM</literal></emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper  | 2001/12/11 13:45:33 | --> Wrapper Started as Console
+wrapper  | 2001/12/11 13:45:33 | Launching a JVM...
+jvm 1    | 2001/12/11 13:45:35 | Initializing...]]></screen>
+        </informalexample>
+        <informalexample>
+            <simpara><emphasis>Example output where <literal moreinfo="none">wrapper.console.format=PM</literal></emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...]]></screen>
+        </informalexample>
+        <informalexample>
+            <simpara><emphasis>Example output where <literal moreinfo="none">wrapper.console.format=M</literal></emphasis></simpara>
+            <screen format="linespecific"><![CDATA[--> Wrapper Started as Console
+Launching a JVM...
+Initializing...]]></screen>
+        </informalexample>
+        <informalexample>
+            <simpara><emphasis>Example output where <literal moreinfo="none">wrapper.console.format=</literal></emphasis></simpara>
+            <screen format="linespecific"><![CDATA[< No Output >]]></screen>
+        </informalexample>
+        <para>
+            The <literal moreinfo="none">'D'</literal> format token is mainly useful
+            for debugging the Wrapper.  It displays which internal Wrapper thread output
+            a given log message.  It does not show information about Java threads.
+            The <literal moreinfo="none">'D'</literal> format token was added in version
+            3.1.0.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example output where <literal moreinfo="none">wrapper.console.format=LPDTM</literal></emphasis></simpara>
+            <screen format="linespecific"><![CDATA[STATUS | wrapper  | main    | 2001/12/11 13:45:33 | --> Wrapper Started as Console
+STATUS | wrapper  | main    | 2001/12/11 13:45:33 | Launching a JVM...
+INFO   | jvm 1    | main    | 2001/12/11 13:45:35 | Initializing...]]></screen>
+        </informalexample>
+    </section>
+</chapter>

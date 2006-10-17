@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-ntservice-dependency-n">
+    <title>wrapper.ntservice.dependency.&lt;n&gt; Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-nt.html">Windows NT/2000/XP Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.ntservice.dependency.&lt;n&gt;</title>
+        <para>
+            Names of any other Services or groups which must be running before
+            this service can be started.  Stopping any of the listed services,
+            or all members of a specified group, will also stop this service.
+            Because both services and groups share the same name space, group
+            names must be prefixed with the '+' character.  Add dependencies as
+            needed starting from 1.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.ntservice.dependency.1=MySQL]]></screen>
+        </informalexample>
+        <para>
+            There is a known problem with dependency ordering when shutting
+            down or restarting the machine.  For some reason, the Windows
+            Service Manager completely ignores the dependency tree and tells
+            all services to shutdown simultaneously.   Depending on which
+            service gets the signal first, this can result in the services
+            being shutdown in a random order.   This is a known problem with
+            all NT services and is not specific to the Java Service Wrapper.
+            Unfortunately there does not appear to be any way for the Wrapper
+            to work around this.
+        </para>
+        <note>
+            <para>
+                Changes to this property will not take effect until the service
+                is reinstalled.
+            </para>
+        </note>
+    </section>
+</chapter>

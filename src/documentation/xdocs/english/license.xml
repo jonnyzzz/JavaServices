@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="license">
+    <title>Java Service Wrapper License</title>
+    <section>
+        <title>Java Service Wrapper</title>
+        <para>
+            The following license covers all versions the Java Service Wrapper
+            starting with version 3.0.0.  See the
+            <ulink url="license-silveregg.html">Silver Egg Technology license</ulink>
+            for prior versions. Please refer to the
+            <ulink url="license.html#history">license history</ulink> for a full
+            explanation of the licensing history of the Java Service Wrapper.
+        </para>
+        <para>
+            Applications which are distributed with the Wrapper must include the
+            license in a file called license-wrapper.txt.  The file should be
+            located in a location that is obvious to the user.  Furthermore, the
+            Wrapper may not be modified in a way which suppresses the copyright
+            banner displayed on startup.
+        </para>
+        <informalexample>
+            <screen format="linespecific"><![CDATA[Copyright (c) 1999, 2006 Tanuki Software, Inc.
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of the Java Service Wrapper and associated
+documentation files (the "Software"), to deal in the Software
+without  restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sub-license,
+and/or sell copies of the Software, and to permit persons to
+whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+
+Portions of the Software have been derived from source code
+developed by Silver Egg Technology under the following license:
+
+BEGIN Silver Egg Techology License -----------------------------------
+    
+    Copyright (c) 2001 Silver Egg Technology
+    
+    Permission is hereby granted, free of charge, to any person
+    obtaining a copy of this software and associated documentation
+    files (the "Software"), to deal in the Software without 
+    restriction, including without limitation the rights to use, 
+    copy, modify, merge, publish, distribute, sub-license, and/or 
+    sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following 
+    conditions:
+    
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+    NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+    OTHER DEALINGS IN THE SOFTWARE.
+    
+END Silver Egg Techology License -------------------------------------
+]]></screen>
+        </informalexample>
+    </section>
+    <section id="history">
+        <title>License History</title>
+        <para>
+            The beginnings of the Java Service Wrapper were originally developed
+            by Leif Mortenson starting in early 1999 as a personal tool for
+            private development projects.  At this point it was completely closed
+            source, existing only in a dark corner of a hard drive, as a small
+            Windows-only tool that could be used to install a Java application
+            as an NT service.
+        </para>
+        <para>
+            Leif joined an internet startup,
+            <ulink url="http://www.silveregg.co.jp">Silver Egg Technology</ulink>,
+            in October of 1999.  In early 2000, Leif brought the basics of what
+            was to become the Wrapper in to work as it was a ready made to tool
+            to solve the problem of being able to install Silver Egg's primary
+            product as an NT service.  Together with Ryan Shaw, another Silver
+            Egg employee, significant improvements were made to the Wrapper
+            over the following months as features such as error recovery and
+            Linux support were added.
+        </para>
+        <para>
+            In November of 2001, Silver Egg decided to open the Wrapper up as an
+            open source project as a way to give something back to the community.
+            As the majority of development to date had been contributed by
+            Silver Egg, the Java Service Wrapper was released under Silver Egg
+            copyright using a the generous MIT <ulink url="license-silveregg.html">license</ulink>.
+            This initial release was version 2.2.0.
+        </para>
+        <para>
+            Leif and Ryan continued to develop the Wrapper mainly on personal time
+            until they both left the company in April of 2002.  At this point the
+            Java Service Wrapper was at version 2.2.6
+        </para>
+        <para>
+            After leaving Silver Egg, Ryan has continued to provide some support for
+            development.  However the majority of development from this point was
+            done by Leif, along with contributions from the growing Java Service
+            Wrapper community.
+        </para>
+        <para>
+            Development of the Java Service Wrapper continued under the
+            <ulink url="license-silveregg.html">Silver Egg license</ulink> until
+            January 2003, and version 2.2.9.  At that point, to reflect the efforts
+            that have gone into the development of the Wrapper, the source code was
+            branched and sub-licensed to Tanuki Software, owned by Leif Mortenson,
+            prior to releasing version 3.0.0.
+        </para>
+        <para>
+            Unfortunately the first version of the Tanuki Software license, while also
+            being an MIT license, was incomplete in that it did not include all
+            required references to the original Silver Egg license.  The license has
+            since been updated to include all required copyright information.
+            However, versions 3.0.0 through 3.0.5 were all released with the incomplete
+            license.  If you have in your possession a copy of such a license, please
+            replace it with the complete <ulink url="#">Tanuki Software license</ulink>
+            at the top of this page.
+        </para>
+    </section>
+</chapter>

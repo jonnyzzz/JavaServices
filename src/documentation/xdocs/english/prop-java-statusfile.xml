@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-java-statusfile">
+    <title>wrapper.java.statusfile Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.java.statusfile</title>
+        <para>
+            File to write the current Java status to.  If set, a file containing the
+            latest status of the Java process will be written to the specified location
+            when the first Java process is launched and then whenever the internal
+            status changes.  The file will be deleted when the Wrapper process has
+            terminated and will reflect the DOWN status when the Java process is being
+            restarted.  This property is not set by default.
+        </para>
+        <para>
+            This property has no use for most applications.  It can be useful to
+            external applications which need to monitor the Java process's state
+            however.
+        </para>
+        <note>
+            <para>
+                The Wrapper needs to be able to open and then write to this file
+                whenever its status is changed.  The Wrapper does include code
+                which allows for the file being briefly locked by an external
+                process.  However, the Wrapper will fail with a warning in the
+                log if the file remains locked for more that 1 second.  This will
+                not affect the operation of the Wrapper.
+            </para>
+        </note>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.java.statusfile=./myapp.java.status]]></screen>
+        </informalexample>
+        <para>
+            The file is formatted as a one line text file with a single token
+            indicating the current Java process status.  Possible values include:
+        </para>
+        <itemizedlist>
+            <listproperty>
+                <literal moreinfo="none">DOWN</literal> - The Java process is completely down.
+                This is the state when the Wrapper first starts as well as after it has been
+                confirmed that the Java process has been terminated.
+            </listproperty>
+            <listproperty>
+                <literal moreinfo="none">LAUNCH(DELAY)</literal> - The Wrapper is waiting to
+                launch a new JVM.  This is the state when the Wrapper is waiting to launch a
+                new JVM process.  It can happen on startup if the
+                <ulink url="prop-startup-delay.html">wrapper.startup.delay</ulink> property
+                is set, or during a restart if the
+                <ulink url="prop-restart-delay.html">wrapper.restart.delay</ulink> property
+                has a value greater than 0.
+            </listproperty>
+            <listproperty>
+                <literal moreinfo="none">LAUNCHING</literal> - The Wrapper is in the process
+                of launching the JVM but the existence of the new Java process has not yet
+                been confirmed.
+                The amount of time that the Wrapper will be allowed to remain in this state
+                is controlled by the
+                <ulink url="prop-startup-timeout.html">wrapper.startup.timeout</ulink> property.
+            </listproperty>
+            <listproperty>
+                <literal moreinfo="none">LAUNCHED</literal> - The Wrapper has confirmed that
+                the Java process has been launched by locating its process.  The state will
+                always be changed to STARTING almost immediately.
+            </listproperty>
+            <listproperty>
+                <literal moreinfo="none">STARTING</literal> - The Java process has been launched.
+                It will remain in this state until the WrapperManager class in the JVM has
+                opened a back end socket with the Wrapper and then notified the Wrapper that
+                the user Java application has been started, or the JVM starts to shut down.
+                The amount of time that the Wrapper will be allowed to remain in this state
+                is controlled by the
+                <ulink url="prop-startup-timeout.html">wrapper.startup.timeout</ulink> property.
+            </listproperty>
+            <listproperty>
+                <literal moreinfo="none">STARTED</literal> - The WrapperManager class in the
+                JVM has notified the Wrapper that the application is up and running.  It will
+                stay in this state until the JVM starts to shut down.  Once in this state,
+                the Wrapper will ping the WrapperManager class at an interval controlled by
+                the <ulink url="prop-ping-interval.html">wrapper.ping.interval</ulink> property.
+                The WrapperManager class must respond within a period controlled by the
+                <ulink url="prop-ping-timeout.html">wrapper.ping.timeout</ulink> property.
+            </listproperty>
+            <listproperty>
+                <literal moreinfo="none">STOPPING</literal> - The JVM has begun to stop its
+                internal application.  It will remain in this state until the WrapperManager
+                class in the JVM has notified that Wrapper that the application is stopped.
+                The amount of time that the Wrapper will be allowed to remain in this state
+                is controlled by the
+                <ulink url="prop-shutdown-timeout.html">wrapper.shutdown.timeout</ulink> property.
+            </listproperty>
+            <listproperty>
+                <literal moreinfo="none">STOPPED</literal> - The WrapperManager class in the
+                JVM has notified the Wrapper that the application has stopped.  It will remain
+                in this state until the Java process actually terminates.  The amount of time
+                that the Wrapper will be allowed to remain in this state is controlled by the
+                <ulink url="prop-jvm-exit-timeout.html">wrapper.jvm_exit.timeout</ulink> property.
+            </listproperty>
+        </itemizedlist>
+        <note>
+            <para>
+                <ulink url="prop-restart-reload-configuration.html">Reloading</ulink>
+                the Wrapper configuration will have no effect on the value of this property.
+                Changes will not take effect until the Wrapper has been restarted.
+            </para>
+        </note>
+    </section>
+</chapter>

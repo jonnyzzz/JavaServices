@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="shift_jis"?>
+<VisualStudioPropertySheet
+    ProjectType="Visual C++"
+    Version="8.00"
+    Name="wrapper32"
+    >
+    <UserMacro
+        Name="javaHome"
+        Value="@java.home@"
+    />
+</VisualStudioPropertySheet>

@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="introduction">
+ 
+    <title>What is the Java Service Wrapper?</title> 
+
+    <section>
+        <title>Note from the Wrapper team.</title>
+        <note>
+            <para>
+                The Java Service Wrapper continues to be actively developed.  Each new
+                version is the culmination of a great deal of time and energy in development,
+                testing, documentation and user support.
+            </para>
+            <para>
+                While the Wrapper is being used within a number of open sourced projects,
+                by far the majority of our user base is directly or indirectly making use of
+                the Wrapper to support commercial applications and or commercial
+                infrastructure.
+            </para>
+            <para>
+                We urge all of our users to please review the value that the Wrapper is
+                providing to your organization.  The Wrapper team develops and maintains
+                the Wrapper on a volunteer basis, but the time and effort involved is real.
+            </para>
+            <para>
+                Please help us to keep the Wrapper project alive, free, and growing, by
+                showing your appreciation and support for the project with a
+                <ulink url="donate.html">donation</ulink> to the team.
+            </para>
+            <para>
+                We would also like to thank all of our users for the ongoing feedback which
+                has helped us to continuously improve the Wrapper over time.
+            </para>
+            <para>
+                Sincerely,
+            </para>
+            <para>
+                The Java Service Wrapper team.
+            </para>
+        </note>
+    </section>
+    <section>
+        <title>Quick Start</title>
+        <para>
+            As with any application, reading through the documentation the best
+            way to get started.  But realizing the desire to get your feet wet
+            quickly, you should glance over this page to get a feel for what the
+            Wrapper can do.
+        </para>
+        <para>
+            Then to get up and running , at a minimum you will need to read over
+            the <ulink url="integrate.html">Integration Page</ulink>.
+            There you will be presented with 3 integration methods.  From the
+            overviews, choose the one that best meets your needs and then proceed
+            to read over the page dedicated to that integration method.
+        </para>
+        <para>
+            The Wrapper provides a very large feature set.  At some point
+            it is suggested that you look over the
+            <ulink url="properties.html">full properties list</ulink> to get a
+            feel for the full power of the Java Service Wrapper.
+        </para>
+        <para>
+            If you run into problems or have any questions, the preferred method
+            for getting help is posting a message to the
+            <ulink url="http://sourceforge.net/mail/?group_id=39428">wrapper-user mailing list</ulink>.
+        </para>
+    </section>
+    <section>
+        <title>Introduction</title>
+        <para>
+            The Java Service Wrapper is an application which has evolved out of a
+            desire to solve a number of problems common to many Java applications:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <ulink url="#service">Run as a Windows Service or Unix Daemon</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#reliability">Application Reliability</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#scripting">Standard, Out of the Box Scripting</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#restarts">On Demand Restarts</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#flexible">Flexible Configuration</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#install">Ease Application Installations</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#logging">Logging</ulink>
+            </listitem>
+        </itemizedlist>
+        <section id="service">
+            <title>Run as a Windows Service or UNIX Daemon</title>
+            <para>
+                The Wrapper makes it possible to install a Java Application as a
+                Windows NT Service.  The scripts provided with the Wrapper also
+                make it very easy to install those same Java Applications as
+                daemon processes on UNIX systems.
+            </para>
+            <para>
+                The Wrapper correctly handles user log outs under Windows, service
+                dependencies, and the ability to run services which interact with
+                the desktop.
+            </para>
+        </section>
+        <section id="reliability">
+            <title>Application Reliability</title>
+            <para>
+                Application Reliability.  As the use of Java expands, applications have
+                been written to provide a variety of mission critical services.  These
+                services must be able to provide a high level of reliability.  In an
+                ideal world, only software which is 100% bug free will ever be released
+                and installed.  However, history has shown this not to be the case.
+                Almost every application suffers from quality issues at one point or
+                another during their life-cycle.  Applications hang, crash, run out of
+                memory or suffer from any number of problems.  Where possible, problems
+                are fixed quickly without significant service outages.  There are times,
+                however, when fixing a problem can be prohibitively expensive or
+                impossible to solve in a short time period.
+            </para>
+            <para>
+                The Wrapper monitors a JVM process and automatically restarts it if it
+                that the JVM has crashed or hung.  This process takes just a few seconds
+                once the Wrapper has decided there is a problem.  There is also a way to
+                <ulink url="prop-filter-x-n.html">configure</ulink> the Wrapper to
+                monitor the console output of a JVM and react to certain strings by
+                restarting or shutting down the JVM.
+            </para>
+            <para>
+                While these features will not make every problem go away, they will help
+                you to sleep easier knowing that if there is a problem, the Wrapper will
+                be there to keep things up and running until you can get into the office
+                to check the logs.  Say goodbye to that pager!! (Or as so as not to date
+                myself, that cel phone!)
+            </para>
+        </section>
+        <section id="scripting">
+            <title>Standard, Out of the Box Scripting</title>
+            <para>
+                Write once run everywhere configuration.  Java has been marketed as a
+                "Write Once, Run Everywhere" programming language.  While this is true
+                for many aspects of an application, the developer is often plagued with
+                having to write complicated, platform specific scripts which are tasked
+                with building up class paths and collecting other system information
+                necessary to launch an application.
+            </para>
+            <para>
+                The Java Service Wrapper helps to relieve the developer of this task
+                by providing a set of scripts for a wide range of platforms that can be
+                used as is to launch almost any Java Application controlled by the
+                Wrapper.
+            </para>
+            <para>
+                The Wrapper moves all JVM configuration into a platform independent
+                configuration file.  See the
+                <ulink url="integrate.html">integration</ulink> examples for details.
+            </para>
+        </section>
+        <section id="restarts">
+            <title>On Demand Restarts</title>
+            <para>
+                The Wrapper provides a way for a Java Application to request that
+                its own JVM be restarted.  This can be useful in a number of cases.
+                Applications may wish to restart after having had their configuration
+                files modified. Or the application may simply need to be restarted
+                to avoid problems with a memory or resource leak of some kind.
+            </para>
+            <para>
+                JVM restarts can be triggered from within the JVM by making a call to
+                <literal moreinfo="none">WrapperManager.restart()</literal>.  See the
+                <ulink url="javadocs.html">Javadocs</ulink> for more details.
+            </para>
+            <para>
+                There are also more passive ways to trigger restarts.  The Wrapper has
+                the ability to <ulink url="prop-filter-x-n.html">monitor console output</ulink>
+                and trigger shutdowns or restarts whenever certain text is detected.
+            </para>
+            <para>
+                The Wrapper can also be configured to either restart another JVM
+                instance or shudown normally depending on the
+                <ulink url="prop-on-exit-n.html">exit code</ulink> returned by a JVM.
+            </para>
+        </section>
+        <section id="flexible">
+            <title>Flexible Configuration</title>
+            <para>
+                The Wrapper provides a wide range of configuration properties which can
+                be used to configure the JVM in any way possible from the command line.
+                The Wrapper configuration file also provides a number of properties to
+                allow you configure things like logging and how the Wrapper is installed
+                as a service.
+            </para>
+            <para>
+                See the <ulink url="properties.html">Configuration Properties</ulink>
+                section for details on what is possible.  Be sure you have read over
+                the <ulink url="integrate.html">integration</ulink> section before
+                jumping into the configuration file.
+            </para>
+        </section>
+        <section id="install">
+            <title>Ease Application Installations</title>
+            <para>
+                By using the Wrapper's standard scripts, and relative paths in the
+                configuration file, it is usually possible to create an application
+                which requires no further installation than simply expanding an
+                archive file into a directory of the user's choice.
+            </para>
+        </section>
+        <section id="logging">
+            <title>Logging</title>
+            <para>
+                While the Wrapper does not attempt to, nor should it, replace any
+                of the great logging tools available, it does provide a number of
+                properties to configure how stdout and stderr output to the JVM console
+                is handled.  This output can be logged to any combination of the console,
+                a file, or the Event Log (Windows) or syslog (UNIX).
+            </para>
+            <para>
+                Logging the output to the JVM console can be critical to tracking down
+                problems with an application.  Without the Wrapper, when a JVM is being
+                run as a service under Windows, or as a daemon under UNIX, the console
+                output would normally be lost.   The Wrapper makes sure that all console
+                output is logged.
+            </para>
+            <para>
+                Java-based logging tools are only capable of logging output generated from
+                within the JVM.  If the JVM crashes or prints out low level messages such
+                as thread dumps, there is normally no way to log it.  The Wrapper logs all
+                console output from the JVM process regardless of its source meaning that
+                a record of any crash will survive even after the Wrapper has restarted
+                the JVM.
+            </para>
+            <para>
+                See the <ulink url="props-logging.html">Logging Configuration</ulink>
+                section for further details.
+            </para>
+        </section>
+    </section>
+    <section>
+        <title>Supported JVMs</title>
+        <para>
+            The Wrapper is known to work with the Sun, IBM, Blackdown and BEA WebLogic
+            JRockit JVMs without any problems.  If you get a chance to test any other
+            JVMs, please be sure and let us know the results.
+        </para>
+        <note>
+            <para>
+                The Wrapper can be used with 1.2.x versions however some functions are disabled
+                due to this version of Java's lack of support for shutdown hooks.  Shutdown
+                hooks were implemented with the 1.3.0 release of Java.
+            </para>
+        </note>
+    </section>
+    <section>
+        <title>Supported Platforms</title>
+        <para>
+            Binary distributions are provided for the following list of platforms and are
+            available on the <ulink url="http://sourceforge.net/project/showfiles.php?group_id=39428">download page</ulink>.
+        </para>
+        <para>
+            Only OS versions which are known to work have been listed.  If you have had successful
+            or unsuccessful results running on other OS versions, please post a comment below
+            and it will be added to the list.
+        </para>
+        <para>
+            It should be fairly easy to build the Wrapper from source on additional UNIX
+            platforms.  Please let us know and we will update the list.
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <literal moreinfo="none">aix</literal> - AIX
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <literal moreinfo="none">freebsd</literal> - FreeBSD
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <literal moreinfo="none">hpux</literal>, <literal moreinfo="none">hpux64</literal> -
+                    HP-UX, 32 and 64-bit versions.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <literal moreinfo="none">irix</literal> - SGI Irix
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <literal moreinfo="none">linux</literal> - Linux kernels; 2.2.x 2.4.x, 2.6.x.
+                    Known to work with Debian and Red Hat, but should work with any distribution.
+                    Currently supported on both 32 and 64-bit x86, and 64-bit ppc systems.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <literal moreinfo="none">macosx</literal> - Macintosh OS X.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <literal moreinfo="none">osf1</literal> - DEC OSF1.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <literal moreinfo="none">solaris</literal> - Sun OS, Solaris 7, 8, 9 and 10.
+                    Currently supported on both 32 and 64-bit sparc, and x86 systems.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <literal moreinfo="none">win32</literal> - Windows NT, 2000, XP, and 2003.
+                </para>
+                <para>
+                    Also known to run on Windows 98 and ME, however due the lack of support for
+                    services in the OS, the Wrapper can only be run in console mode.
+                </para>
+            </listitem>
+        </itemizedlist>
+    </section>
+</chapter>
+

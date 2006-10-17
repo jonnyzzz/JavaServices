@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-use-system-time">
+    <title>wrapper.use_system_time Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.use_system_time</title>
+        <para>
+            Controls how the Wrapper internally manages the passage of time
+            and scheduling of events.  If <ulink url="#use-true">true</ulink>
+            then the Wrapper will make use of the system time for all internal
+            timekeeping functions.  Setting it to <ulink url="#use-false">false</ulink>
+            will cause the Wrapper to make use of a background timer thread
+            which keeps time by incrementing a "tick" counter.  Defaults to false.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.use_system_time=FALSE]]></screen>
+        </informalexample>
+        <para>
+            Each value of this property has advantages in certain situations.
+        </para>
+        <note>
+            <para>
+                <ulink url="prop-restart-reload-configuration.html">Reloading</ulink>
+                the Wrapper configuration will have no effect on the value of this property.
+                Changes will not take effect until the Wrapper has been restarted.  The threshold
+                properties described below can be updated.
+            </para>
+        </note>
+        <section id="use-true">
+            <title>wrapper.use_system_time=true (System time)</title>
+            <para>
+                Historically, the Wrapper has always used the system time for internal
+                timekeeping.  In the majority of cases this works perfectly.  However
+                there are a few cases where this will fail or the Wrapper does not do
+                what may be expected:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        If the Wrapper is in a situation where it is competing for CPU with
+                        other processes that are operating at a higher priority, it is
+                        possible that the Wrapper and/or its JVM will not get any CPU cycles
+                        for long periods of time.  The Wrapper has always handled these
+                        cases by using logic that detects such situations and extends
+                        any affected timeouts appropriately.  In rare cases however, the
+                        Wrapper will falsely think that the JVM has become frozen and
+                        restart it.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        System time changes.  If the system time is set forward or backward
+                        by more than a few seconds while the Wrapper is running, one or more
+                        of its timeouts could be triggered, resulting in an unintended JVM
+                        restart.  In most cases, the Wrapper will handle time changes as
+                        if the process had been starved of CPU.  But there are cases were
+                        this will fail.
+                    </para>
+                    <para>
+                        In general, setting the clock forward works correctly.  A message will
+                        be displayed in the console notifying the user that the Wrapper did
+                        not receive any CPU for x seconds.  But the Wrapper will continue to
+                        function correctly.
+                    </para>
+                    <para>
+                        Setting the system time backwards however can cause a number of
+                        problems depending on exactly what state the Wrapper is in when
+                        it happens.  Internally, the Wrapper schedules events at specific
+                        future points in time when operations like pinging, or launching
+                        a new JVM should take place.   If the time is set back by an hour
+                        then an operation that was scheduled to take place after 5 seconds
+                        will not happen for an hour and 5 seconds.  If the timing of this
+                        is perfect then the Wrapper may stop pinging the JVM and the JVM
+                        will respond to a lack of pings by initiating a JVM restart.
+                    </para>
+                    <note>
+                        <para>Day light savings time</para>
+                        <para>
+                            The Wrapper will not work correctly during day light savings
+                            time.  If you live in a country which likes to change the time
+                            every spring and fall then it is recommended that you use the
+                            tick timer to avoid timeouts.
+                        </para>
+                        <para>
+                            As described above, you may get a single JVM restart either in
+                            the spring or fall as the system time is adjusted.  Once the
+                            JVM has been restarted however your application should continue
+                            to function correctly.
+                        </para>
+                    </note>
+                </listitem>
+                <listitem>
+                    <para>
+                        System suspend and resume.  If the Wrapper is being used on a system
+                        that can be suspended to disk or ram for long periods of time, the
+                        system time will appear to have jumped forward when the machine is
+                        resumed.  Other than a console message, this works correctly.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </section>
+        <section id="use-false">
+            <title>wrapper.use_system_time=false (Timer thread)</title>
+            <para>
+                As of version 3.1.0, a new timer mechanism was added to the Wrapper.
+                This new timer was made the default in version 3.2.0.
+                Rather than keeping time by querying the system clock, the Wrapper
+                creates a background thread which enters a light weight loop and
+                increments an internal "tick" counter.  Internally all timekeeping
+                has been modified to be based on these "ticks".  (If the system time
+                is being used then the tick count at any particular moment is
+                calculated from the system time rather than from the counter.)
+            </para>
+            <para>
+                This has turned out to have a number of advantages:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        The Wrapper is no longer affected by changes to the system
+                        time, either forward or backwards.  This guarantees that the
+                        Wrapper will behave correctly when the time is adjusted for
+                        day light savings time or other adjustments.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        When a suspended system is resumed, the Wrapper continues
+                        on where it left off without any problems.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        The Wrapper handles cases where it is running in a CPU
+                        starved state reliably because the tick count is incremented
+                        at a rate that reflects the amount of CPU being received,
+                        rather than being absolute.  This means that timeouts due
+                        to high loads are very unlikely.
+                    </para>
+                    <para>
+                        In extreme cases, if the Wrapper receives some CPU but the
+                        JVM is completely starved, or vica versa, timeouts will
+                        still be possible.  The two processes always operate at
+                        the exact same priority, however, so this is very unlikely.
+                    </para>
+                </listitem>
+            </itemizedlist>
+            <para>
+                There are, however, some disadvantages to using a "tick" counter for
+                timekeeping:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        The tick timer requires that an additional thread be allocated
+                        within the native Wrapper.  This results in a slight increase
+                        in the resources needed to run the Wrapper.
+                    </para>
+                    <para>
+                        The Java side of the Wrapper makes use of a thread that was
+                        already being used to check for system signals so there is
+                        no increase in resources on the Java side.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        At anything less than 100% CPU load, the timer threads will
+                        always get just enough CPU to increment their counts and be
+                        temporally accurate.  But when the system is running at 100%
+                        CPU, the thread will not be able to loop at full speed
+                        resulting in the count being incremented more slowly.  In
+                        most cases, this is actually a good thing.  However it will
+                        cause operations like the ping interval to be inconsistent
+                        at times, so must be kept in mind.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </section>
+        <section>
+            <title>Timer Debug properties</title>
+            <para>
+                The wrapper also implements a pair of properties that are useful
+                for monitoring when either the JVM or Wrapper timer threads gain
+                or lose time relative to the system clock.  They were mainly
+                implemented for debugging purposes, but can provide very useful
+                information about the state of the system.  They are described
+                here rather than on their own page as they have no meaning outside
+                this context.
+            </para>
+            <section id="prop-timer-slow-threshold">
+                <title>wrapper.timer_slow_threshold</title>
+                <para>
+                    The wrapper.timer_slow_threshold
+                    property will display a message to the log whenever the "tick"
+                    timer falls behind the system time by more than a threshold
+                    number of seconds, within a single loop of the timer thread.
+                    The default value of this property is very high to effectively
+                    disable it.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Example:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper.timer_slow_threshold=10]]></screen>
+                </informalexample>
+                <para>
+                    Setting the slow threshold to a low value like 1 second will
+                    provide useful information about when during the day the system
+                    is under load.
+                </para>
+                <para>
+                    A value of 0 will show every single slip in time and is in
+                    general not very useful.  Even under very light load, the
+                    timer will fall slightly behind the system clock simply
+                    because the loop itself takes a finite amount of time to
+                    complete.
+                </para>
+                <para>
+                    Slightly higher values like 10 seconds can actually be quite
+                    useful as they will point out any major periods of high load
+                    on the system, while not bothering to log every single CPU
+                    hiccup.
+                </para>
+                <para>
+                    Any forward adjustments in the system clock will be
+                    interpreted as a period of high CPU load that lasted the
+                    duration that the clock was advanced.
+                </para>
+                <para>
+                    If for example you have set this property to a low value and the
+                    system clock is either set ahead by one minute, or is under extremely
+                    heavy load for a minute, you will see output in your logs like the
+                    following:
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Example:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[INFO   | wrapper  | 2004/07/21 08:52:01 | The timer fell behind the system clock by 60000ms.
+INFO   | jvm 1    | 2004/07/21 08:52:15 | The timer fell behind the system clock by 60000ms.]]></screen>
+                </informalexample>
+                <para>
+                    The pair of messages indicates that both the wrapper and JVM
+                    processes noticed the change in system time.  It is quite common
+                    for the numbers reported by the two processes to differ slightly
+                    when the just is caused by heavy load.
+                </para>
+            </section>
+            <section id="prop-timer-fast-threshold">
+                <title>wrapper.timer_fast_threshold</title>
+                <para>
+                    The wrapper.timer_fast_threshold
+                    property will display a message to the log whenever the system
+                    time falls behind the "tick" timer by more than a threshold
+                    number of seconds within, a single loop of the timer thread.
+                    The default value of this property is very high to effectively
+                    disable it.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Example:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper.timer_fast_threshold=0]]></screen>
+                </informalexample>
+                <para>
+                    Setting the fast threshold to a low value is not generally as
+                    useful as the slow threshold property above.  Under normal
+                    operation, the "tick" timer will never advance beyond the
+                    system time.  The only exception is in the case where the
+                    system clock has been set back.  Setting the property to
+                    0 will detect any such backward adjustments of the system
+                    clock.
+                </para>
+                <para>
+                    If for example you have set this property to a low value and the
+                    system clock is set back by one minute, you will see output in
+                    your logs like the following:
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Example:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[INFO   | wrapper  | 2004/07/21 08:52:01 | The system clock fell behind the timer by 60000ms.
+INFO   | jvm 1    | 2004/07/21 08:52:15 | The system clock fell behind the timer by 60000ms.]]></screen>
+                </informalexample>
+                <para>
+                    The pair of messages indicates that both the wrapper and JVM
+                    processes noticed the change in system time.
+                </para>
+            </section>
+        </section>
+    </section>
+</chapter>

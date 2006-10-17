@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-ntservice-process-priority">
+    <title>wrapper.ntservice.process_priority Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-nt.html">Windows NT/2000/XP Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.ntservice.process_priority</title>
+        <para>
+            Specifies the priority at which the Wrapper and its JVM will be run
+            at when run as an NT service or as a console application.  Possible
+            values are
+            <literal moreinfo="none">LOW</literal>,
+            <literal moreinfo="none">BELOW_NORMAL</literal>,
+            <literal moreinfo="none">NORMAL</literal>,
+            <literal moreinfo="none">ABOVE_NORMAL</literal>,
+            <literal moreinfo="none">HIGH</literal>, and
+            <literal moreinfo="none">REALTIME</literal>.  Defaults to
+            <literal moreinfo="none">NORMAL</literal>.
+            <literal moreinfo="none">BELOW_NORMAL</literal> and
+            <literal moreinfo="none">ABOVE_NORMAL</literal> are not supported on
+            Windows NT, 95 or 98.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.ntservice.process_priority=NORMAL]]></screen>
+        </informalexample>
+        <warning>
+            <para>
+                Changing this property to HIGH or REALTIME makes the Wrapper and its JVM consume
+                all available CPU first.  It will only yield CPU to other processes when it does
+                not need the cycles itself.  This will cause a number of problems including an
+                unresponsive UI.
+            </para>
+            <para>
+                We have seen problems with time-outs, between the Wrapper and its JVM, when the
+                JVM is outputting large quantities of console output and consuming 100%, for
+                long periods of time.  If you change this default value and are experiencing
+                such time-outs, please return the property to the default NORMAL priority
+                before contacting support.
+            </para>
+        </warning>
+        <note>
+            <para>
+                <ulink url="prop-restart-reload-configuration.html">Reloading</ulink>
+                the Wrapper configuration will have no effect on the priority of the Wrapper
+                process.  But the priority of the restarted JVM process will take on the
+                updated value.
+            </para>
+        </note>
+        <note>
+            <simpara>
+                From the Windows API, each priority level is described as
+                follows:
+            </simpara>
+            <glosslist>
+                <glossentry>
+                    <glossterm>NORMAL</glossterm>
+                    <glossdef>
+                        <para>
+                            Specify this class for a process with no
+                            special scheduling needs.
+                        </para>
+                    </glossdef>
+                </glossentry>
+                <glossentry>
+                    <glossterm>LOW</glossterm>
+                    <glossdef>
+                        <para>
+                            Specify this class for a process whose threads
+                            run only when the system is idle. The threads
+                            of the process are preempted by the threads of
+                            any process running in a higher priority class.
+                            An example is a screen saver. The idle-priority
+                            class is inherited by child processes.
+                        </para>
+                    </glossdef>
+                </glossentry>
+                <glossentry>
+                    <glossterm>HIGH</glossterm>
+                    <glossdef>
+                        <para>
+                            Specify this class for a process that performs
+                            time-critical tasks that must be executed
+                            immediately. The threads of the process preempt
+                            the threads of normal or idle priority class
+                            processes. An example is the Task List, which
+                            must respond quickly when called by the user,
+                            regardless of the load on the operating system.
+                            Use extreme care when using the high-priority
+                            class, because a high-priority class
+                            application can use nearly all available CPU
+                            time.
+                        </para>
+                    </glossdef>
+                </glossentry>
+                <glossentry>
+                    <glossterm>REALTIME</glossterm>
+                    <glossdef>
+                        <para>
+                            Specify this class for a process that has the
+                            highest possible priority. The threads of the
+                            process preempt the threads of all other
+                            processes, including operating system processes
+                            performing important tasks. For example, a
+                            real-time process that executes for more than
+                            a very brief interval can cause disk caches not
+                            to flush or cause the mouse to be unresponsive.
+                        </para>
+                    </glossdef>
+                </glossentry>
+            </glosslist>
+        </note>
+    </section>
+</chapter>

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-umask">
+    <title>wrapper.umask Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.umask</title>
+        <para>
+            Sets the umask used when creating files.  The umask is used to disable
+            certain permission bits for files.  Values can be entered in decimal
+            or hexadecimal or octal formats.  Defaults to 0022 which is an octal
+            number.
+        </para>
+        <para>
+            Values beginning with '0x' will be treated as hexadecimal (base 16).
+            The leading '0' causes the number to be parsed as octal (base 8)
+            otherwise it is treated as a decimal (base 10) number,
+        </para>
+        <para>
+            In octal format the umask is defined as a 3 digit number starting with
+            a 0.  The first, left-most, digit specifies the blocked permissions for
+            the user creating the file.   The second digit specifies the blocked
+            permissions for other users who are members of the file's group.
+            The third, right-most, digit specifies the blocked permissions for
+            any other user.
+        </para>
+        <para>
+            Each digit is specified by adding up the following values: 4 to restrict
+            read access, 2 to restrict write access, 1 to restrict executable access.
+            A value of 7 thus restricts read, write and execute access.
+        </para>
+        <para>
+            The default umask of 0022 will thus restrict all users except the
+            creator from writing or modifying files.  To prevent other users
+            from being able to execute or even see the files a value of 0077
+            should be used.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.umask=0022]]></screen>
+        </informalexample>
+    </section>
+    <section>
+        <title>wrapper.*.umask</title>
+        <para>
+            The Wrapper also makes it possible to specify the umask for particular
+            files created by the Wrapper by using the following properties.  Each
+            defaults to the value of the
+            <ulink url="prop-java-umask.html">wrapper.umask</ulink> property.
+        </para>
+        <itemizedlist>
+            <listitem>
+                <literal moreinfo="none">wrapper.umask</literal> Specifies the default
+                umask and umask of the Wrapper process.
+            </listitem>
+            <listitem>
+                <literal moreinfo="none">wrapper.java.umask</literal> Specifies the
+                default umask of the Java process and thus of any files created by
+                the Java application.
+            </listitem>
+            <listitem>
+                <literal moreinfo="none">wrapper.pidfile.umask</literal> Specifies the
+                umask to use when creating the pid file.  See the
+                <ulink url="prop-pidfile.html">wrapper.pidfile</ulink> property.
+            </listitem>
+            <listitem>
+                <literal moreinfo="none">wrapper.lockfile.umask</literal> Specifies the
+                umask to use when creating the lock file.  See the
+                <ulink url="prop-lockfile.html">wrapper.lockfile</ulink> property.
+            </listitem>
+            <listitem>
+                <literal moreinfo="none">wrapper.java.pidfile.umask</literal> Specifies the
+                umask to use when creating the Java pid file.  See the
+                <ulink url="prop-java-pidfile.html">wrapper.java.pidfile</ulink> property.
+            </listitem>
+            <listitem>
+                <literal moreinfo="none">wrapper.java.idfile.umask</literal> Specifies the
+                umask to use when creating the Java id file.  See the
+                <ulink url="prop-java-idfile.html">wrapper.java.idfile</ulink> property.
+            </listitem>
+            <listitem>
+                <literal moreinfo="none">wrapper.statusfile.umask</literal> Specifies the
+                umask to use when creating the status file.  See the
+                <ulink url="prop-statusfile.html">wrapper.statusfile</ulink> property.
+            </listitem>
+            <listitem>
+                <literal moreinfo="none">wrapper.java.statusfile.umask</literal> Specifies the
+                umask to use when creating the Java status file.  See the
+                <ulink url="prop-java-statusfile.html">wrapper.java.statusfile</ulink> property.
+            </listitem>
+            <listitem>
+                <literal moreinfo="none">wrapper.anchorfile.umask</literal> Specifies the
+                umask to use when creating the anchor file.  See the
+                <ulink url="prop-anchorfile.html">wrapper.anchorfile</ulink> property.
+            </listitem>
+            <listitem>
+                <literal moreinfo="none">wrapper.logfile.umask</literal> Specifies the
+                umask to use when creating the log file.  See the
+                <ulink url="prop-logfile.html">wrapper.logfile</ulink> property.
+            </listitem>
+        </itemizedlist>
+    </section>
+</chapter>

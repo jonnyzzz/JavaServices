@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-ntservice-displayname">
+    <title>wrapper.ntservice.displayname Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-nt.html">Windows NT/2000/XP Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.ntservice.displayname</title>
+        <para>
+            Display name of the NT service when installed.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.ntservice.displayname=My Application]]></screen>
+        </informalexample>
+        <note>
+            <para>
+                Changes to this property will not take effect until the
+                service is reinstalled.
+            </para>
+        </note>
+    </section>
+</chapter>

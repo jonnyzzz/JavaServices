@@ -1,0 +1,623 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="example">
+    <title>Feature Examples</title> 
+    <section>
+        <title>Running the TestWrapper example application</title>
+        <para>
+            This section will make use of the TestWrapper sample application,
+            which ships with the Wrapper, to demonstrate several of the Wrapper's
+            failure recovery features.
+        </para>
+        <itemizedlist>
+            <listitem>
+                <ulink url="example.html#testwrapper-console">Running in a Console</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="example.html#testwrapper-internal">Testing Wrapper Features (Internal Exits and Problems)</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="example.html#testwrapper-external">Testing Wrapper Features (External Exits)</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="example.html#testwrapper-nt">Running as an NT Service</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="example.html#testwrapper-unix">Running as a Linux / Solaris Service</ulink>
+            </listitem>
+        </itemizedlist>
+        <section id="testwrapper-console">
+            <title>Running in a Console</title>
+            <para>
+                Once you install the binary version of the Wrapper distribution, or have run build
+                on a source distribution, you will be ready to immediately run the example
+                application.
+            </para>
+            <para>
+                The TestWrapper example application is also used to test many of the recovery
+                features of the Java Service Wrapper.
+            </para>
+            <para>
+                To run the example, cd into your bin directory and run the following script:
+            </para>
+            <informalexample>
+                <simpara><emphasis>Windows:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[TestWrapper.bat]]></screen>
+            </informalexample>
+            <informalexample>
+                <simpara><emphasis>Linux / Solaris:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[./testwrapper start]]></screen>
+            </informalexample>
+            <note>
+                <simpara>
+                    The Solaris <literal moreinfo="none">testwrapper</literal> script tries
+                    to write a PID file to <literal moreinfo="none">/var/run</literal>. If
+                    you aren't logged in as root, this will fail. You can fix this by simply
+                    changing the <literal moreinfo="none">PIDDIR</literal> variable in the
+                    script, or by logging in as root. If you log in as root, make sure that 
+                    you have permission to use the X server or else you won't be able to see
+                    the <literal moreinfo="none">testwrapper</literal> GUI.
+                </simpara>
+            </note>
+            <para>
+                The Windows console can be stopped cleanly by hitting CTRL-C, but the Linux and
+                Solaris version require you to run the script with the stop parameter:
+            </para>
+            <informalexample>
+                <simpara><emphasis>Linux / Solaris:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[./testwrapper stop]]></screen>
+            </informalexample>
+            <para>
+                The Linux and Solaris versions also provide the ability to restart the application:
+            </para>
+            <informalexample>
+                <simpara><emphasis>Linux / Solaris:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[./testwrapper restart]]></screen>
+            </informalexample>
+            <para>
+                When the application starts, you should see the following dialog:
+            </para>
+            <screenshot>
+                <screeninfo>767x287x256</screeninfo>
+                <graphic fileref="images/TestWrapper"/>
+            </screenshot>
+            <para>
+                You should also see the following in the console:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()]]></screen>
+            </informalexample>
+            <para>
+                Let's start with the console output.  The first column of data displays the source
+                of the output.  Lines starting with <literal moreinfo="none">wrapper</literal> are
+                coming from the native Wrapper application.  Lines starting with
+                <literal moreinfo="none">jvm 1</literal> are coming from the output of the JVM.  
+                The number after <literal moreinfo="none">jvm</literal> indicates the JVM number
+                since the wrapper was started.  We will see how that works when we start playing
+                with the TestWrapper's dialog.
+            </para>
+            <para>
+                The console output is also all logged to
+                <literal moreinfo="none">logs/wrapper.log</literal>.  The logged output differs
+                from the console output in that each line of output also includes a timestamp.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[wrapper  | 2001/12/06 16:18:27 | --> Wrapper Started as Console
+wrapper  | 2001/12/06 16:18:28 | Launching a JVM...
+jvm 1    | 2001/12/06 16:18:29 | Initializing...
+jvm 1    | 2001/12/06 16:18:30 | Wrapper (Version 3.x.x)
+jvm 1    | 2001/12/06 16:18:30 | 
+jvm 1    | 2001/12/06 16:18:30 | start()]]></screen>
+            </informalexample>
+            <para>
+                The TestWrapper presents you with a number of buttons.  These are each used to test
+                various functionality of the Wrapper.  Each button is described below with the
+                output you will see in the console if the button is activated.
+            </para>
+        </section>
+        <section id="testwrapper-internal">
+            <title>Testing Wrapper Features (Internal Exits and Problems)</title>
+            <para>
+                This section will demonstrate how the Wrapper responds to various
+                events.  Each of these events can be tested in the safety of your
+                very own home by pressing the various buttons on the TestWrapper
+                sample application's dialog.
+            </para>
+            <section>
+                <title>Stop</title>
+                <para>
+                    Exits the JVM cleanly by calling WrapperManager.stop(0).
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+jvm 1    | stop(0)
+wrapper  | <-- Wrapper Stopped]]></screen>
+                </informalexample>
+                <para>
+                    As you can see, the application had its stop() method called and
+                    was stopped cleanly.
+                </para>
+            </section>
+            <section>
+                <title>Exit</title>
+                <para>
+                    This button tests the Wrapper's ability to trap an unexpected call
+                    to System.exit() and stop the application gracefully.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+jvm 1    | stop(0)
+jvm 1    | here
+wrapper  | <-- Wrapper Stopped]]></screen>
+                </informalexample>
+                <para>
+                    As an exercise, edit your <literal moreinfo="none">conf/wrapper.conf</literal>
+                    file and uncomment the property,
+                    <literal moreinfo="none">wrapper.disable_shutdown_hook=TRUE</literal>.
+                    (Make sure to comment it back out when you are done)  Now rerun the
+                    test.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+wrapper  | JVM exited unexpectedly.
+wrapper  | Launching a JVM...
+jvm 2    | Initializing...
+jvm 2    | Wrapper (Version 3.x.x)
+jvm 2    |
+jvm 2    | start()]]></screen>
+                </informalexample>
+                <para>
+                    You will notice that the Wrapper no longer catches the call to
+                    System.exit() and so the it thinks that the JVM crashed and
+                    restarts it.
+                </para>
+                <note>
+                    <para>
+                        Because Shutdown hooks are not supported in 1.2 versions of
+                        Java, calls to System.exit will always result in the JVM being
+                        restarted.  To shutdown the JVM using Java 1.2, it is necessary
+                        to call WrapperManager.stop(exitCode).
+                    </para>
+                </note>
+            </section>
+            <section>
+                <title>Halt</title>
+                <para>
+                    This button calls a very low-level method to stop the JVM very
+                    forcibly.  In this case, Shutdown Hooks are not executed and the
+                    Wrapper has no way to catch it.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+wrapper  | JVM exited unexpectedly.
+wrapper  | Launching a JVM...
+jvm 2    | Initializing...
+jvm 2    | Wrapper (Version 3.x.x)
+jvm 2    |
+jvm 2    | start()]]></screen>
+                </informalexample>
+                <para>
+                    Notice that the Wrapper thinks that the JVM crashed and restarts it.
+                </para>
+            </section>
+            <section>
+                <title>Request Restart</title>
+                <para>
+                    Restarts the JVM cleanly by calling WrapperManager.restart()
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+wrapper  | JVM requested a restart.
+jvm 1    | stop(0)
+wrapper  | Launching a JVM...
+jvm 2    | Initializing...
+jvm 2    | Wrapper (Version 3.x.x)
+jvm 2    |
+jvm 2    | start()]]></screen>
+                </informalexample>
+                <para>
+                    As you can see, the application had its stop() method called and
+                    was restarted cleanly. 
+                </para>
+            </section>
+            <section>
+                <title>Access Violation</title>
+                <para>
+                    This takes advantage of a bug in the 1.3 Sun JVM to cause an immediate
+                    access violation in the JVM.  (It doesn't work in the IBM JVM.  Or
+                    I guess you could say it does work...).
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output (SUN JVM):</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+jvm 1    | WARNING: Attempting to cause an access violation...
+jvm 1    | #
+jvm 1    | # HotSpot Virtual Machine Error, EXCEPTION_ACCESS_VIOLATION
+jvm 1    | # Please report this error at
+jvm 1    | # http://java.sun.com/cgi-bin/bugreport.cgi
+jvm 1    | #
+jvm 1    | # Error ID: 4F533F57494E13120E43505002D4
+jvm 1    | #
+jvm 1    |
+jvm 1    | abnormal program termination
+wrapper  | JVM exited unexpectedly.
+wrapper  | Launching a JVM...
+jvm 2    | Initializing...
+jvm 2    | Wrapper (Version 3.x.x)
+jvm 2    |
+jvm 2    | start()]]></screen>
+                </informalexample>
+                <para>
+                    As you can see, an access violation caused the JVM to display an
+                    error dump and then terminate.  The wrapper immediately detects
+                    this and after a 5 second pause, restarts the application in a new
+                    JVM, as can be seen with the
+                    <literal moreinfo="none">jvm 2</literal>.  All available
+                    information about the crash has been logged for future reference.
+                </para>
+            </section>
+            <section>
+                <title>Native Access Violation</title>
+                <para>
+                    The Wrapper includes a lightweight native library which is used to
+                    handle system events.  The library also contains a native method,
+                    which is used for testing, to cause an access violation in native
+                    code due to a NULL reference.
+                </para>
+                <para>
+                    Depending on the JVM, this will give different output.  In the example
+                    below, the JVM created a core dump which takes about a minute to save.
+                    During this time, the JVM appears to be hung so the Wrapper kills and
+                    restarts it.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+jvm 1    | WARNING: Attempting to cause an access violation...
+jvm 1    | #
+jvm 1    | # An EXCEPTION_ACCESS_VIOLATION exception has been detected in native code outside the VM.
+jvm 1    | # Program counter=0x8f7105f
+jvm 1    | #
+wrapper  | JVM is hung: Timed out waiting for signal from JVM.
+wrapper  | Java Virtual Machine did not exit on request, terminated
+wrapper  | Launching a JVM...
+jvm 2    | Initializing...
+jvm 2    | Wrapper (Version 3.x.x)
+jvm 2    |
+jvm 2    | start()]]></screen>
+                </informalexample>
+            </section>
+            <section>
+                <title>Simulate JVM Hang</title>
+                <para>
+                    This test causes the Wrapper to think that the JVM has become hung.
+                    After 30 seconds, the Wrapper times out and decides that the JVM
+                    will not come back and restarts it.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+jvm 1    | WARNING: Making JVM appear to be hung...
+wrapper  | JVM appears hung: Timed out waiting for signal from JVM.
+wrapper  | Java Virtual Machine did not exit on request, terminated
+wrapper  | Launching a JVM...
+jvm 2    | Initializing...
+jvm 2    | Wrapper (Version 3.x.x)
+jvm 2    |
+jvm 2    | start()]]></screen>
+                </informalexample>
+            </section>
+        </section>
+        <section id="testwrapper-external">
+            <title>Testing Wrapper Features (External Exits)</title>
+            <para>
+                The above section covered all of the ways that an application can exit or
+                die of its own will.  There are other external factors that the Wrapper
+                can also protect itself against.
+            </para>
+            <section>
+                <title>CTRL-C</title>
+                <para>
+                    Most Java applications die rather abruptly if the user hits CTRL-C,
+                    logs out of windows, etc.  You can work around some of these issues
+                    with a Shutdown Hook, but the Wrapper implements this by using a
+                    native library to directly capture the system signals.  This makes
+                    it possible to have a Java application installed as an NT Service
+                    without it being stopped when a user logs out.
+                </para>
+                <para>
+                    As a test, try hitting CTRL-C in the console window.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+wrapper  | CTRL-C trapped.  Shutting down.
+jvm 1    | stop(0)
+wrapper  | <-- Wrapper Stopped]]></screen>
+                </informalexample>
+                <para>
+                    You can also see variations on this by logging out when the console
+                    application is still running.  The Wrapper will correctly terminate
+                    the application.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    | 
+jvm 1    | start()
+wrapper  | User logged out.  Shutting down.
+jvm 1    | stop(0)
+wrapper  | <-- Wrapper Stopped]]></screen>
+                </informalexample>
+                <para>
+                    On Linux or Solaris platforms, you can only hit CTRL-C if the script
+                    used to launch the wrapper was passed the console command.  If the
+                    wrapper was launched using the start command then it has been spawned
+                    in a different process.  To stop spawned instances of the Wrapper,
+                    run the same script used to launch the wrapper, only this time specify
+                    the stop command:
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+wrapper  | Shutting down.
+jvm 1    | stop(0)
+wrapper  | <-- Wrapper Stopped]]></screen>
+                </informalexample>
+            </section>
+            <section>
+                <title>Process Termination</title>
+                <para>
+                    It is also possible, though unlikely, that the application process
+                    could be killed by another application.  This test also simulates
+                    cases where the JVM dies very suddenly of its own accord.  On Unix
+                    systems, you can kill the java process with a
+                    <literal moreinfo="none">kill -9</literal>.  On Windows systems,
+                    open up the Task Manager.  Select the Process tab.  Locate the
+                    java.exe process to kill and then kill it.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+wrapper  | JVM exited unexpectedly.
+wrapper  | Launching a JVM...
+jvm 2    | Initializing...
+jvm 2    | Wrapper (Version 3.x.x)
+jvm 2    |
+jvm 2    | start()]]></screen>
+                </informalexample>
+                <para>
+                    The Wrapper will be restarted without any problems.
+                </para>
+                <para>
+                    If rather than killing the Java process, the Wrapper process is
+                    killed then there is currently now recovery mode.  The WrapperManager
+                    inside the Java process reacts to the loss of the Wrapper by assuming
+                    that it is abandoned.  This leads to the JVM being shutdown cleanly
+                    30 seconds after the Wrapper process died.
+                </para>
+            </section>
+            <section>
+                <title>System Under High Load or System Suspend</title>
+                <para>
+                    There are cases where either the Wrapper, the JVM or both will be
+                    denied CPU cycles for an extended period of time.  This can happen
+                    if a resource unfriendly process starts taking 100% of the CPU for
+                    a period of time.   It is also possible if the user Suspends the
+                    system to RAM or disk.  When the system is resumed, all running
+                    applications will have experienced some missing time.  The Wrapper
+                    is capable of recognizing that this has happened making it possible
+                    to avoid unneeded restarts of the JVM process.  The following output
+                    shows what happens when the System is suspended to RAM for 255
+                    seconds before being resumed.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>Console Output:</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Initializing...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |
+jvm 1    | start()
+jvm 1    | JVM Process has not received any CPU time for 255 seconds.  Extending timeouts.
+wrapper  | Wrapper Process has not received any CPU time for 255 seconds.  Extending timeouts.]]></screen>
+                </informalexample>
+            </section>
+        </section>
+        <section id="testwrapper-nt">
+            <title>Running as an NT Service</title>
+            <para>
+                When running as an NT service, the TestWrapper will be unable to show
+                its Dialog.  So this application is not very interesting.  We can
+                however do a few tests to verify that the Wrapper acts as an NT service
+                correctly.
+            </para>
+            <para>
+                The first thing you will need to do is get the TestWrapper installed
+                as a service by running the following command:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[InstallTestWrapper-NT.bat]]></screen>
+            </informalexample>
+            <informalexample>
+                <simpara><emphasis>You will see the output:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[wrapper  | Test Wrapper Application installed.]]></screen>
+            </informalexample>
+            <para>
+                Once the TestWrapper application in installed as a service, we will
+                want to start it.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[net start TestWrapper]]></screen>
+            </informalexample>
+            <informalexample>
+                <simpara><emphasis>You will see the output:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[The Test Wrapper Application service is starting.
+The Test Wrapper Application service was started successfully.]]></screen>
+            </informalexample>
+            <para>
+                The service can be uninstalled by executing the following command:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[UninstallTestWrapper-NT.bat]]></screen>
+            </informalexample>
+            <informalexample>
+                <simpara><emphasis>If the service is running, you will see the output:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[wrapper  | Service is running.  Stopping it...
+wrapper  | Waiting to stop...
+wrapper  | Test Wrapper Application stopped.
+wrapper  | Test Wrapper Application removed.]]></screen>
+            </informalexample>
+            <para>
+                If you look at the contents of <literal moreinfo="none">logs/wrapper.log</literal>,
+                you will see output very similar to that of the console.  Except this
+                time, the start message informs you that the application is being started
+                as a Service.
+            </para>
+            <informalexample>
+                <simpara><emphasis>wrapper.log</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[wrapper  | 2001/12/06 17:34:21 | --> Wrapper Started as Service
+wrapper  | 2001/12/06 17:34:21 | Launching a JVM...
+jvm 1    | 2001/12/06 17:34:22 | Initializing...
+jvm 1    | 2001/12/06 17:34:22 | Wrapper (Version 3.x.x)
+jvm 1    | 2001/12/06 17:34:22 |
+jvm 1    | 2001/12/06 17:34:22 | start()]]></screen>
+            </informalexample>
+            <para>
+                Here are the results of several more actions that can take place on an
+                NT service:
+            </para>
+            <section>
+                <title>User Logging out and then back in</title>
+                <para>
+                    A log entry is made when the user logs out, but the service is
+                    unaffected.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>wrapper.log</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | 2001/12/06 17:39:39 | --> Wrapper Started as Service
+wrapper  | 2001/12/06 17:39:40 | Launching a JVM...
+jvm 1    | 2001/12/06 17:39:40 | Initializing...
+jvm 1    | 2001/12/06 17:39:40 | Wrapper (Version 3.x.x)
+jvm 1    | 2001/12/06 17:39:40 |
+jvm 1    | 2001/12/06 17:39:41 | start()
+wrapper  | 2001/12/06 17:40:07 | User logged out.  Ignored.
+jvm 1    | 2001/12/06 17:40:07 | controlEvent(202)]]></screen>
+                </informalexample>
+            </section>
+            <section>
+                <title>Restarting the machine.</title>
+                <para>
+                    This will result in a logout signal followed by a shut down signal.
+                    The service will be shut down gracefully and then come back after
+                    the machine restarts.
+                </para>
+                <para>
+                    A log entry is made when the user logs out, but the service is
+                    unaffected.
+                </para>
+                <informalexample>
+                    <simpara><emphasis>wrapper.log</emphasis></simpara>
+                    <screen format="linespecific"><![CDATA[wrapper  | 2001/12/06 17:41:04 | --> Wrapper Started as Service
+wrapper  | 2001/12/06 17:41:05 | Launching a JVM...
+jvm 1    | 2001/12/06 17:41:05 | Initializing...
+jvm 1    | 2001/12/06 17:41:05 | Wrapper (Version 3.x.x)
+jvm 1    | 2001/12/06 17:41:05 |
+jvm 1    | 2001/12/06 17:41:05 | start()
+wrapper  | 2001/12/06 17:41:25 | User logged out.  Ignored.
+jvm 1    | 2001/12/06 17:41:26 | controlEvent(202)
+wrapper  | 2001/12/06 17:41:27 | Machine is shutting down.
+jvm 1    | 2001/12/06 17:41:27 | controlEvent(203)
+jvm 1    | 2001/12/06 17:41:28 | stop(0)
+wrapper  | 2001/12/06 17:41:29 | <-- Wrapper Stopped
+wrapper  | 2001/12/06 17:44:12 | --> Wrapper Started as Service
+wrapper  | 2001/12/06 17:44:12 | Launching a JVM...
+jvm 1    | 2001/12/06 17:44:17 | Initializing...
+jvm 1    | 2001/12/06 17:44:21 | Wrapper (Version 3.x.x)
+jvm 1    | 2001/12/06 17:44:21 |
+jvm 1    | 2001/12/06 17:44:23 | start()]]></screen>
+                </informalexample>
+            </section>
+        </section>
+        <section id="testwrapper-unix">
+            <title>Running as a Linux / Solaris Service</title>
+            <para>
+                There are not any differences between running as a service vs as a console
+                application in a Unix environment.
+            </para>
+        </section>
+    </section>
+</chapter>

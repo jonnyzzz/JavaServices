@@ -1,0 +1,384 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="launch-win">
+    <title>Launching Your Application (Win32)</title>
+    <section>
+        <title>Launching Your Application</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="launch.html">All Platforms</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>Launching Your Application (Win32)</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="#scripts">Setup The Scripts</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#console">Running in a Console</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#service">Installing and Running as an NT Service</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#exe">Using wrapper.exe Directly</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#status">Query Service Status</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#command">UNIX-Style Command Based Script</ulink>
+            </listitem>
+        </itemizedlist>
+        <section id="scripts">
+            <title>Setup The Scripts</title>
+            <para>
+                Setting up the scripts used to launch the Java Service Wrapper is
+                extremely simple.  Simply copy the following 3 batch files from the
+                Wrapper distribution into the bin directory of your application.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[{WRAPPER_HOME}\src\bin\App.bat.in
+{WRAPPER_HOME}\src\bin\InstallApp-NT.bat.in
+{WRAPPER_HOME}\src\bin\UninstallApp-NT.bat.in]]></screen>
+            </informalexample>
+            <para>
+                Rename the three batch files as follows, replacing "MyApp" throughout
+                this document with the name of your application.
+                Be sure to remove the <literal moreinfo="none">.in</literal>
+                extensions so that the files all end in
+                <literal moreinfo="none">.bat</literal>.  Depending on how
+                your file explorer is configured, you may not be able to see
+                the extensions.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin\MyApp.bat
+C:\MyApp\bin\InstallMyApp-NT.bat
+C:\MyApp\bin\UninstallMyApp-NT.bat]]></screen>
+            </informalexample>
+            <para>
+                The three batch files are used to run an application in a console,
+                and to install and remove it as an NT Service.  These scripts
+                should not require any modification.  However, they do assume that
+                they are placed into the same directory as the
+                <literal moreinfo="none">wrapper.exe</literal> executable.  They
+                also assume that the <literal moreinfo="none">wrapper.conf</literal>
+                file will be located within a <literal moreinfo="none">conf</literal>
+                directory one level up,
+                <literal moreinfo="none">../conf/wrapper.conf</literal>.  If
+                you wish to locate either of these files elsewhere, then the three
+                batch files will require appropriate modifications.
+            </para>
+        </section>
+        <section id="console">
+            <title>Running in a Console</title>
+            <para>
+                Running the application in a Command Window (console) can be done by
+                double clicking on the <literal moreinfo="none">MyApp.bat</literal>
+                batch file from within the file explorer.  Or by opening a Command
+                Window and then running the script from the command prompt.  The
+                scripts do not require that you be in the
+                <literal moreinfo="none">bin</literal> directory.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>MyApp.bat
+wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |]]></screen>
+            </informalexample>
+            <para>
+                The application can be terminated by hitting CTRL-C in the command
+                window.  This will cause the Wrapper to shut down the application
+                cleanly.
+            </para>
+        </section>
+        <section id="service">
+            <title>Installing and Running as an NT Service</title>
+            <para>
+                Before proceeding, please make sure you have configured all of the
+                <ulink url="props-nt.html">NT service</ulink> related
+                properties in the <literal moreinfo="none">wrapper.conf</literal>
+                file.  You should also have verified that the application runs
+                correctly in console mode.
+            </para>
+            <para>
+                The application can be installed as a service by double clicking on
+                the <literal moreinfo="none">InstallMyApp-NT.bat</literal> batch
+                file from within the file explorer.  Or by opening a Command Window
+                and then running the install script from the command prompt.  If the
+                service is installed successfully, the script will terminate
+                immediately.  If there are any problems then an error message
+                describing what went wrong will be displayed.  The script will then
+                wait for the user to press a key before terminating.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>InstallMyApp-NT.bat
+wrapper  | My Application installed.]]></screen>
+            </informalexample>
+            <para>
+                Once the service has been installed, it can be started by opening up
+                the Service Control Panel, selecting the service, and then pressing
+                the start button.
+            </para>
+            <para>
+                The service can also be started and stopped from within a Command
+                Window by using the <literal moreinfo="none">net start MyApp</literal>
+                and <literal moreinfo="none">net stop MyApp</literal> commands, or
+                by passing commands to the <ulink url="#exe">wrapper.exe</ulink>
+                executable.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>net start MyApp
+The My Application service is starting....
+The My Application service was started successfully.]]></screen>
+            </informalexample>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>net stop MyApp
+The My Application service is stopping..
+The My Application service was stopped successfully.]]></screen>
+            </informalexample>
+            <para>
+                If the <ulink url="prop-ntservice-starttype.html">wrapper.ntservice.starttype</ulink>
+                property is set to AUTO_START then the service will be started
+                whenever machine is rebooted.
+            </para>
+            <para>
+                The service can be uninstalled by running the
+                <literal moreinfo="none">UninstallMyApp-NT.bat</literal> batch
+                file.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>UninstallMyApp-NT.bat
+wrapper  | Service is running.  Stopping it...
+wrapper  | Waiting to stop...
+wrapper  | My Application stopped.
+wrapper  | My Application removed.]]></screen>
+            </informalexample>
+        </section>
+        <section id="exe">
+            <title>Using wrapper.exe Directly</title>
+            <para>
+                As an alternative to using the scripts provided with the Java Service
+                Wrapper.  You may choose to launch the Wrapper directly.  If the
+                <literal moreinfo="none">wrapper.exe</literal> executable is launched
+                without any parameters, the following usage output will be displayed.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>wrapper.exe
+Wrapper (Version 3.n.n) http://wrapper.tanukisoftware.org
+
+Usage:
+  wrapper.exe <command> <configuration file> [configuration properties] [...]
+  wrapper.exe <configuration file> [configuration properties] [...]
+     (<command> implicitly '-c')
+  wrapper.exe <command>
+     (<configuration file> implicitly 'wrapper.conf')
+  wrapper.exe
+     (<command> implicitly '-c' and <configuration file> 'wrapper.conf')
+
+where <command> can be one of:
+  -c  --console run as a Console application
+  -t  --start   starT an NT service
+  -p  --stop    stoP a running NT service
+  -i  --install Install as an NT service
+  -r  --remove  Remove as an NT service
+  -q  --query   Query the current status of the service
+  -qs --querysilent Silently Query the current status of the service
+  -?  --help    print this help message
+
+<configuration file> is the wrapper.conf to use.  Name must be absolute or relative
+  to the location of wrapper.exe
+
+[configuration properties] are configuration name-value pairs which override values
+  in wrapper.conf.  For example:
+  wrapper.debug=true]]></screen>
+            </informalexample>
+            <para>
+                To run the Java Service Wrapper as a console application, you would
+                specify the <literal moreinfo="none">-c</literal> command, followed
+                by the wrapper.conf file.  The location of the
+                <literal moreinfo="none">wrapper.conf</literal> file can be an
+                absolute or relative location.  If a relative path is used, the path
+                is always relative to the location of the
+                <literal moreinfo="none">wrapper.exe</literal> file, not the current
+                directory.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>wrapper.exe -c ..\conf\wrapper.conf]]></screen>
+            </informalexample>
+            <para>
+                To install the application as an NT service, execute:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>wrapper.exe -i ..\conf\wrapper.conf]]></screen>
+            </informalexample>
+            <para>
+                Once installed, the service can be started just like any other NT
+                service.  If the <ulink url="prop-ntservice-starttype.html">wrapper.ntservice.starttype</ulink>
+                was set to <literal moreinfo="none">AUTO_START</literal> when
+                installed, then the service will be started the next time the
+                machine is rebooted.  It is also possible to start the service
+                manually from the services control panel, or by executing either
+                of the following two commands:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>net start MyApp
+C:\MyApp\bin>wrapper.exe -t ..\conf\wrapper.conf]]></screen>
+            </informalexample>
+            <note>
+                <para>
+                    The <literal moreinfo="none">net start x</literal> and
+                    <literal moreinfo="none">net stop x</literal> commands have problems
+                    with services that take a long time to start or stop.  In most
+                    cases they will work, but if a service takes more than a few seconds
+                    to stop, the <literal moreinfo="none">net stop x</literal> command
+                    will return that the service was stopped even though it is still in
+                    the process of stopping.  This can lead to problems when a script
+                    must wait until a service has actually stopped before proceeding.
+                    By using the Wrapper to start and stop the service, you will be
+                    guaranteed not to have any such problems.
+                </para>
+                <para>
+                    The Wrapper method of starting and stopping the service is also
+                    useful in scripts as it does not require the actual name that
+                    the service is installed as to exist anywhere except in the
+                    <literal moreinfo="none">wrapper.conf</literal> file.  This
+                    removes the need for manual editing of multiple files if the
+                    service name is changed.
+                </para>
+            </note>
+            <para>
+                The service can be stopped using the services control panel, or by
+                executing either of the following commands:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>net stop MyApp
+C:\MyApp\bin>wrapper.exe -p ..\conf\wrapper.conf]]></screen>
+            </informalexample>
+            <para>
+                 To uninstall the application as an NT service, execute:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>wrapper.exe -r ..\conf\wrapper.conf]]></screen>
+            </informalexample>
+            <para>
+                If the service is running at the time that it is uninstalled, the service
+                will be cleanly stopped and then removed.
+            </para>
+        </section>
+        <section id="status">
+            <title>Query Service Status</title>
+            <para>
+                The wrapper can be used to query the state of the service manually or from within
+                a batch file.  This can be useful for install scripts which need to know the current
+                state of the service configuration.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>wrapper.exe -q ..\conf\wrapper.conf
+wrapper  | The My Application Service is installed.
+wrapper  |   Start Type: Automatic
+wrapper  |   Interactive: Yes
+wrapper  |   Running: No]]></screen>
+            </informalexample>
+            <para>
+                If run with the "-q" command, the Wrapper will display the current status to the
+                console, "-qs" will run silently.  The Wrapper will then exit an exit code that
+                is a combination of the following bits:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[1  : Service is installed
+2  : Service is running
+4  : Service is interactive
+8  : Start type is automatic
+16 : Start type is manual
+32 : Start type is disabled]]></screen>
+            </informalexample>
+            <para>
+                An exit code of 15, for example, indicates that the service is installed, running,
+                interactive and configured to start automatically when the system is booted.  An
+                exit code of 0 means that the service is not currently installed.
+            </para>
+        </section>
+        <section id="command">
+            <title>UNIX-Style Command Based Script</title>
+            <para>
+                The Wrapper distribution also includes an alternative batch file
+                which functions very much like the shell script that is provided
+                with UNIX versions of the Wrapper.  This script requires a single
+                command argument, which tells the script what to do.  It has the
+                benefit of being able to do everything from a single batch file.
+                But the drawback of not being able to simply double-click on the
+                batch file from the File Manager.
+            </para>
+            <para>
+                To make use of this script, simply copy the following file to your
+                application's bin directory.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[{WRAPPER_HOME}\src\bin\AppCommand.bat.in]]></screen>
+            </informalexample>
+            <para>
+                Rename the script as follows, replacing "MyApp" throughout this
+                document with the name of your application.
+                Be sure to remove the <literal moreinfo="none">.in</literal>
+                extensions so that the file ends in
+                <literal moreinfo="none">.bat</literal>.  Depending on how
+                your file explorer is configured, you may not be able to see
+                the extension.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin\MyApp.bat]]></screen>
+            </informalexample>
+            <para>
+                To familiarize yourself with the script, run it without any
+                arguments.  You will see the following:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>MyApp.bat
+Usage: MyApp.bat { console : start : stop : restart : install : remove }
+Press any key to continue . . .]]></screen>
+            </informalexample>
+            <para>
+                The <literal moreinfo="none">console</literal> command runs the
+                Wrapper in the current command window.  The
+                <literal moreinfo="none">start</literal> and <literal moreinfo="none">stop</literal>
+                commands are used to start and stop the Wrapper when it is installed
+                as an NT service.  The <literal moreinfo="none">restart</literal>
+                command will stop and then immediately start the Wrapper.  And the
+                <literal moreinfo="none">install</literal> and <literal moreinfo="none">remove</literal>
+                commands are used to install and remove the Wrapper as an NT service.
+            </para>
+            <para>
+                There are a few differences between this script and the UNIX script.
+                The UNIX script can be used to stop a copy of the Wrapper running in
+                a console.  This is not possible with the Windows script.  In addition,
+                the <literal moreinfo="none">dump</literal> command is missing from
+                the Windows version of the script.
+            </para>
+            <para>
+                As an example, the Wrapper can be started in a console using the
+                following command:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[C:\MyApp\bin>MyApp.bat console
+wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |]]></screen>
+            </informalexample>
+            <para>
+                To execute other commands, simply replace <literal moreinfo="none">console</literal>
+                with the command you wish to have executed.
+            </para>
+        </section>
+    </section>
+</chapter>

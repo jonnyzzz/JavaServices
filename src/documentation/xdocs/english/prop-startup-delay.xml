@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-startup-delay">
+    <title>wrapper.startup.delay Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.startup.delay</title>
+        <para>
+            Controls the number of seconds to pause between the Wrapper being launched
+            and the first JVM being launched.  Defaults to 0 seconds.
+        </para>
+        <para>
+            Most applications will want to maintain a startup delay of 0, but
+            there are some cases where system resources may not be immediately
+            available after a system restart for example.  In general, it is
+            recommended to make the Java application being run, robust enough
+            to handle such problems.   However where that is not possible, this
+            property may be useful.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.startup.delay=30]]></screen>
+        </informalexample>
+        <para>
+            It may be necessary to have a startup delay when running as a service
+            under windows.  However having such a delay at all times would be
+            inconvenient when the application is being run from a console.  The
+            Wrapper provides two variants of this property which make it
+            possible to specify different startup delays depending on whether
+            the Wrapper is being run as a service or a console application.
+        </para>
+        <para>
+            The service delay is specified using the
+            <literal moreinfo="none">wrapper.startup.delay.service</literal>
+            property, and the console mode delay using the
+            <literal moreinfo="none">wrapper.startup.delay.console</literal>
+            property.   If either property is not specified, it defaults to
+            the value of <literal moreinfo="none">wrapper.startup.delay</literal>.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.startup.delay.console=0
+wrapper.startup.delay.service=30]]></screen>
+        </informalexample>
+        <para>
+            On UNIX platforms, the Wrapper is running as a service if its
+            <ulink url="prop-daemonize.html">wrapper.daemonize</ulink> property
+            is set.  The sh script, provided with the Wrapper, will set the
+            wrapper.daemonize property if the <literal moreinfo="none">start</literal>
+            command is used when.
+        </para>
+    </section>
+</chapter>

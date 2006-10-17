@@ -1,0 +1,369 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="properties">
+    <title>Configuration Property Overview</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <para>
+            The Java Service Wrapper uses a configuration file to control
+            the various Wrapper settings.  The file also contains all of
+            the information necessary to launch a JVM instance with the
+            correct command line required by a given application.
+        </para>
+        <para>
+            This section includes an example configuration file as well
+            as covers some general features which apply to all properties.
+        </para>
+        <para>
+            The individual properties are individually explained below.
+            They can be accessed by category or name.  Many of the
+            properties which will most likely be required are also
+            explained elsewhere in this document.
+        </para>
+        <para>
+            The Wrapper configuration file is very similar, but not exactly
+            the same, as a Java Properties file.  The '\' character is not
+            interpreted as an escape character for example.  The '#'
+            character is interpreted as a comment character.  To include a
+            '#' character in a property value, the value must either be
+            quoted, or escaped by a second '#' character.
+        </para>
+        <itemizedlist>
+            <listitem>
+                <ulink url="props-example-config.html">Example Configuration File</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-command-line.html">Command Line Configuration</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-paths.html">Paths in Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-envvars.html">Environment Variables</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-cascading.html">Cascading Configuration Files</ulink>
+            </listitem>
+        </itemizedlist>
+        <section id="category">
+            <title>Properties by Category</title>
+            <itemizedlist>
+                <listitem>
+                    <ulink url="props-jvm.html">JVM Configuration Properties</ulink>
+                </listitem>
+                <listitem>
+                    <ulink url="props-logging.html">Logging Configuration Properties</ulink>
+                </listitem>
+                <listitem>
+                    <ulink url="props-unix.html">Linux/Unix Configuration Properties</ulink>
+                </listitem>
+                <listitem>
+                    <ulink url="props-nt.html">Windows NT/2000/XP Configuration Properties</ulink>
+                </listitem>
+                <listitem>
+                    <ulink url="props-advanced.html">Advanced Properties</ulink>
+                </listitem>
+            </itemizedlist>
+        </section>
+        <section id="name">
+            <title>Properties by Name</title>
+            <para>
+                Properties added after the initial release are followed by the version in which
+                they were implemented.
+            </para>
+            <itemizedlist>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-adviser.html">wrapper.adviser</ulink>
+                </listproperty>
+                <listproperty version="3.1.1">
+                    <ulink url="prop-anchorfile.html">wrapper.anchorfile</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-umask.html">wrapper.anchorfile.umask</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-app-parameter-n.html">wrapper.app.parameter.&lt;n&gt;</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-commandfile.html">wrapper.commandfile</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-console-flush.html">wrapper.console.flush</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-console-format.html">wrapper.console.format</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-console-loglevel.html">wrapper.console.loglevel</ulink>
+                </listproperty>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-console-title.html">wrapper.console.title</ulink>
+                </listproperty>
+                <listproperty version="2.2.8">
+                    <ulink url="prop-cpu-timeout.html">wrapper.cpu.timeout</ulink>
+                </listproperty>
+                <listproperty version="3.0.0">
+                    <ulink url="prop-daemonize.html">wrapper.daemonize</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-debug.html">wrapper.debug</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-disable-restarts.html">wrapper.disable_restarts</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-disable-shutdown-hook.html">wrapper.disable_shutdown_hook</ulink>
+                </listproperty>
+                <listproperty version="3.0.0">
+                    <ulink url="prop-filter-x-n.html">wrapper.filter.action.&lt;n&gt;</ulink>
+                </listproperty>
+                <listproperty version="3.0.0">
+                    <ulink url="prop-filter-x-n.html">wrapper.filter.trigger.&lt;n&gt;</ulink>
+                </listproperty>
+                <listproperty version="3.0.5">
+                    <ulink url="prop-ignore-signals.html">wrapper.ignore_signals</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-java-additional-n.html">wrapper.java.additional.&lt;n&gt;</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-java-classpath-n.html">wrapper.java.classpath.&lt;n&gt;</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-java-command.html">wrapper.java.command</ulink>
+                </listproperty>
+                <listproperty version="3.1.2">
+                    <ulink url="prop-java-command-loglevel.html">wrapper.java.command.loglevel</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-java-idfile.html">wrapper.java.idfile</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-java-initmemory.html">wrapper.java.initmemory</ulink>
+                </listproperty>
+                <listproperty version="2.2.9">
+                    <ulink url="prop-java-library-path-n.html">wrapper.java.library.path.&lt;n&gt;</ulink>
+                </listproperty>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-java-library-path-append-system-path.html">wrapper.java.library.path.append_system_path</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-java-mainclass.html">wrapper.java.mainclass</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-java-maxmemory.html">wrapper.java.maxmemory</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-java-idfile.html">wrapper.java.idfile</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-umask.html">wrapper.java.idfile.umask</ulink>
+                </listproperty>
+                <listproperty version="3.0.5">
+                    <ulink url="prop-java-pidfile.html">wrapper.java.pidfile</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-umask.html">wrapper.java.pidfile.umask</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-java-statusfile.html">wrapper.java.statusfile</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-umask.html">wrapper.java.statusfile.umask</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-umask.html">wrapper.java.umask</ulink>
+                </listproperty>
+                <listproperty version="2.2.8">
+                    <ulink url="prop-jvm-exit-timeout.html">wrapper.jvm_exit.timeout</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-jvm-port.html">wrapper.jvm.port</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-jvm-port.html">wrapper.jvm.port.max</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-jvm-port.html">wrapper.jvm.port.min</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-lockfile.html">wrapper.lockfile</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-umask.html">wrapper.lockfile.umask</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-logfile.html">wrapper.logfile</ulink>
+                </listproperty>
+                <listproperty version="2.2.5">
+                    <ulink url="prop-logfile-format.html">wrapper.logfile.format</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-logfile-inactivity-timeout.html">wrapper.logfile.inactivity.timeout</ulink>
+                </listproperty>
+                <listproperty version="2.2.5">
+                    <ulink url="prop-logfile-loglevel.html">wrapper.logfile.loglevel</ulink>
+                </listproperty>
+                <listproperty version="2.2.5">
+                    <ulink url="prop-logfile-maxfiles.html">wrapper.logfile.maxfiles</ulink>
+                </listproperty>
+                <listproperty version="2.2.5">
+                    <ulink url="prop-logfile-maxsize.html">wrapper.logfile.maxsize</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-logfile-rollmode.html">wrapper.logfile.rollmode</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-umask.html">wrapper.logfile.umask</ulink>
+                </listproperty>
+                <listproperty version="2.2.8">
+                    <ulink url="prop-max-failed-invocations.html">wrapper.max_failed_invocations</ulink>
+                </listproperty>
+                <listproperty version="3.2.0 (Deprecated as of 3.2.1)">
+                    <ulink url="prop-monitor-thread-count.html">wrapper.monitor_thread_count</ulink>
+                </listproperty>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-native-library.html">wrapper.native_library</ulink>
+                </listproperty>
+                <listproperty version="3.0.0">
+                    <ulink url="prop-ntservice-account.html">wrapper.ntservice.account</ulink>
+                </listproperty>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-ntservice-console.html">wrapper.ntservice.console</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-ntservice-dependency-n.html">wrapper.ntservice.dependency.&lt;n&gt;</ulink>
+                </listproperty>
+                <listproperty version="2.2.5">
+                    <ulink url="prop-ntservice-description.html">wrapper.ntservice.description</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-ntservice-displayname.html">wrapper.ntservice.displayname</ulink>
+                </listproperty>
+                <listproperty version="3.0.4">
+                    <ulink url="prop-ntservice-hide-console.html">wrapper.ntservice.hide_console</ulink>
+                </listproperty>
+                <listproperty version="3.0.0">
+                    <ulink url="prop-ntservice-interactive.html">wrapper.ntservice.interactive</ulink>
+                </listproperty>
+                <listproperty version="3.0.4">
+                    <ulink url="prop-ntservice-load-order-group.html">wrapper.ntservice.load_order_group</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-ntservice-name.html">wrapper.ntservice.name</ulink>
+                </listproperty>
+                <listproperty version="3.0.0">
+                    <ulink url="prop-ntservice-password.html">wrapper.ntservice.password</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-ntservice-password.html#prompt">wrapper.ntservice.password.prompt</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-ntservice-password.html#mask">wrapper.ntservice.password.prompt.mask</ulink>
+                </listproperty>
+                <listproperty version="3.2.1">
+                    <ulink url="prop-ntservice-pausable.html">wrapper.ntservice.pausable</ulink>
+                </listproperty>
+                <listproperty version="3.2.1">
+                    <ulink url="prop-ntservice-pausable-stop-jvm.html">wrapper.ntservice.pausable.stop_jvm</ulink>
+                </listproperty>
+                <listproperty version="2.2.7">
+                    <ulink url="prop-ntservice-process-priority.html">wrapper.ntservice.process_priority</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-ntservice-starttype.html">wrapper.ntservice.starttype</ulink>
+                </listproperty>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-on-exit-n.html">wrapper.on_exit.&lt;n&gt;</ulink>
+                </listproperty>
+                <listproperty version="Usage changed in 3.0.5">
+                    <ulink url="prop-pidfile.html">wrapper.pidfile</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-umask.html">wrapper.pidfile.umask</ulink>
+                </listproperty>
+                <listproperty version="3.0.5">
+                    <ulink url="prop-ping-interval.html">wrapper.ping.interval</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-ping-timeout.html">wrapper.ping.timeout</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-port.html">wrapper.port</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-port.html">wrapper.port.max</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-port.html">wrapper.port.min</ulink>
+                </listproperty>
+                <listproperty version="2.2.7">
+                    <ulink url="prop-request-thread-dump-on-failed-jvm-exit.html">wrapper.request_thread_dump_on_failed_jvm_exit</ulink>
+                </listproperty>
+                <listproperty version="2.2.9">
+                    <ulink url="prop-restart-delay.html">wrapper.restart.delay</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-restart-reload-configuration.html">wrapper.restart.reload_configuration</ulink>
+                </listproperty>
+                <listproperty version="2.2.7">
+                    <ulink url="prop-shutdown-timeout.html">wrapper.shutdown.timeout</ulink>
+                </listproperty>
+                <listproperty version="3.2.2">
+                    <ulink url="prop-signal-mode-hup.html">wrapper.signal.mode.hup</ulink>
+                </listproperty>
+                <listproperty version="3.1.2">
+                    <ulink url="prop-single-invocation.html">wrapper.single_invocation</ulink>
+                </listproperty>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-startup-delay.html">wrapper.startup.delay</ulink>
+                </listproperty>
+                <listproperty>
+                    <ulink url="prop-startup-timeout.html">wrapper.startup.timeout</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-statusfile.html">wrapper.statusfile</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-umask.html">wrapper.statusfile.umask</ulink>
+                </listproperty>
+                <listproperty version="2.2.8">
+                    <ulink url="prop-successful-invocation-time.html">wrapper.successful_invocation_time</ulink>
+                </listproperty>
+                <listproperty version="3.2.1">
+                    <ulink url="prop-syslog-facility.html">wrapper.syslog.facility</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-syslog-ident.html">wrapper.syslog.ident</ulink>
+                </listproperty>
+                <listproperty version="2.2.5">
+                    <ulink url="prop-syslog-loglevel.html">wrapper.syslog.loglevel</ulink>
+                </listproperty>
+                <listproperty version="3.2.0 (Deprecated as of 3.2.1)">
+                    <ulink url="prop-thread-count-delay.html">wrapper.thread_count_delay</ulink>
+                </listproperty>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-use-system-time.html#prop-timer-fast-threshold">wrapper.timer_fast_threshold</ulink>
+                </listproperty>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-use-system-time.html#prop-timer-slow-threshold">wrapper.timer_slow_threshold</ulink>
+                </listproperty>
+                <listproperty version="3.2.0">
+                    <ulink url="prop-umask.html">wrapper.umask</ulink>
+                </listproperty>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-use-system-time.html">wrapper.use_system_time</ulink>
+                </listproperty>
+                <listproperty version="3.1.0">
+                    <ulink url="prop-working-dir.html">wrapper.working.dir</ulink>
+                </listproperty>
+            </itemizedlist>
+        </section>
+    </section>
+</chapter>

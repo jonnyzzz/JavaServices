@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-restart-delay">
+    <title>wrapper.restart.delay Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.restart.delay</title>
+        <para>
+            Controls the number of seconds to pause between a JVM exiting for
+            any reason, and a new JVM being launched.  Defaults to 5 seconds.
+        </para>
+        <para>
+            Setting this restart delay to a very low value or even 0 could
+            cause problems as the new JVM could may be launched before all
+            resources from the previous invocation have been reclaimed by
+            the operating system.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.restart.delay=5]]></screen>
+        </informalexample>
+    </section>
+</chapter>

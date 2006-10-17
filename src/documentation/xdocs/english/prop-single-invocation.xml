@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-single-invocation">
+    <title>wrapper.single_invocation Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-nt.html">Windows NT/2000/XP Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.single_invocation</title>
+        <para>
+            This property makes it possible to control whether or not multiple invocations
+            of a given application can be run at the same time.  The default value is to
+            allow multiple invocations.  Defaults to FALSE.
+        </para>
+        <para>
+            If enabled then the Wrapper will look for a named Mutex in memory build by
+            concatinating "Java Service Wrapper - " and the value of the
+            <ulink url="prop-ntservice-name.html">wrapper.ntservice.name</ulink> property.
+            This means that it is possible to run multiple applications controlled by
+            the Wrapper, while at the same time making sure that an individual application
+            is not launched more than once.
+        </para>
+        <para>
+            This property can be useful in making sure that an application is not launched
+            as a console application when running as an NT service, or visa-versa.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.single_invocation=TRUE]]></screen>
+        </informalexample>
+        <note>
+            <para>
+                <ulink url="prop-restart-reload-configuration.html">Reloading</ulink>
+                the Wrapper configuration will have no effect on the value of this property.
+                Changes will not take effect until the Wrapper has been restarted.
+            </para>
+        </note>
+    </section>
+</chapter>

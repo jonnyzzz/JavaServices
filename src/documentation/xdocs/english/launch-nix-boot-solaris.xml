@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="launch-nix-boot-solaris">
+    <title>Starting at Reboot (Solaris) DRAFT</title>
+    <section>
+        <title>Launching Your Application</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="launch.html">All Platforms</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="launch-nix.html">Linux / UNIX</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>Installing The Application To Start on Reboot (Solaris) DRAFT</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="#slink">Create Symbolic Link in <literal moreinfo="none">/etc/init.d</literal></ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#rc">Registering the Run Levels</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#urc">Unregistering the Run Levels</ulink>
+            </listitem>
+        </itemizedlist>
+        <section id="slink">
+            <title>Create Symbolic Link in <literal moreinfo="none">/etc/init.d</literal></title>
+            <para>
+                The first step in setting up the application so that it will
+                shutdown cleanly when the system shutsdown and then starts up
+                in the correct order when the system boots is to create a
+                symbolic link to the applications script within the 
+                <literal moreinfo="none">/etc/init.d</literal> directory.
+                Many applications simply copy their daemon script to this
+                directory but the Wrapper's scripts require that a symolic
+                link is used so that the location of the rest of the
+                application's files can be located without modification to the
+                script.
+            </para>
+            <para>
+                To create a symbol link in the <literal moreinfo="none">/etc/init.d</literal>,
+                you must be root. Simply enter the following sequence of commands:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[ln -s /usr/lib/myapp/bin/myapp /etc/init.d/myapp]]></screen>
+            </informalexample>
+            <para>
+                Now verify that the symbolic link is working correctly by changing
+                the current directory to <literal moreinfo="none">/etc/init.d</literal>
+                and executing the following command.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[./myapp console]]></screen>
+            </informalexample>
+            <para>
+                Make sure to run as root as this will be the case when the
+                application is started on system startup.  It is fairly common
+                for their to be differences in the environment between the
+                root user and the user you are normally logged in as.  These
+                differences can cause problems like not being able to locate
+                the JVM for example.
+            </para>
+            <para>
+                The application should start normally.  Press CTRL-C to stop the
+                application.
+            </para>
+        </section>
+        <section id="rc">
+            <title>Registering the Run Levels</title>
+            <para>
+                We will want our application to be started for all multi-user
+                run levels and stopped for the halt, single-user and reboot
+                runlevels.  This can be accomplished by changing the current
+                directory to <literal moreinfo="none">/etc/init.d</literal>
+                and then, as root executing the following commands:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[ln -s /etc/init.d/myapp /etc/rc0.d/K20myapp
+ln -s /etc/init.d/myapp /etc/rc1.d/K20myapp
+ln -s /etc/init.d/myapp /etc/rc2.d/S20myapp
+ln -s /etc/init.d/myapp /etc/rc3.d/S20myapp]]></screen>
+            </informalexample>
+            <para>
+                The environment while booting is pretty sparse, so any references
+                which make use of the path or environment variables may fail.  To
+                save yourself some extra reboots to test your install, I would
+                suggest setting the
+                <literal moreinfo="none">wrapper.logfile.loglevel</literal>
+                property to <literal moreinfo="none">DEBUG</literal> now.
+            </para>
+            <para>
+                You can now reboot your system to test the installation:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[shutdown -r now]]></screen>
+            </informalexample>
+            <para>
+                When the system comes back up it will hopefully be running.  If
+                there were any problems, then the log file should contain some
+                clues as to the problem.   If the test in the previous section
+                worked but this failed, then the problem is most likely a
+                problem with missing enviroment variables.
+            </para>
+            <para>
+                If your application makes use of other services, MySQL for example,
+                then you will need to make sure that your application is started
+                after MySQL, and then shutdown before MySQL.  This is done by
+                controlling the startup/shutdown order. By default, MySQL starts
+                and stops with an order of 20, so we can get the desired behavior by
+                using a startup order of 21 and a shutdown order of 19.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[ln -s /etc/init.d/myapp /etc/rc0.d/K19myapp
+ln -s /etc/init.d/myapp /etc/rc1.d/K19myapp
+ln -s /etc/init.d/myapp /etc/rc2.d/S21myapp
+ln -s /etc/init.d/myapp /etc/rc3.d/S21myapp]]></screen>
+            </informalexample>
+        </section>
+        <section id="urc">
+            <title>Unregistering the Run Levels</title>
+            <para>
+                To unregister the run levels registered in the previous section,
+                execute the following commands.  You may need to modify the orders
+                to match those used when creating the symbolic links.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[rm /etc/rc0.d/K20myapp
+rm /etc/rc1.d/K20myapp
+rm /etc/rc2.d/S20myapp
+rm /etc/rc3.d/S20myapp]]></screen>
+            </informalexample>
+        </section>
+    </section>
+</chapter>

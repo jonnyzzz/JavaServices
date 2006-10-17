@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="launch-nix">
+    <title>Launching Your Application (Linux / UNIX)</title>
+    <section>
+        <title>Launching Your Application</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="launch.html">All Platforms</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>Launching Your Application (Linux / UNIX)</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="#scripts">Setup The Scripts</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#console">Running in a Console</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#daemon">Running as a Daemon Process</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#boot">Installing The Application To Start on Reboot</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#exe">Using wrapper Directly</ulink>
+            </listitem>
+        </itemizedlist>
+        <section id="scripts">
+            <title>Setup The Scripts</title>
+            <para>
+                The Wrapper is shipped with a <literal moreinfo="none">sh</literal>
+                script which can be used to reliably start and stop any Java
+                application controlled by the Java Service Wrapper.
+            </para>
+            <para>
+                First copy the <literal moreinfo="none">sh</literal> script to the
+                <literal moreinfo="none">bin</literal> directory of your
+                application.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[{WRAPPER_HOME}\src\bin\sh.script.in]]></screen>
+            </informalexample>
+            <para>
+                Rename the script file to reflect the name of the application.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[/usr/lib/myapp/bin/myapp]]></screen>
+            </informalexample>
+            <para>
+                Now open the script into an editor.  We need to set the long and
+                short names to reflect that the script is being used to launch
+                your application.  You will see two variables immediately after
+                the header of the script.  <literal moreinfo="none">APP_NAME</literal>
+                and <literal moreinfo="none">APP_LONG_NAME</literal>.  Note that
+                the default values of both of these variables are
+                <ulink url="http://ant.apache.org/">Ant</ulink> friendly
+                tokens which can easily be replaced as part of a build.
+                Suggested values for these variables are shown below.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[APP_NAME="myapp"
+APP_LONG_NAME="My Application"]]></screen>
+            </informalexample>
+            <para>
+                The script should not require any additional modification.
+                However it does assume that it is placed into the same directory
+                as the <literal moreinfo="none">wrapper</literal> executable.
+                It also assumes that the <literal moreinfo="none">wrapper.conf</literal>
+                file will be located within a
+                <literal moreinfo="none">conf</literal> directory one level up,
+                <literal moreinfo="none">../conf/wrapper.conf</literal>.  If
+                you wish to locate this file someplace else, then that can also
+                be set using the <literal moreinfo="none">WRAPPER_CONF</literal>
+                variable in the script.
+            </para>
+            <note>
+                <para>
+                    Important!  Before proceeding, please make sure that both
+                    the script and the <literal moreinfo="none">wrapper</literal>
+                    executable have their executable bit set.
+                </para>
+            </note>
+            <note>
+                <para>
+                    The <literal moreinfo="none">sh</literal> script will attempt to
+                    create a pid file in the <literal moreinfo="none">/var/run</literal>.
+                    If the user used to launch the Wrapper does not have permission to
+                    write to this directory then this will result in an error.  An
+                    alternative that will work in most cases is to write the pid file
+                    to the same directory where the wrapper executable is located.  To
+                    make this change, edit the <literal moreinfo="none">sh</literal>
+                    script and change the following line:
+                </para>
+                <informalexample>
+                    <screen format="linespecific"><![CDATA[PIDDIR="/var/run"]]></screen>
+                </informalexample>
+                <para>
+                    to:
+                </para>
+                <informalexample>
+                    <screen format="linespecific"><![CDATA[PIDDIR="./"]]></screen>
+                </informalexample>
+            </note>
+        </section>
+        <section id="console">
+            <title>Running in a Console</title>
+            <para>
+                The application can now be run by simply executing
+                <literal moreinfo="none">bin/myapp console</literal>.
+                Because of the way the Wrapper script sets its current directory,
+                it is not necessary to run this script from within the
+                <literal moreinfo="none">bin</literal> directory.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[/usr/lib/myapp/bin/myapp console
+Running My Application...
+wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Wrapper (Version 3.x.x)
+jvm 1    |]]></screen>
+            </informalexample>
+            <para>
+                When running using the <literal moreinfo="none">console</literal>
+                command, output from the JVM will be visible in the console.
+            </para>
+            <para>
+                The application can be terminated by hitting CTRL-C in the command
+                window.  This will cause the Wrapper to shut down the application
+                cleanly.
+            </para>
+            <para>
+                As you will see if you omit a command, the scripts shipped
+                with the wrapper are fairly standard daemon scripts.  They
+                accept <literal moreinfo="none">console</literal>,
+                <literal moreinfo="none">start</literal>,
+                <literal moreinfo="none">stop</literal>,
+                <literal moreinfo="none">restart</literal>,
+                <literal moreinfo="none">status</literal>, and
+                <literal moreinfo="none">dump</literal> commands.
+                The <literal moreinfo="none">start</literal>,
+                <literal moreinfo="none">stop</literal>, and
+                <literal moreinfo="none">restart</literal> commands are common
+                to most daemon scripts and are used to control the wrapper and 
+                its application as a daemon process.  The 
+                <literal moreinfo="none">status</literal> command
+                can be used to find out whether or not the wrapper is currently
+                running.  The <literal moreinfo="none">console</literal> command
+                will launch the wrapper in the current shell, making it
+                possible to kill the application with CTRL-C.  The final
+                command, <literal moreinfo="none">dump</literal>, will send a
+                <literal moreinfo="none">kill -3</literal> signal to the wrapper
+                causing the its JVM to do a full thread dump.
+            </para>
+        </section>
+        <section id="daemon">
+            <title>Running as a Daemon Process</title>
+            <para>
+                The application can be run as a detatched daemon process by
+                executing the script using the <literal moreinfo="none">start</literal>
+                command.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[/usr/lib/myapp/bin/myapp start
+Running My Application...]]></screen>
+            </informalexample>
+            <para>
+                When running using the <literal moreinfo="none">start</literal>
+                command, output from the JVM will only be visible by viewing the
+                <literal moreinfo="none">wrapper.log</literal> file using
+                <literal moreinfo="none">tail -f wrapper.log</literal>
+            </para>
+            <para>
+                Because the application is running as a detatched process, it can
+                not be terminated using CTRL-C and will continue to run even if
+                the console is closed.
+            </para>
+            <para>
+                To stop the application rerun the script using the
+                <literal moreinfo="none">stop</literal> command.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[/usr/lib/myapp/bin/myapp stop
+Stopping Test Wrapper Sample Application...
+Stopped Test Wrapper Sample Application.]]></screen>
+            </informalexample>
+        </section>
+        <section id="boot">
+            <title>Installing The Application To Start on Reboot</title>
+            <para>
+                Installing the application to start up when the system boots and
+                shutdown when the system shutsdown is platform specific.  I have
+                tried to include instructions for platforms which I have access
+                to.  If your platform is not included, please read over those that
+                have been included and adapt as necessary.  Please post what you
+                come up with to the
+                <ulink url="http://sourceforge.net/mail/?group_id=39428">wrapper-user@sourceforge.net</ulink>
+                mailing list and I will be more than happy to include them in the
+                next release.
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <ulink url="launch-nix-boot-debian.html">Debian Linux</ulink>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <ulink url="launch-nix-boot-solaris.html">Solaris</ulink>
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </section>
+        <section id="exe">
+            <title>Using wrapper Directly</title>
+            <para>
+                As an alternative to using the scripts provided with the Java Service
+                Wrapper.  You may choose to launch the Wrapper directly.  If the
+                <literal moreinfo="none">wrapper</literal> executable is launched
+                without any parameters, the following usage output will be displayed.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[/usr/lib/myapp/bin/wrapper
+Wrapper (Version 3.n.n) http://wrapper.tanukisoftware.org
+
+Usage:
+  wrapper <command> <configuration file> [configuration properties] [...]
+  wrapper <configuration file> [configuration properties] [...]
+     (<command> implicitly '-c')
+  wrapper <command>
+     (<configuration file> implicitly 'wrapper.conf')
+  wrapper
+     (<command> implicitly '-c' and <configuration file> 'wrapper.conf')
+
+where <command> can be one of:
+  -c  --console run as a Console application
+  -?  --help    print this help message
+
+<configuration file> is the wrapper.conf to use.  Name must be absolute or relative
+  to the location of wrapper
+
+[configuration properties] are configuration name-value pairs which override values
+  in wrapper.conf.  For example:
+  wrapper.debug=true]]></screen>
+            </informalexample>
+            <para>
+                To run the Java Service Wrapper in a shell, you would
+                specify the <literal moreinfo="none">-c</literal> command, followed
+                by the wrapper.conf file.  The location of the
+                <literal moreinfo="none">wrapper.conf</literal> file can be an
+                absolute or relative location.  If a relative path is used, the path
+                is always relative to the location of the
+                <literal moreinfo="none">wrapper</literal> file, not the current
+                directory.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[/usr/lib/myapp/bin/wrapper -c ..\conf\wrapper.conf]]></screen>
+            </informalexample>
+            <para>
+                To launch the application a daemon process (Using the shell
+                script is recommended):
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[/usr/lib/myapp/bin/wrapper -c ..\conf\wrapper.conf wrapper.daemonize=TRUE]]></screen>
+            </informalexample>
+        </section>
+    </section>
+</chapter>

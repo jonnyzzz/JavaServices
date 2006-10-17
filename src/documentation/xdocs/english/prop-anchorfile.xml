@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-anchorfile">
+    <title>wrapper.anchorfile Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.anchorfile</title>
+        <para>
+            Causes the Wrapper to create an anchor file on startup.  The
+            Wrapper will monitor the file and then shutdown when it is
+            deleted.  This property is not set by default. Common values
+            are <literal moreinfo="none">./myapp.anchor</literal> or
+            <literal moreinfo="none">/var/run/myapp.anchor</literal>.
+        </para>
+        <para>
+            The Wrapper can still be shutdown by normal methods.  If the
+            anchor file still exists when the Wrapper shuts down, it will
+            be deleted automatically.
+        </para>
+        <para>
+            While the property is supported on all platforms, it is most
+            commonly used in combination with the
+            <ulink url="prop-ignore-signals.html">wrapper.ignore_signals</ulink>
+            property on UNIX systems.  In such cases, rather than setting either
+            of these properties manually, it is suggested that the
+            <literal moreinfo="none">IGNORE_SIGNALS</literal> setting be
+            uncommented in the sh script which ships with the Wrapper.
+            See the <ulink url="prop-ignore-signals.html">wrapper.ignore_signals</ulink>
+            property for further details.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.anchorfile=wrapper.anchor]]></screen>
+        </informalexample>
+        <para>
+            The interval at which the existence of the anchor file is tested
+            can be controlled using the
+            <literal moreinfo="none">wrapper.anchor.poll_interval</literal>
+            property.  It defaults to 5 seconds, with valid values in the range
+            of 1 to 3600 seconds.
+        </para>
+        <note>
+            <para>
+                <ulink url="prop-restart-reload-configuration.html">Reloading</ulink>
+                the Wrapper configuration will have no effect on the value of this property.
+                Changes will not take effect until the Wrapper has been restarted.
+            </para>
+        </note>
+    </section>
+</chapter>

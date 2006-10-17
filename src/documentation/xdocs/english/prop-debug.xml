@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-debug">
+    <title>wrapper.debug Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-logging.html">Logging Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.debug</title>
+        <para>
+            Used to quickly enable debug logging both to the console and
+            log file.   Disabling this flag does not disable debug logging
+            to the console or log file.  However setting it to true will
+            override the currently configured log levels. Defaults to false.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.debug=TRUE]]></screen>
+        </informalexample>
+        <para>
+            Which is equivalent to the following:
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.console.loglevel=DEBUG
+wrapper.logfile.loglevel=DEBUG]]></screen>
+        </informalexample>
+        <para>
+            This property can of course be added to the wrapper.conf file.  But
+            like any other property, it can also be specified from the command
+            line.   One common use is to quickly enable debug output when the
+            Wrapper is launched.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Windows Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[Wrapper.exe -c ../conf/wrapper.conf wrapper.debug=TRUE]]></screen>
+        </informalexample>
+        <informalexample>
+            <simpara><emphasis>Linu / UNIX Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[./wrapper ../conf/wrapper.conf wrapper.debug=TRUE]]></screen>
+        </informalexample>
+    </section>
+</chapter>

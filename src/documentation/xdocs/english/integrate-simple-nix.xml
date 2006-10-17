@@ -1,0 +1,498 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="integrate-simple-nix">
+    <title>WrapperSimpleApp Integration (Linux / UNIX)</title>
+    <section>
+        <title>Integration Methods</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="integrate.html">Methods of Integrating with the Java Service Wrapper</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>Method 1 - WrapperSimpleApp Integration (Linux / UNIX)</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="#overview">Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#detailed">Detailed Instructions</ulink>
+            </listitem>
+        </itemizedlist>
+        <section id="overview">
+            <title>Overview</title>
+            <para>
+                The first method is to use the
+                <literal moreinfo="none">WrapperSimpleApp</literal> helper class to
+                launch the application.  This is by far the simplest way to integrate
+                with the Wrapper, and where possible, it is highly recommended.  There
+                are some things to be aware of when using this method however.  When
+                the Wrapper shuts down the JVM, there is no direct call to an
+                application requesting that it shutdown cleanly.  Rather, the Wrapper
+                will exit the JVM by calling <literal moreinfo="none">System.exit()</literal>
+                from within the JVM.  If the application has registered its own
+                <ulink url="http://developer.java.sun.com/developer/TechTips/2000/tt0711.html">shutdown hook</ulink>,
+                it will be invoked, giving the application a chance to shutdown
+                cleanly.  If on the other hand, a shutdown hook is not registered, then
+                the application will suddenly exit.   Both cases, with and without a
+                shutdown hook, provide the exact same behavior as if the application
+                was running without the Wrapper and a user pressed CTRL-C in the console.
+            </para>
+            <para>
+                When integrating with the <literal moreinfo="none">WrapperSimpleApp</literal>
+                helper class, the <literal moreinfo="none">WrapperSimpleApp</literal>
+                class replaces an application's main class.   This gives the
+                <literal moreinfo="none">WrapperSimpleApp</literal> class a chance to
+                immediately initialize the <literal moreinfo="none">WrapperManager</literal>
+                and register the JVM with the Wrapper.  The
+                <literal moreinfo="none">WrapperSimpleApp</literal> class then manages all
+                interaction with the Wrapper as well as the life-cycle of an application.
+                When the Wrapper sends a start message to the JVM via the 
+                <literal moreinfo="none">WrapperManager</literal>, the main method of
+                the application's actual main class is called.
+            </para>
+            <para>
+                The <literal moreinfo="none">WrapperSimpleApp</literal> helper class
+                is told how to launch the application by passing the application's
+                main class name, followed by any additional application parameters
+                to the main method of the <literal moreinfo="none">WrapperSimpleApp</literal>.
+            </para>
+            <para>
+                The following section will walk you through a detailed explanation of
+                how to configure <ulink url="http://www.jboss.org">JBoss</ulink> to
+                run within the Wrapper.  Most other applications can be integrated by
+                following the same steps.
+            </para>
+        </section>
+        <section id="detailed">
+            <title>Detailed Instructions</title>
+            <section>
+                <title>Install JBoss</title>
+                <para>
+                    This tutorial will start with a clean install of
+                    <ulink url="http://www.jboss.org">JBoss</ulink>.  We used version
+                    3.0.4 so the exact steps may be slightly different depending
+                    on the exact version installed.  JBoss was installed in the
+                    <literal moreinfo="none">/usr/lib</literal> directory, resulting
+                    in a JBoss Home directory of
+                    <literal moreinfo="none">/usr/lib/jboss-3.0.4</literal>.
+                </para>
+            </section>
+            <section>
+                <title>Installing Wrapper Files</title>
+                <para>
+                    There are four files which are required to be able to use the
+                    Wrapper.  We will also copy over a script which makes it easy to
+                    launch and control the Wrapper.
+                </para>
+                <note>
+                    <para>
+                        Please make sure that you are using the
+                        <literal moreinfo="none">wrapper</literal>, and
+                        <literal moreinfo="none">libwrapper.so</literal> files which
+                        were built for the platform being run.   It sounds obvious,
+                        but the Linux version will not work on Solaris for example.
+                    </para>
+                </note>
+                <section>
+                    <title>bin directory</title>
+                    <para>
+                        The Wrapper is shipped with a <literal moreinfo="none">sh</literal>
+                        script which can be used to reliably start and stop any Java
+                        application controlled by the Java Service Wrapper.
+                    </para>
+                    <para>
+                        First we will copy the following files into the JBoss
+                        <literal moreinfo="none">bin</literal> directory:  
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[{WRAPPER_HOME}/bin/wrapper
+{WRAPPER_HOME}/src/bin/sh.script.in]]></screen>
+                    </informalexample>
+                    <para>
+                        Rename the script file to reflect the name of the application.
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[{JBOSS_HOME}/bin/jboss]]></screen>
+                    </informalexample>
+                    <para>
+                        Now open the script into an editor.  We need to set the long and
+                        short names to reflect that the script is being used to launch
+                        JBoss.  You will see two variables immediately after the header
+                        of the script.  <literal moreinfo="none">APP_NAME</literal>
+                        and <literal moreinfo="none">APP_LONG_NAME</literal>.  Note that
+                        the default values of both of these variables are
+                        <ulink url="http://ant.apache.org/">Ant</ulink> friendly
+                        tokens which can easily be replaced as part of a build.
+                        Suggested values for these variables are shown below.
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[APP_NAME="jboss"
+APP_LONG_NAME="JBoss Application Server"]]></screen>
+                    </informalexample>
+                    <para>
+                        These script should not require any additional modification.
+                        It does assume that the <literal moreinfo="none">wrapper.conf</literal>
+                        file will be located within a
+                        <literal moreinfo="none">conf</literal> directory one level up,
+                        <literal moreinfo="none">../conf/wrapper.conf</literal>.  If
+                        you wish to locate this file someplace else, then that can also
+                        be set using the <literal moreinfo="none">WRAPPER_CONF</literal>
+                        variable in the script.
+                    </para>
+                    <note>
+                        <para>
+                            Important!  Before proceeding, please make sure that all
+                            three files copied into the <literal moreinfo="none">bin</literal>
+                            directory have their executable bit set.
+                        </para>
+                    </note>
+                </section>
+                <section>
+                    <title>lib directory</title>
+                    <para>
+                        Copy the following two files into the JBoss lib directory:
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[{WRAPPER_HOME}/lib/libwrapper.so
+{WRAPPER_HOME}/lib/wrapper.jar]]></screen>
+                    </informalexample>
+                    <para>
+                        The <literal moreinfo="none">libwrapper.so</literal> file is a
+                        native library required by the portion of the Wrapper which
+                        runs within the JVM.  The <literal moreinfo="none">wrapper.jar</literal>
+                        file contains all of the Wrapper classes.
+                    </para>
+                </section>
+                <section>
+                    <title>conf directory</title>
+                    <para>
+                        The Wrapper requires a configuration file.  The standard
+                        location for this file is in a conf directory in the
+                        application's home directory.  JBoss does not have such
+                        a directory by default, so we will need to create one.
+                        Please do so and copy the template
+                        <literal moreinfo="none">wrapper.conf</literal> file to
+                        that location:
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[{WRAPPER_HOME}/src/conf/wrapper.conf.in]]></screen>
+                    </informalexample>
+                    <para>
+                        Be sure to remove the <literal moreinfo="none">.in</literal>
+                        extension so that the file is named
+                        <literal moreinfo="none">wrapper.conf</literal>.  You should
+                        now have:
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[{JBOSS_HOME}/conf/wrapper.conf]]></screen>
+                    </informalexample>
+                    <para>
+                        If you wish to relocate the configuration file, you are free
+                        to do so.  You will need to modify the batch scripts copied
+                        into the <literal moreinfo="none">bin</literal> directory above,
+                        to reflect the new location.
+                    </para>
+                </section>
+                <section>
+                    <title>logs directory</title>
+                    <para>
+                        The default <literal moreinfo="none">wrapper.conf</literal> file
+                        will place a <literal moreinfo="none">wrapper.log</literal> file
+                        in a <literal moreinfo="none">logs</literal> directory under the
+                        application home directory.  JBoss does not have such a directory
+                        by default, so we will need to create one.  Please do so.  You
+                        should now have the following directory:
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[{JBOSS_HOME}/logs]]></screen>
+                    </informalexample>
+                    <para>
+                        If you wish to place the log file in another location, you will
+                        need to edit the <literal moreinfo="none">wrapper.conf</literal>
+                        file and modify the <literal moreinfo="none">wrapper.logfile</literal>
+                        property to reflect the new location.
+                    </para>
+                </section>
+            </section>
+            <section>
+                <title>Locate the Application's Java Command Line</title>
+                <para>
+                    Before the Wrapper can be configured to launch an Application,
+                    you will need to know the full Java command which is normally
+                    used.
+                </para>
+                <para>
+                    Most applications make use of a script to build up the actual
+                    command line.  These scripts tend to get quite unwieldy and
+                    in fact, the ability to avoid having to work with them is one of
+                    the benefits of working with the Wrapper.
+                </para>
+                <para>
+                    JBoss is launched by using a script called 
+                    <literal moreinfo="none">run.sh</literal>.  It is
+                    launched by first changing the current directory to the
+                    <literal moreinfo="none">bin</literal> directory and then
+                    run from there.  If you open
+                    <literal moreinfo="none">run.sh</literal> into an editor, you
+                    will notice the following lines towards the end of the file:
+                </para>
+                <informalexample>
+                    <screen format="linespecific"><![CDATA[    exec $JAVA $JAVA_OPTS \
+            -classpath "$JBOSS_CLASSPATH" \
+            org.jboss.Main "$@"]]></screen>
+                </informalexample>
+                <para>
+                    The majority of the script has the task of collecting system
+                    specific information and storing that information into environment
+                    variables.  The lines above then expands all of the collected
+                    information into the final Java command which launches the
+                    application.  From looking at the source of the script,
+                    we hope you appreciate the complexity and the desire to have to
+                    avoid completely writing such scripts yourself.
+                </para>
+                <para>
+                    In order to configure the Wrapper, all that is really needed is
+                    the final expanded command line.  Rather than reading through the
+                    entire script and attempting to understand it, we will use a
+                    simple trick to display the final command line in the console.
+                    Edit the script by changing it as follows:
+                </para>
+                <informalexample>
+                    <screen format="linespecific"><![CDATA[    #exec $JAVA $JAVA_OPTS \
+    #        -classpath "$JBOSS_CLASSPATH" \
+    #        org.jboss.Main "$@"
+    echo "exec $JAVA $JAVA_OPTS -classpath $JBOSS_CLASSPATH org.jboss.Main $@"
+]]></screen>
+                </informalexample>
+                <para>
+                    If you now rerun the script, you will see something like the
+                    following in the console (Your output will all be on one line):
+                </para>
+                <informalexample>
+                    <screen format="linespecific"><![CDATA[exec /opt/IBMJava2-131/bin/java  -Dprogram.name=run.sh
+  -classpath /usr/lib/jboss-3.0.4/bin/run.jar:/opt/IBMJava2-131/lib/tools.jar org.jboss.Main]]></screen>
+                </informalexample>
+            </section>
+            <section>
+                <title>Modifying the wrapper.conf File</title>
+                <para>
+                    In order to be able to use this command with the Wrapper, we need
+                    to break up its components.  Open the
+                    <literal moreinfo="none">wrapper.conf</literal> file into an editor
+                    and make the changes below.
+                </para>
+                <note>
+                    <para>
+                        Where properties are mentioned below, links are provided to their
+                        descriptions.  Please take the time to review the descriptions of
+                        any properties which are modified.  In many cases, there are
+                        further details on their usage which are not mentioned here.
+                    </para>
+                </note>
+                <section>
+                    <title>Java Executable</title>
+                    <para>
+                        First is to extract the java executable and assign it to the
+                        <literal moreinfo="none"><ulink url="prop-java-command.html">wrapper.java.command</ulink></literal>
+                        property:
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[wrapper.java.command=/opt/IBMJava2-131/bin/java]]></screen>
+                    </informalexample>
+                </section>
+                <section>
+                    <title>Java Arguments</title>
+                    <para>
+                        Most applications provide a number of parameters to the Java
+                        executable when it is launched.  The Wrapper provides special
+                        properties for configuring things like memory, as well as
+                        class and library paths.  These will be covered below, however
+                        any other settings are configured using the 
+                        <literal moreinfo="none"><ulink url="prop-java-additional-n.html">wrapper.java.additional.&lt;n&gt;</ulink></literal>
+                        series of properties.
+                    </para>
+                    <para>
+                        The JBoss command line only has one such property.  In this
+                        case, we have changed the name of the script used to launch
+                        JBoss from <literal moreinfo="none">run.sh</literal>, but
+                        for consistency we will leave it as is.:
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[wrapper.java.additional.1=-Dprogram.name=run.sh]]></screen>
+                    </informalexample>
+                    <para>
+                        Notice that the full property was copied directly from the
+                        command line without any modifications.  See the property
+                        documentation for details on how to handle properties
+                        containing spaces.
+                    </para>
+                </section>
+                <section>
+                    <title>Classpath</title>
+                    <para>
+                        Next, comes the classpath, which is configured using the
+                        <literal moreinfo="none"><ulink url="prop-java-classpath-n.html">wrapper.java.classpath.&lt;n&gt;</ulink></literal>
+                        properties.  The Wrapper requires that the classpath be
+                        broken up into its individual elements.  Then, because we
+                        will also be making use of the Wrapper, it is necessary to
+                        include the <literal moreinfo="none">wrapper.jar</literal>
+                        file as well:
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[wrapper.java.classpath.1=/usr/lib/jboss-3.0.4/wrapper.jar
+wrapper.java.classpath.2=/usr/lib/jboss-3.0.4/bin/run.jar
+wrapper.java.classpath.3=/opt/IBMJava2-131/lib/tools.jar]]></screen>
+                    </informalexample>
+                </section>
+                <section>
+                    <title>Main Class</title>
+                    <para>
+                        The final component of the command used to launch JBoss is the
+                        main class, <literal moreinfo="none">org.jboss.Main</literal>.
+                        The main class executed by Java when launched is specified by
+                        using the 
+                        <literal moreinfo="none"><ulink url="prop-java-mainclass.html">wrapper.java.mainclass</ulink></literal>
+                        property.  As mentioned above however.  Because the JBoss main
+                        class does not know how to communicate with the Wrapper, we
+                        will set the main class to be the full class name of
+                        <literal moreinfo="none">WrapperSimpleApp</literal>.
+                        The JBoss main class is then specified as the first application
+                        parameter below.
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[wrapper.java.mainclass=org.tanukisoftware.wrapper.WrapperSimpleApp]]></screen>
+                    </informalexample>
+                </section>
+                <section>
+                    <title>Application Parameters</title>
+                    <para>
+                        Application parameters are set using the
+                        <literal moreinfo="none"><ulink url="prop-app-parameter-n.html">wrapper.app-parameter.&lt;n&gt;</ulink></literal>
+                        properties.  Application parameters appear in the Java command
+                        line directly after the main class.  While JBoss does not have
+                        any such parameters, it is still necessary to set one of these
+                        properties.  This is because we are using the
+                        <literal moreinfo="none">WrapperSimpleApp</literal> helper class
+                        and as described above, its first parameter is the main class
+                        name of the application being run.  in this case, 
+                        <literal moreinfo="none">org.jboss.Main</literal>:
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[wrapper.app.parameter.1=org.jboss.Main]]></screen>
+                    </informalexample>
+                </section>
+                <section>
+                    <title>Library Path</title>
+                    <para>
+                        In order to use the Wrapper, there is one more property which
+                        much be set.  The Wrapper makes use of a native library to
+                        control interactions with the system.  This file
+                        <literal moreinfo="none">libwrapper.so</literal> needs to be
+                        specified on the library path supplied to the JVM.  JBoss
+                        does not have any native libraries of its own, but if it did,
+                        the directories where they were located would also need to be
+                        specified.  The library path is set using the 
+                        <literal moreinfo="none"><ulink url="prop-java-library-path-n.html">wrapper.java-library-path.&lt;n&gt;</ulink></literal>
+                        properties.
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[wrapper.java.library.path.1=/usr/lib/jboss-3.0.4/lib]]></screen>
+                    </informalexample>
+                </section>
+                <section>
+                    <title>Putting It All Together</title>
+                    <para>
+                        Putting it all together, we get the following:
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[wrapper.java.command=/opt/IBMJava2-131/bin/java
+
+wrapper.java.additional.1=-Dprogram.name=run.sh
+
+wrapper.java.classpath.1=/usr/lib/jboss-3.0.4/wrapper.jar
+wrapper.java.classpath.2=/usr/lib/jboss-3.0.4/bin/run.jar
+wrapper.java.classpath.3=/opt/IBMJava2-131/lib/tools.jar
+
+wrapper.java.library.path.1=/usr/lib/jboss-3.0.4/lib
+
+wrapper.java.mainclass=org.tanukisoftware.wrapper.WrapperSimpleApp
+
+wrapper.app.parameter.1=org.jboss.Main]]></screen>
+                    </informalexample>
+                    <para>
+                        Notice what while this will function correctly on this
+                        particular machine, it is highly dependent on the directory
+                        structure and platform.  By taking advantage of the fact that
+                        the Wrapper's scripts always set the current directory to the
+                        location of the script, and by making use of a single environment
+                        variable, we are able to modify the above properties so that
+                        they are completely platform and machine independent:
+                    </para>
+                    <informalexample>
+                        <screen format="linespecific"><![CDATA[wrapper.java.command=%JAVA_HOME%/bin/java
+
+wrapper.java.additional.1=-Dprogram.name=run.sh
+
+wrapper.java.classpath.1=../lib/wrapper.jar
+wrapper.java.classpath.2=./run.jar
+wrapper.java.classpath.3=%JAVA_HOME%/lib/tools.jar
+
+wrapper.java.library.path.1=../lib
+
+wrapper.java.mainclass=org.tanukisoftware.wrapper.WrapperSimpleApp
+
+wrapper.app.parameter.1=org.jboss.Main]]></screen>
+                    </informalexample>
+                </section>
+            </section>
+            <section>
+                <title>Trying It Out</title>
+                <para>
+                    JBoss can now be run by simply executing
+                    <literal moreinfo="none">bin/jboss console</literal>.
+                    Because of the way the Wrapper sets its current directory, it
+                    is not necessary to run this script from within the
+                    <literal moreinfo="none">bin</literal> directory.
+                </para>
+                <para>
+                    As you will see if you omit a command, the scripts shipped
+                    with the wrapper are fairly standard daemon scripts.  They
+                    accept <literal moreinfo="none">console</literal>,
+                    <literal moreinfo="none">start</literal>,
+                    <literal moreinfo="none">stop</literal>,
+                    <literal moreinfo="none">restart</literal>, and
+                    <literal moreinfo="none">dump</literal> commands.
+                    The <literal moreinfo="none">start</literal>,
+                    <literal moreinfo="none">stop</literal>, and
+                    <literal moreinfo="none">restart</literal> commands are common
+                    to most daemon scripts and are used to control the wrapper and 
+                    its application as a daemon process.  The 
+                    <literal moreinfo="none">status</literal> command
+                    can be used to find out whether or not the wrapper is currently
+                    running.  The <literal moreinfo="none">console</literal> command
+                    will launch the wrapper in the current shell, making it
+                    possible to kill the application with CTRL-C.  The final
+                    command, <literal moreinfo="none">dump</literal>, will send a
+                    <literal moreinfo="none">kill -3</literal> signal to the wrapper
+                    causing the its JVM to do a full thread dump.
+                </para>
+                <para>
+                    Congratulations.  Your application should now be up and running.
+                </para>
+                <para>
+                    If you did have any problems, please take a look at the
+                    <ulink url="troubleshooting.html">Troubleshooting</ulink>
+                    section for help with tracking down the problem.
+                </para>
+            </section>
+        </section>
+    </section>
+</chapter>

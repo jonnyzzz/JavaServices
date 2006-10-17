@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="props-paths">
+    <title>Paths in Configuration Properties</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>Paths in Configuration Properties</title>
+        <para>
+            Java handles both forward slashes, <literal moreinfo="none">'/'</literal>,
+            and backslashes, <literal moreinfo="none">'\'</literal>, correctly
+            on Windows.  To make your <literal moreinfo="none">wrapper.conf</literal>
+            cross platform compatible, you should always use forward slashes
+            in all paths in <literal moreinfo="none">wrapper.conf</literal>.
+        </para>
+        <para>
+            At startup, the Wrapper always sets its current working directory
+            to the location of the Wrapper executable.  When the Wrapper
+            launches Java, its working directory will remain the same, making
+            relative path references function reliably.
+        </para>
+        <para>
+            On Linux and UNIX versions, the <literal moreinfo="none">sh</literal>
+            script which ships with the Wrapper will change set the working
+            directory to the location of the script.  This is required
+            so that relative paths will always work correctly even when
+            the script used to launch the Wrapper is referenced using
+            a symbolic reference.
+        </para>
+        <para>
+            The above functionality on all platforms makes it possible to
+            make all file references in the configuration file use
+            relative paths.  Relative paths are preferable in most cases
+            because they make it easy to install an application at any
+            location and then it work correctly without modification.
+            In most cases relative file references will also work on all
+            platforms.
+        </para>
+        <para>
+            The example configuration file fragments below show how some
+            property values which use static platform specific paths can
+            be modified to use relative paths.  Note that there is nothing
+            platform specific in the second version of the properties.
+            This example assumes that the Wrapper binaries and scripts
+            are located in a bin directory under the application's home
+            directory.  The application also contains its own JRE to make
+            installation easier for users.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Fixed path properties:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.java.command=C:/MyApp/jre/bin/java
+wrapper.java.classpath.1=C:/MyApp/lib/wrapper.jar
+wrapper.java.library.path.1=C:/MyApp/lib
+wrapper.logfile=C:/MyApp/logs/wrapper.log]]></screen>
+        </informalexample>
+        <informalexample>
+            <simpara><emphasis>Relative path properties:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.java.command=../jre/bin/java
+wrapper.java.classpath.1=../lib/wrapper.jar
+wrapper.java.library.path.1=../lib
+wrapper.logfile=../logs/wrapper.log]]></screen>
+        </informalexample>
+    </section>
+</chapter>

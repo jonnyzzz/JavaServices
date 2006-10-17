@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="props-envvars">
+    <title>Environment Variables</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>Working with Environment Variables</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="#expansion">Environment Variable Expansion</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#definition">Environment Variable Definition</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#default-definitions">Default Environment Variable Definitions</ulink>
+            </listitem>
+        </itemizedlist>
+        <section id="expansion">
+            <title>Environment Variable Expansion</title>
+            <para>
+                The Wrapper supports environment variable expansion at run time
+                within the values of any property.  To maintain the platform
+                independent nature of the <literal moreinfo="none">wrapper.conf</literal>
+                file, the windows syntax is used for all platforms.
+            </para>
+            <para>
+                When the Wrapper is run as a service, environment variables will
+                be loaded from the system registry rather than from the
+                environment.  This was necessary because Windows loads the
+                environment variables which are available to services when the
+                machine is booted.  Any changes to the system environment variables
+                in the registry (set directly or through the system control panel)
+                are not made available to the services until the machine is once
+                again rebooted.  By loading the environment variables from the
+                registry, the reboot can be avoided while providing the same
+                functionality.
+            </para>
+            <informalexample>
+                <simpara><emphasis>Example referencing the <literal moreinfo="none">JAVA_HOME</literal> environment variable:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[wrapper.java.command=%JAVA_HOME%/bin/java]]></screen>
+            </informalexample>
+            <para>
+                This will expand at runtime to a fully qualified path on any
+                system which defines the <literal moreinfo="none">JAVA_HOME</literal>
+                environment variable.
+            </para>
+            <informalexample>
+                <simpara><emphasis>Windows:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[wrapper.java.command=C:\Sun\jdk1.3/bin/java]]></screen>
+            </informalexample>
+            <informalexample>
+                <simpara><emphasis>UNIX:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[wrapper.java.command=/opt/IBMJava2-131/bin/java]]></screen>
+            </informalexample>
+            <para>
+                If a referenced environment variable is not defined, then it will
+                be left unchanged in the property value.
+            </para>
+        </section>
+        <section id="definition">
+            <title>Environment Variable Definition</title>
+            <para>
+                The Wrapper supports the ability to define environment variables
+                from within the <literal moreinfo="none">wrapper.conf</literal> file
+                or from the command line.  Once defined, the environment variable
+                can be referenced like any other environment variable.  This includes
+                use in variable expansion as described above.
+            </para>
+            <para>
+                Environment variables are defined by using special property names which
+                begin with <literal moreinfo="none">"set."</literal> or
+                <literal moreinfo="none">"set.default."</literal> followed by the name
+                of the environment variable.  The value of the property will be the value
+                of the new environment variable.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[set.EXTERN_APP=C:/ExternAppHome]]></screen>
+            </informalexample>
+            <para>
+                If the <literal moreinfo="none">"set.default."</literal> syntax is used,
+                the environment variable will only be set if it does not yet exist.
+                This can be useful for defining a series of default environment variable
+                values.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[set.default.EXTERN_APP=C:/ExternAppHome]]></screen>
+            </informalexample>
+            <para>
+                The ability to define environment variables make it possible to easily
+                modify values that may be used throughout a configuration file.  The
+                example below shows how an environment variable can be used to specify
+                the location of an external application.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[set.EXTERN_APP=C:/ExternAppHome
+
+wrapper.java.classpath.1=../lib/wrapper.jar
+wrapper.java.classpath.2=%EXTERN_APP%/lib/jar1.jar
+wrapper.java.classpath.3=%EXTERN_APP%/lib/jar2.jar
+wrapper.java.classpath.4=%EXTERN_APP%/lib/ext/jar3.jar
+wrapper.java.classpath.5=%EXTERN_APP%/lib/ext/jar4.jar]]></screen>
+            </informalexample>
+            <para>
+                The use of environment variables definitions can be very powerful if you
+                understand how and when their values are set.  Environment variables which
+                were set before the Wrapper is launched can of course be used as usual.
+                If the same variable name is specified in the configuration file then
+                the value in the configuration file will override the existing value.
+            </para>
+            <para>
+                Environment variables defined from the command line work a little
+                differently.  These values will override any values from either the system
+                or those set in the configuration file.  This makes it possible to define
+                default environment variables within the <literal moreinfo="none">wrapper.conf</literal>
+                file and then override that value from the command line.
+            </para>
+            <informalexample>
+                <simpara><emphasis>Windows:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[Wrapper.exe -c ..\conf\wrapper.conf "set.EXTERN_APP=C:\Program Files\ExternAppHome"]]></screen>
+            </informalexample>
+            <informalexample>
+                <simpara><emphasis>Unix:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[wrapper ../conf/wrapper.conf set.EXTERN_APP=/usr/lib/externapphome]]></screen>
+            </informalexample>
+            <note>
+                <para>
+                    Notice that like all properties set from the command line, properties
+                    which include spaces can be defined by including the entire property name,
+                    value pair in quotes.
+                </para>
+            </note>
+        </section>
+        <section id="default-definitions">
+            <title>Default Environment Variable Definitions</title>
+            <para>
+                On startup, the Wrapper sets the following environment variables into its own
+                environment.   These variables can be used within the wrapper.conf file or by
+                accessing the environment of the JVM or any of its child processes.
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        The <literal moreinfo="none">WRAPPER_FILE_SEPARATOR</literal> variable is
+                        set to '\' on Windows and '/' on UNIX platforms.  The variable can be used
+                        to set platform independent values for additional environment variables or
+                        properties.
+                    </para>
+                    <para>
+                        In general it is safe to always use '/' as a file separator for paths used
+                        within Java.  Java is designed to work correctly on all platforms when '/'
+                        is used.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        The <literal moreinfo="none">WRAPPER_PATH_SEPARATOR</literal> variable is
+                        set to ';' on Windows and ':' on UNIX platforms.  The variable can be
+                        used to build up platform independent paths.
+                    </para>
+                    <informalexample>
+                        <simpara><emphasis>Example:</emphasis></simpara>
+                        <screen format="linespecific"><![CDATA[set.PATH=..%WRAPPER_FILE_SEPARATOR%lib%WRAPPER_PATH_SEPARATOR%%PATH%]]></screen>
+                    </informalexample>
+                    <para>
+                        Which resolves to the following:
+                    </para>
+                    <informalexample>
+                        <simpara><emphasis>Windows:</emphasis></simpara>
+                        <screen format="linespecific"><![CDATA[set.PATH=..\lib;%PATH%]]></screen>
+                    </informalexample>
+                    <informalexample>
+                        <simpara><emphasis>UNIX:</emphasis></simpara>
+                        <screen format="linespecific"><![CDATA[set.PATH=../lib:%PATH%]]></screen>
+                    </informalexample>
+                </listitem>
+                <listitem>
+                    <para>
+                        The <literal moreinfo="none">WRAPPER_OS</literal> variable is set to the
+                        name of the OS for which the currently running copy of Wrapper was built.
+                    </para>
+                    <informalexample>
+                        <simpara><emphasis>Example:</emphasis></simpara>
+                        <screen format="linespecific"><![CDATA[wrapper.java.library.path.1=../lib
+wrapper.java.library.path.2=../lib/native/%WRAPPER_OS%-%WRAPPER_ARCH%-%WRAPPER_BITS%]]></screen>
+                    </informalexample>
+                    <para>
+                        Which resolves to the following:
+                    </para>
+                    <informalexample>
+                        <simpara><emphasis>Windows:</emphasis></simpara>
+                        <screen format="linespecific"><![CDATA[wrapper.java.library.path.1=../lib
+wrapper.java.library.path.2=../lib/native/windows-x86-32]]></screen>
+                    </informalexample>
+                    <informalexample>
+                        <simpara><emphasis>Linux:</emphasis></simpara>
+                        <screen format="linespecific"><![CDATA[wrapper.java.library.path.1=../lib
+wrapper.java.library.path.2=../lib/native/linux-x86-32]]></screen>
+                    </informalexample>
+                    <informalexample>
+                        <simpara><emphasis>Solaris:</emphasis></simpara>
+                        <screen format="linespecific"><![CDATA[wrapper.java.library.path.1=../lib
+wrapper.java.library.path.2=../lib/native/solaris-sparc-32]]></screen>
+                    </informalexample>
+                </listitem>
+                <listitem>
+                    <para>
+                        The <literal moreinfo="none">WRAPPER_ARCH</literal> variable is set to the
+                        name of the architecture for which the currently running copy of Wrapper
+                        was built.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        The <literal moreinfo="none">WRAPPER_BITS</literal> variable is set to the
+                        32 or 64 bit depth for which the currently running copy of Wrapper was
+                        built.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </section>
+    </section>
+</chapter>

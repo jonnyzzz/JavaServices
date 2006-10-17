@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="integrate">
+    <title>Integration Methods</title>
+    <section>
+        <title>Methods of Integrating with the Java Service Wrapper</title>
+        <para>
+            There are currently three ways which an application can integrate with
+            the Java Service Wrapper.  Two of which will work out of the box
+            without any additional coding.  The first step is to decide which of
+            these three methods is best for your application.  After a brief
+            overview of each of the three options, we will go into detail how
+            to integrate an application using each.
+        </para>
+        <section id="method1">
+            <title>Method 1</title>
+            <para>
+                The first method is to use the
+                <literal moreinfo="none">WrapperSimpleApp</literal> helper class to
+                launch the application.  This is by far the simplest way to integrate
+                with the Wrapper, and where possible, it is highly recommended.  There
+                are some things to be aware of when using this method however.  When
+                the Wrapper shuts down the JVM, there is no direct call to an
+                application requesting that it shutdown cleanly.  Rather, the Wrapper
+                will exit the JVM by calling <literal moreinfo="none">System.exit()</literal>
+                from within the JVM.  If the application has registered its own shutdown
+                hook, it will be invoked, giving the application a chance to shutdown
+                cleanly.  If on the other hand, a shutdown hook is not registered, then
+                the application will suddenly exit.   Both cases, with and without a
+                shutdown hook, provide the exact same behavior as if the application
+                was running without the Wrapper and a user pressed CTRL-C in the console.
+            </para>
+            <para>
+                Detailed overview and instructions, using
+                <ulink url="http://www.jboss.org">JBoss</ulink> as an example.
+                (<ulink url="integrate-simple-win.html">Win32</ulink>
+                or <ulink url="integrate-simple-nix.html">Linux / UNIX</ulink>).
+            </para>
+        </section>
+        <section id="method2">
+            <title>Method 2</title>
+            <para>
+                The second method is to use the
+                <literal moreinfo="none">WrapperStartStopApp</literal> helper class.
+                This method provides a way to integrate with applications like Tomcat,
+                which are started using one class and then stopped using another
+                class.  Typically, this kind of application will open a server socket
+                on startup whose job is to wait for a connection which triggers a
+                shutdown.  The shutdown, or "stop", class when launched then triggers
+                the shutdown by connecting to application.   The Wrapper works with
+                this kind of application by starting up the application, as in the
+                first method, using the "start" class and then calling the main method
+                of the "stop" class when it is time for the application to be shutdown.
+            </para>
+            <para>
+                Detailed overview and instructions, using
+                <ulink url="http://tomcat.apache.org/">Tomcat</ulink> as an
+                example.  (<ulink url="integrate-start-stop-win.html">Win32</ulink>
+                or <ulink url="integrate-start-stop-nix.html">Linux / UNIX</ulink>).
+            </para>
+        </section>
+        <section id="method3">
+            <title>Method 3</title>
+            <para>
+                The third and final method, while providing the most flexibility and
+                access to all of the Wrapper's features, is also the only one which
+                requires some coding to complete the integration.  This method
+                involves creating a class which implements the
+                <literal moreinfo="none">WrapperListener</literal> interface.
+                An instance of the user class is then instantiated and registered with
+                the <literal moreinfo="none">WrapperManager</literal>.
+            </para>
+            <para>
+                While this method provides features that are not available with
+                either of the first two methods, it does add some complexity.
+                If the additional features are not required, implementing a
+                shutdown hook to enable the use of <ulink url="#method1">Method 1</ulink>,
+                or implementing a shutdown class should be considered as options.
+                The main method of a shutdown class can be as simple as just calling a
+                shutdown method in the application.
+            </para>
+            <para>
+                This is the only method which allows user code to receive and respond
+                directly to system control events as well as the startup and shutdown
+                process.   In most cases this added control is not necessary however,
+                as both the
+                <literal moreinfo="none"><ulink url="#method1">WrapperSimpleApp</ulink></literal>
+                and
+                <literal moreinfo="none"><ulink url="#method2">WrapperStartStopApp</ulink></literal>
+                helper classes take care of this for you by starting up and shutting
+                down the application at the appropriate times.
+            </para>
+            <para>
+                Detailed overview and instructions
+                (<ulink url="integrate-listener.html">Platform Independent</ulink>).
+            </para>
+        </section>
+        <note>
+            <para>
+                The Wrapper can be used with 1.2.x versions however some functions are disabled
+                due to this version of Java's lack of support for shutdown hooks.  Shutdown
+                hooks were implemented with the 1.3.0 release of Java.
+            </para>
+            <para>
+                Integration <ulink url="#method1">method #1</ulink> can be used, but the
+                application will not be shutdown cleanly.  This method normally relies
+                on an application's own shutdown hook to handle any work that needs to
+                be done before the JVM shuts down.  To guarantee a clean shutdown of the
+                application, <ulink url="#method2">Methods #2</ulink> or
+                <ulink url="#method3">#3</ulink>, which both directly allow code to be
+                executed on shutdown must be used.
+            </para>
+        </note>
+    </section>
+</chapter>

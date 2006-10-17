@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="euc-jp"?>
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+$Id$
+******************************************************************** -->
+
+<article id="index">
+    <title>FAQ</title>
+    <section>
+        <title>
+            Questions
+        </title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="#1">My application can not access network drives when run as an NT service.</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#2">My application is an executable jar. What do I do.</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#3">The JVM exits unexpectedly when requesting a thread dump.</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#4">My application uses the Windows COMM API, but it doesn't work with the Wrapper.</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#5">My is throwing security exceptions when I run with the Wrapper.</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#6">Does the Wrapper handle the problem of JVMs exiting when a user logs out under Windows?</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#7">How can I change the priority at which my application runs on the system?</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#8">How can I change the user directory of my application?</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="#9">I have several Wrapper's and JVMs running, how can I tell which is which in the Windows Task Manager.</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>
+            Answers
+        </title>
+        <section id="1">
+            <title>
+                My application can not access network drives when run as an NT service.
+            </title>
+            <para>
+                By default, NT Services run as the SYSTEM user.  The problem is that the
+                SYSTEM user does not have access to network resources.   If your
+                application is working fine when run as a service.  Then the first thing
+                to try is running your service as the user you were logged in as when
+                running it as a console application.
+            </para>
+            <para>
+                To do this, first uninstall your application if it is currently installed
+                as an NT service.  Then edit the wrapper.conf file, setting the
+                <ulink url="prop-ntservice-account.html">wrapper.ntservice.account</ulink> and
+                <ulink url="prop-ntservice-password.html">wrapper.ntservice.password</ulink>
+                properties.  Next reinstall and start your service.
+            </para>
+            <para>
+                The service will now be running under the same environment as it was being
+                run as a console application, so everything should now be working correctly.
+                This issue is explained a bit in the following document,
+                <ulink url="http://support.microsoft.com/default.aspx?scid=kb;EN-US;149984">Accessing Network Drives Created in Services Under Windows NT</ulink>
+            </para>
+            <para>
+                Depending on your security requirements, you may wish to create and
+                configure a new user especially for the service.
+            </para>
+            <para>
+                I have found that on some systems, drives mapped to a drive letter are not
+                always accessable on system restart until a real user actually logs on and
+                connects to the drive.  The workaround is to use the UNC syntax to reference
+                the drive directly rather than using the mapped drive letter.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[//host/share/path]]></screen>
+            </informalexample>
+        </section>
+        <section id="2">
+            <title>
+                My application is an executable jar. What do I do.
+            </title>
+            <para>
+                The Wrapper does not directly support executable jar files.  But
+                this is easily worked around.
+            </para>
+            <para>
+                The first step is to find out what class is actually being executed
+                when the JVM runs the jar.  To do this, you will need to expand the
+                contents of the jar into a temp directory.  A jar file is nothing
+                more than a fancy ZIP file, so you can either use your favorite ZIP
+                utility or the jar utility that comes with Java.
+            </para>
+            <para>
+                Inside the jar file, you will find the file,
+                <literal moreinfo="none">meta-inf/Manifest.mf</literal>.  Opening
+                this into an editor, reveals something like the following:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[Manifest-Version: 1.0
+Main-Class: com.myco.myapp.Main]]></screen>
+            </informalexample>
+            <para>
+                Passing the <literal moreinfo="none">-jar</literal> parameter and a
+                jar file to Java simply causes it to read the above main class name
+                and use it to run the application.  So to get the Wrapper to launch
+                the same application, all that needs to be done is to include the
+                executable jar on the wrapper classpath along with any other jars,
+                and then follow the normal <ulink url="integrate.html">integration</ulink>
+                steps using the <literal moreinfo="none">Main-Class</literal> as the
+                application's main class.
+            </para>
+        </section>
+        <section id="3">
+            <title>
+                The JVM exits unexpectedly when requesting a thread dump.
+            </title>
+            <para>
+                When I request a thread dump by hitting CTRL-BREAK, CTRL-\, or via the
+                API, I get the following message in the log and the JVM is restarted:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[wrapper  | JVM exited unexpectedly.]]></screen>
+            </informalexample>
+            <para>
+                Please make sure that you have not specified the -Xrs flag when launching
+                the JVM.  This flag is useful in some environments when using Java without
+                the Wrapper.  But it compromises the Wrapper's ability to respond to the
+                the various system signals.
+            </para>
+            <para>
+                To tell the Wrapper and thus it's JVM to ignore system signals, use the
+                <ulink url="prop-ignore-signals.html">wrapper.ignore_signals</ulink>
+                instead.  Make sure you have read the docs first.
+            </para>
+        </section>
+        <section id="4">
+            <title>
+                My application uses the Windows COMM API, but it doesn't work with the Wrapper.
+            </title>
+            <para>
+                Some users have reported problems when attempting to get their COMM
+                applications working with the Wrapper.  The application will work fine
+                standalone, but when run under the Wrapper errors like the following
+                are thrown:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[Caught java.lang.NullPointerException: name can't be null while loading driver com.sun.comm.Win32Driver]]></screen>
+            </informalexample>
+            <para>
+                The COMM API requires two files to be available:  The win32com.dll file
+                on the library path, and a javax.comm.properties file located in a lib
+                subdirectory of the directory returned by System.getProperty("java.home").
+            </para>
+            <para>
+                Problems are caused if your wrapper.conf has configured that you use a
+                different JVM than is specified by your JAVA_HOME environment variable.
+                You can make sure you are using the correct JVM by specifying the following
+                in your wrapper.conf file
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[wrapper.java.command=%JAVA_HOME%/bin/java]]></screen>
+            </informalexample>
+        </section>
+        <section id="5">
+            <title>
+                My is throwing security exceptions when I run with the Wrapper.
+            </title>
+            <para>
+                The only difference between the way your application is running
+                under the Wrapper and the way is was running before being integrated
+                is that before your application's main method was being called directly
+                by the JVM on startup.  Now, assuming that you are using the
+                WrapperSimpleApp or WrapperStartStopApp helper classes, the JVM first
+                calls that class's main method, then after the Wrapper has initialized,
+                it calls your application's main method.
+            </para>
+            <para>
+                This can cause some problems when a security manager is in use.  The
+                reason is that the Java security manager searches up the call stack to
+                make sure that every class and method is authorized to call the protected
+                code before granting access.  If the Wrapper's classes exist in your call
+                stack and they are not given privileges then you will get a security
+                exception.
+            </para>
+            <para>
+                Try giving wrapper.jar permissions by adding the following to your policy
+                file:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[// Give Wrapper classes full permissions
+grant codeBase "file:../lib/wrapper.jar" {
+    permission java.security.AllPermission;
+};]]></screen>
+            </informalexample>
+            <para>
+                This usually fixes this kind of problem.
+            </para>
+        </section>
+        <section id="6">
+            <title>
+                Does the Wrapper handle the problem of JVMs exiting when a user logs out under Windows?
+            </title>
+            <para>
+                Some Java Service application have a problem with the Java process exiting whenever a
+                user logs out under Windows.  Several people have asked about whether or not the
+                Wrapper handles this.  The answer is that the Wrapper has handled this correctly since
+                its first release.
+            </para>
+            <para>
+                The Java side of the Wrapper requires a native library to make this work.  (Wrapper.DLL
+                on Windows and libwrapper.so on Unix systems.)  The native library is responsible for
+                trapping all system signals sent to the JVM process and handling them correctly.
+                A Java Application may handle these signals by implementing the
+                <literal moreinfo="none">controlEvent</literal> method in the
+                <literal moreinfo="none">WrapperListener</literal> interface.
+            </para>
+            <para>
+                If you are experiencing any problems with your JVM being restarted by the Wrapper when
+                a user logs out, please verify that the library is being loaded.  If it is not, then a
+                warning message will be displayed in the JVM output during the WrapperManager
+                initialization.
+            </para>
+            <para>
+                You can find examples of what happens the user logs out while Wrapper is being run as
+                a console application and as a service in the <ulink url="example.html">Examples</ulink>
+                section of the documentation.
+            </para>
+        </section>
+        <section id="7">
+            <title>How can I change the priority at which my application runs on the system?</title>
+            <para>
+                On Windows systems, the priority can be set by setting the
+                wrapper.ntservice.process_priority property in the wrapper.conf file.  Please the
+                configuration overview for more details.
+            </para>
+            <para>
+                On Unix systems, the suggested method for setting the priority is to use the
+                <literal moreinfo="none">nice</literal> command in your shell scripts when launching
+                the Wrapper. The example scripts provided with the Wrapper distribution show how to do
+                this. See <literal moreinfo="none">man nice</literal> or
+                <literal moreinfo="none">info nice</literal> for details about how to use
+                <literal moreinfo="none">nice</literal>.
+            </para>
+        </section>
+        <section id="8">
+            <title>How can I change the user directory of my application?</title>
+            <para>
+                By default, the Wrapper sets the JVM's user directory to the location of the
+                Wrapper.exe file on Windows, or wrapper shell script on UNIX systems.  This
+                is done to make it possible to reliably make use of relative paths within
+                your application.  Normally this would not be possible because the user dir
+                would depend on where the JVM was launched from.
+            </para>
+            <para>
+                Relative paths make it extremely easy to install an application as it can
+                usually be unzipped into any directory and run reliably.
+            </para>
+            <para>
+                There are some cases where it is necessary to set the user.dir to a location
+                other than the default.  This is done by setting the
+                <ulink url="prop-working-dir.html">wrapper.working.dir</ulink> property.
+            </para>
+            <para>
+                Important - Make sure that you have read over the documentation for the
+                working dir property before playing with it.  You will safe yourself some
+                headaches.
+            </para>
+        </section>
+        <section id="9">
+            <title>I have several Wrapper's and JVMs running, how can I tell which is which in the Windows Task Manager.</title>
+            <para>
+                When running several copies of the Wrapper under Windows, it is not easy to tell
+                which application is which in the Task Manager because they all show up as
+                wrapper.exe and java.exe.
+            </para>
+            <para>
+                If is not possible for the Wrpaper to implement a feature to change this name
+                because Windows does not allow that for security reasons.
+            </para>
+            <para>
+                The workaround is a bit of a hack.  But it works great.  Rename the wrapper.exe
+                file to wrapper-myapp.exe.   Then modify the batch files so they use this new
+                wrapper-myapp.exe.   For the java process, you have to do the same thing.  Go
+                into the %JAVA_HOME%/bin directory and simply copy java.exe to java-myapp.exe.
+                Then modify the wrapper.conf file so that new java-myapp.exe is used.
+            </para>
+            <para>
+                Now when you look at your Windows Task Manager, it will be easy to tell which
+                exe is which.
+            </para>
+            <para>
+                Note, you can also set the <ulink url="prop-pidfile.html">wrapper.pidfile</ulink>
+                and <ulink url="prop-java-pidfile.html">wrapper.java.pidfile</ulink> properties in
+                the wrapper.conf file.  These will create files containing the pids.  These pids
+                can then be compared with those shown in the Task Manager.  Note that you need to
+                configure the Task Manager to display process pids.
+            </para>
+        </section>
+    </section>
+</article>

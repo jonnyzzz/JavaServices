@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="donate-thanks">
+    <title>Thank you!</title>
+    <section>
+        <title>Thank You For Your Support</title>
+        <para>
+            The Java Service Wrapper team greatly appreciates your support for
+            the project.
+        </para>
+    </section>
+</chapter>

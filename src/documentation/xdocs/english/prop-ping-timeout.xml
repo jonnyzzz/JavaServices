@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-ping-timeout">
+    <title>wrapper.ping.timeout Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.ping.timeout</title>
+        <para>
+            Number of seconds to allow between the wrapper pinging the JVM and
+            the response.  0 means never time out.  Defaults to 30 seconds.
+        </para>
+        <para>
+            The ping timeout must be at least 5 seconds longer than the value
+            of <ulink url="prop-ping-interval.html">wrapper.ping.interval</ulink>.
+            The Wrapper will modify the value at run time if necessary to avoid
+            problems.
+        </para>
+        <para>
+            In normal operation, the Wrapper pings the JVM once every 5 seconds
+            to make sure that its process has not frozen up.  The ping timeout
+            is the amount of time to allow for a response from the JVM before
+            the Wrapper assumes that it is hung and restarts it.
+        </para>
+        <para>
+            This same property also controls the amount of time that the JVM will
+            allow to pass without being pinged by the Wrapper.  If the Wrapper
+            does not ping the JVM for longer than the specified timeout, it will
+            exit allowing the Wrapper to resynch by launching a new JVM.   This
+            also makes sure that the JVM will exit if the Wrapper process is
+            terminated abnormally.  (By killing the Wrapper process in the Windows
+            Task Manager, or using kill -9 on Unix systems.)
+        </para>
+        <para>
+            With the addition of the
+            <ulink url="prop-cpu-timeout.html">wrapper.cpu.timeout</ulink>
+            property, there is now almost no reason why you should ever need
+            to change this property.  The only reasons why you should be
+            getting ping timeouts are if the system is under heavy load or
+            if the JVM is really hung.  The CPU timeout should now detect
+            any problems in with CPU.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.ping.timeout=30]]></screen>
+        </informalexample>
+        <warning>
+            <simpara>
+                While the ability is there.  Be aware that
+                setting this property to 0 or some large value will mean
+                that the Wrapper's ability to detect a JVM hang as it is
+                running will be disabled.
+            </simpara>
+            <simpara>
+                Also note that if the Wrapper process is killed abnormally or
+                God forbid crashes, then the JVM will never attempt to resynch
+                with the Wrapper.  If the Wrapper was running as an NT service
+                at the time, it may be necessary to then reboot the machine to
+                stop Java process.  With normal ping timeouts, the JVM would
+                exit on its own after a few seconds.
+            </simpara>
+        </warning>
+    </section>
+</chapter>

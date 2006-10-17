@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-cpu-timeout">
+    <title>wrapper.cpu.timeout Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.cpu.timeout</title>
+        <para>
+            Number of seconds without CPU before the JVM will issue a warning
+            and extend timeouts.  In order for this property to have any effect,
+            it must have a value less than the other timeouts
+            (<ulink url="prop-startup-timeout.html">wrapper.startup.timeout</ulink>,
+            <ulink url="prop-ping-timeout.html">wrapper.ping.timeout</ulink>, and
+            <ulink url="prop-shutdown-timeout.html">wrapper.shutdown.timeout</ulink>).
+            0 means never extend time outs.  Defaults to 10 seconds.
+        </para>
+        <para>
+            If the Wrapper detects that it was denied CPU for an extended
+            period of time, you may see messages like the following from
+            the Wrapper, the JVM, or both.
+        </para>
+        <informalexample>
+            <screen format="linespecific"><![CDATA[INFO   | wrapper  | Wrapper Process has not received any CPU time for 27 seconds.
+                    Extending timeouts.
+INFO   | jvm 1    | JVM Process has not received any CPU time for 27 seconds.
+                    Extending timeouts.]]></screen>
+        </informalexample>
+        <para>
+            These messages are warnings that, in this case, both the Wrapper
+            and its JVM process were denied access to the CPU for a period of
+            27 seconds.  Depending on the current state of the wrapper, either
+            the startup, ping, or shutdown timeout is extended to avoid a false
+            timeout caused by the lack of processing power.
+        </para>
+        <para>
+            There are two cases where either the Wrapper or its controlled
+            JVM could be denied access to the CPU for an extended period
+            of time.  Either could lead to the Wrapper thinking that the JVM
+            was hung, causing it to be restarted or shutdown because
+            one or more of the timeouts expired.
+        </para>
+        <para>
+            The first way that this can happen is when the Wrapper is competing
+            for system resources with another process which has the habit of
+            consuming 100% of the CPU for extended periods of time without
+            yielding to other processes.  Most modern operating systems are
+            fairly good about managing multitasking.  But there are still cases
+            where it can fail.   One example of this on NT, is when the machine
+            is very low on memory leading to lots of disk swapping.  If the
+            total memory is large enough the entire system can freeze up for
+            as long as a minute before any applications are again given any CPU
+            cycles.
+        </para>
+        <para>
+            In most cases, when you are having problems with CPU timeouts, you
+            should really look at finding a way to resolve the problem of the
+            Wrapper not getting any CPU rather than extending any timeouts.
+            If the application being run by the Wrapper is not getting any
+            CPU then it will not be able to reliably service requests from
+            clients.
+        </para>
+        <para>
+            A second way is if the system is suspended and then resumed.  This
+            is a common thing to do on notebooks.  When the system comes back
+            up, the system will appear to have suddenly been set ahead by
+            potentially several hours.
+        </para>
+        <para>
+            By default, warning messages will be displayed after 10 seconds,
+            which is actually quite a while.  The CPU timeout being triggered
+            will not have any adverse effects on an application other than the
+            message being displayed in the logs.   To avoid this message being
+            logged the timeout can be set to a larger value, or disabled
+            completely.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.cpu.timeout=10]]></screen>
+        </informalexample>
+        <warning>
+            <simpara>
+                While the ability is there.  Be aware that
+                setting this property to 0 or a value larger than another
+                timeout could cause that timeout to be falsely triggered
+                in cases of heavy load.  This can lead to the JVM being
+                restarted when a restart is not really necessary.
+            </simpara>
+        </warning>
+    </section>
+</chapter>

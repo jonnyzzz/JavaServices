@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="donate">
+    <title>Make a Donation</title> 
+    <section>
+        <title>Supporting Java Service Wrapper Development (Please Read)</title>
+        <para>
+            The Wrapper team has been working very hard to provide a well documented
+            product which is stable, as well as easy to configure and use.  We always
+            make every effort to respond to all support and request queries in a
+            timely manner and work with users to help resolve their problems quickly.
+            All of this requires a surprising amount of time.
+        </para>
+        <para>
+            The Wrapper, being an open source application, is free and will always
+            remain free.  However, if you enjoy using the Wrapper or find that it is
+            improving the value of a product or service that your organization
+            provides, we urge you to consider donating to the Wrapper project.
+        </para>
+        <para>
+            In many cases the Java Service Wrapper is being used to support and
+            improve the reliability of mission critical applications or being
+            shipped with commercial products.  If your usage of the Wrapper falls
+            into this category we urge you to remember that your customers will most
+            likely never even know that the Wrapper is a part of the product or
+            service that they are purchasing from you, and can therefor not
+            realistically be expected to provide any support back to this project.
+            It would be appreciated if you could include a slight charge for the
+            use of the Wrapper when billing your customers and then donate the
+            money back to this project.  Please contact us if there is anything
+            you need to help make this possible either with your customers or
+            within your own organization.
+        </para>
+        <para>
+            The preferred way to donate the Java Service Wrapper project is by using
+            our Pay Pal account.  However if you prefer another payment method please
+            contact <ulink url="mailto:leif@tanukisoftware.com?Subject=Wrapper Donations">Leif</ulink>
+            directly via email.
+        </para>
+        <para>
+            We suggest a donation of $50 per machine, but you may donate any amount
+            you feel to be appropriate by filling in the amount below.
+        </para>
+        <para>
+            By default we will respect your privacy.  But if you elect to do so we
+            will show our appreciation by listing your name and donation on our
+            <ulink url="sponsors.html">sponsor's page</ulink>.
+        </para>
+        <paypal-form/>
+    </section>
+</chapter>

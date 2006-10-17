@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+
+<cocoon version="2.0">
+    
+    <!-- ===================== General Components =========================== -->
+    
+    <!-- The default parser used in the Apache Cocoon 2 system is
+    org.apache.cocoon.components.parser.JaxpParser.
+    Apache Cocoon 2 system requires a JAXP 1.1 parser.
+    If you have problems because your servlet environment uses its own
+    parser not conforming to JAXP 1.1 try using the alternative
+    XercesParser instead of the JaxpParser. To activate the XercesParser
+    move the line below starting with <parser ...> out of this comment block.
+    You also than have to add a system property to your JVM
+    (probably on the startup of your servlet engine like this:
+    
+    -Dorg.apache.cocoon.components.parser.Parser=org.apache.cocoon.components.parser.XercesParser
+    
+<parser class="org.apache.cocoon.components.parser.XercesParser"/>
+    -->
+    
+    <!-- Storing:
+    freememory: Indicates how much memory should be left free in the
+    JVM for normal operation.
+    heapsize: Indicates how big the heap size can grow to before the
+    cleanup thread kicks in.
+    objectlifetime: Indicates how long (seconds) a cache object will
+    be hold in memory. The object will be thrown out,
+    when the time is over.
+    interval: Indicates the interval of the cleanup thread in seconds.
+    maxobjects: Indicates how many objects will be hold in the cache.
+    When the number of maxobjects has been reached. The
+    last object in the cache will be thrown out.
+    usethread: Indicates whether we use a cleanup thread or not.
+    threadpriority: Indicates the priority of the cleanup thread.
+    (1 is the lowest priority and 10 is the highest).
+    -->
+    <store class="org.apache.cocoon.components.store.MRUMemoryStore">
+        <parameter name="maxobjects" value="100"/>
+        <parameter name="threadpriority" value="5"/>
+        <parameter name="filesystem" value="true"/>
+    </store>
+
+    <!-- Store Janitor:
+    freememory = How much free memory shall be available in the jvm
+    heapsize = Indicates the limit of the jvm memory consumption
+    cleanupthreadinterval = How often shall the cleanup thread check memory
+    threadpriority = Indicates the thread priority of the cleanup thread
+
+    Be carefull with the heapsize and freememory paramters. Wrong values can
+    cause high cpu usage.
+    Example configuration:
+    Jvm settings: 
+    -Xms100000000 -Xmx200000000
+    store-janitor settings:
+<parameter name="freememory" value="50000000"/>
+<parameter name="heapsize" value="150000000"/>
+    
+    Heapsize must be higher then the -Xms parameter and freememory
+    between those both.    
+    -->
+    <store-janitor class="org.apache.cocoon.components.store.StoreJanitorImpl" logger="root.store">
+        <parameter name="freememory" value="1000000"/>
+        <parameter name="heapsize" value="60000000"/>
+        <parameter name="cleanupthreadinterval" value="10"/>
+        <parameter name="threadpriority" value="5"/>
+    </store-janitor>
+
+    <xslt-processor class="org.apache.cocoon.components.xslt.XSLTProcessorImpl" logger="root.xslt">
+        <parameter name="use-store" value="true"/>
+    </xslt-processor>
+
+    <!-- The url factory adds special url protocols to the system, they
+    are then available inside Cocoon, e.g. as a source argument
+    for one of the sitemap components -->
+    <url-factory>
+        <protocol name="resource" class="org.apache.cocoon.components.url.ResourceURLFactory"/>
+        <protocol name="context"  class="org.apache.cocoon.components.url.ContextURLFactory"/>
+    </url-factory>
+
+    <!-- The source handler adds special url protocols to the system, they
+    are then available inside Cocoon, e.g. as a source argument
+    for one of the sitemap components. -->
+    <source-handler>
+    </source-handler>
+
+    <program-generator>
+        <parameter name="auto-reload" value="true"/>
+        <parameter name="root-package" value="org.apache.cocoon.www"/>
+        <parameter name="preload" value="true"/>
+    </program-generator>
+
+    <programming-languages>
+        <java-language name="java">
+            <!-- compiler parameter specifies which class to use to compile Java.
+            Possible variants are Javac and Jikes compilers.
+            Javac requires javac.jar (included with Cocoon distribution).
+            Jikes requires IBM jikes compiler to be present in the PATH  -->
+            <parameter name="compiler" 
+                       value="org.apache.cocoon.components.language.programming.java.Javac"/>
+            <!-- Specifies which formatter to use to format source code.
+            This parameter is optional. -->
+            <!-- A singleton-like implementation of a ClassLoader -->
+            <parameter name="class-loader" 
+                       value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
+        </java-language>
+    </programming-languages>
+    
+    <classloader class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
+
+    <markup-languages>
+        <!-- Defines Sitemap Core logicsheet for the Java language -->
+        <sitemap-language name="sitemap">
+            <parameter name="prefix" value="map"/>
+            <parameter name="uri" value="http://apache.org/cocoon/sitemap/1.0"/>
+            
+            <target-language name="java">
+                <parameter name="core-logicsheet" 
+                           value="resource://org/apache/cocoon/components/language/markup/sitemap/java/sitemap.xsl"/>
+            </target-language>
+        </sitemap-language>
+    </markup-languages>
+
+    <!-- A StreamPipeline either
+    collects a Reader and let it produce a character stream
+    or connects a EventPipeline with a
+    Serializer and let them produce the character stream.
+    -->
+    <stream-pipeline class="org.apache.cocoon.components.pipeline.CachingStreamPipeline"
+                     pool-max="32" pool-min="16" pool-grow="4"/>
+
+    <!-- Caching of stream pipeline:
+    freememory: Indicates how much memory should be left free in the
+    JVM for normal operation.
+    heapsize: Indicates how big the heap size can grow to before the
+    cleanup thread kicks in.
+    objectlifetime: Indicates how long (seconds) a cache object will
+    be hold in memory. The object will be thrown out,
+    when the time is over.
+    interval: Indicates the interval of the cleanup thread in seconds.
+    maxobjects: Indicates how many objects will be hold in the cache.
+    When the number of maxobjects has been reached. The
+    last object in the cache will be thrown out.
+    usethread: Indicates whether we use a cleanup thread or not.
+    threadpriority: Indicates the priority of the cleanup thread.
+    (1 is the lowest priority and 10 is the highest).
+    -->
+    <stream-cache class="org.apache.cocoon.components.store.MRUMemoryStore" logger="root.store">
+        <parameter name="maxobjects" value="100"/>
+        <parameter name="threadpriority" value="5"/>
+        <parameter name="filesystem" value="true"/>
+    </stream-cache>
+
+    <!-- An EventPipeline connects the generator and the various transformers
+    and produces a character stream. Alternatives to CachingEventPipeline
+    are: NonCachingEventPipeline.
+<event-pipeline class="org.apache.cocoon.components.pipeline.NonCachingEventPipeline"/>
+    -->
+    <event-pipeline class="org.apache.cocoon.components.pipeline.CachingEventPipeline"
+                    pool-max="32" pool-min="16" pool-grow="4"/>
+
+    <!-- Caching of event pipeline:
+    freememory: Indicates how much memory should be left free in the
+    JVM for normal operation.
+    heapsize: Indicates how big the heap size can grow to before the
+    cleanup thread kicks in.
+    objectlifetime: Indicates how long (seconds) a cache object will
+    be hold in memory. The object will be thrown out,
+    when the time is over.
+    interval: Indicates the interval of the cleanup thread in seconds.
+    maxobjects: Indicates how many objects will be hold in the cache.
+    When the number of maxobjects has been reached. The
+    last object in the cache will be thrown out.
+    usethread: Indicates whether we use a cleanup thread or not.
+    threadpriority: Indicates the priority of the cleanup thread.
+    (1 is the lowest priority and 10 is the highest).
+    -->
+    <event-cache class="org.apache.cocoon.components.store.MRUMemoryStore" logger="root.store">
+        <parameter name="maxobjects" value="100"/>
+        <parameter name="threadpriority" value="5"/>
+        <parameter name="filesystem" value="true"/>
+    </event-cache>
+
+    <!-- The SAXConnector connects the various pipeline components.
+    LoggingSAXConnector logs SAX events between pipeline components
+    into a cocoon's log file.
+    Uncomment one of the following lines for using the SAXConnector.
+<sax-connector class="org.apache.cocoon.components.saxconnector.LoggingSAXConnector"/>
+    -->
+
+    <!-- ======================== The sitemap  ============================== -->
+
+    <!-- The reloading of the sitemap:
+    The check-reload attribute determines if the sitemap is reloaded on change. If
+    it is set to "no", the sitemap is generated once at startup, if it is set to "yes",
+    the sitemap is regenerated if it changes.
+    The reload-method specifies the method for the regeneration:
+    asynchron: If the sitemap changes, the sitemap is regenerated at the next request in
+    the background and the incoming request is served with the old sitemap.
+    All subsequent requests are served with the old sitemap until the
+    regeneration in the background has finished.
+    synchron: If the sitemap changes, the sitemap is regenerated at the next request.
+    When the regeneration is finished the request (and all subsequent ones)
+    is served with the new sitemap.
+
+    For development environment set the reload-method to synchron and the
+    check-reload to yes, for production environment it is advisable to set
+    the reload-method to asynchron and for more safety the check-reload to no.
+    -->
+    <sitemap file="sitemap.xmap" reload-method="synchron" check-reload="yes"/>
+
+</cocoon>

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="props-cascading">
+    <title>Cascading Configuration Files</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>Cascading Configuration Files</title>
+        <para>
+            Starting with version 3.0.0, it is possible to specify include
+            files within a configuration file.  This is useful where there is a need
+            to override default values without modifying the main
+            configuration file.
+        </para>
+        <para>
+            Include files are specified by placing a line in the configuration file
+            with the following syntax:
+        </para>
+        <informalexample>
+            <screen format="linespecific"><![CDATA[#include ../conf/wrapper2.conf]]></screen>
+        </informalexample>
+        <para>
+            If the specified file can not be located for any reason then it
+            is ignored.  This makes it easy to specify a series of optional
+            include files which users may or may not create.
+        </para>
+        <para>
+            The location of the include definition in a file is important.
+            Any properties defined before the include can be overridden where
+            as properties set after the include file will override any
+            settings in the include files.  This rule applies to the contents
+            of include files as well.
+        </para>
+        <para>
+            If relative paths to the include files are specified, be aware
+            that all paths must be relative to the location of the Wrapper
+            working directory.  By default, this is the location of the Wrapper.exe
+            on Windows, or the script used to launch the Wrapper on UNIX.  The
+            working directory can be changed using the
+            <ulink url="prop-working-dir.html">wrapper.working.dir</ulink> property.
+        </para>
+        <para>
+            Include files can be nested up to 10 levels deep.
+        </para>
+    </section>
+</chapter>

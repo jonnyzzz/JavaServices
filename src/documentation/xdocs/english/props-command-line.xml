@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="props-command-line">
+    <title>Command Line Configuration</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>Command Line Configuration</title>
+        <para>
+            The Wrapper allows any configuration property to be set from
+            the command line.  This can be useful in situations where
+            configuration values can only be set at runtime.  An example
+            can be seen by looking at the <literal moreinfo="none">sh</literal>
+            script shipped with the Wrapper.
+        </para>
+        <para>
+            Configuration properties can be set on the command line by
+            including them after the configuration file when launching
+            Wrapper.  Each property consists of a property name, followed
+            by <literal moreinfo="none">'='</literal>, followed by the
+            property's value.  The syntax is exactly the same as in the
+            <literal moreinfo="none">wrapper.conf</literal> file.
+        </para>
+        <para>
+            In this example, an application is being launched using a
+            specific java application and debug logging enabled.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Windows NT/2000:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[Wrapper.exe -c ..\conf\wrapper.conf wrapper.java.command=java wrapper.debug=true]]></screen>
+        </informalexample>
+        <informalexample>
+            <simpara><emphasis>Linux / Solaris:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[./wrapper ../conf/wrapper.conf wrapper.java.command=java wrapper.debug=true]]></screen>
+        </informalexample>
+        <para>
+            Properties set on the command line will override any property
+            value set in the configuration file or any cascaded include files.
+        </para>
+        <note>
+            <para>
+                Properties specified on the command line can not contain
+                unquoted spaces.  If you need to include spaces in the value
+                of the property, simply include the entire name-value pair
+                in quotes:
+            </para>
+            <informalexample>
+                <simpara><emphasis>Example:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[Wrapper.exe -c ..\conf\wrapper.conf "wrapper.java.command=C:\My App\jre\bin\java.exe"]]></screen>
+            </informalexample>
+        </note>
+        <para>
+            Properties can be specified from the command line when using any of the
+            Wrapper commands, including the <literal moreinfo="none">-i</literal>
+            command, used to install the application as a service on Windows systems.
+        </para>
+        <para>
+            When running the wrapper and its JVM as a console application using the
+            <literal moreinfo="none">-c</literal> command, the specified properties will
+            override any values in the wrapper.conf file and be used when launching the
+            JVM.
+        </para>
+        <para>
+            Likewise, the <literal moreinfo="none">-i</literal> command, which is used
+            to install the wrapper as a service, will remember the specified properties
+            and then use them later when the service is actually started.  Likewise,
+            the specified properties will be used to override values in the wrapper.conf
+            file while installing the service.
+        </para>
+        <para>
+            All other commands will make use of command line properties to override values
+            in the configuration file.  These will effect logging or the way the service is
+            referenced.  They will have no effect on the running JVM.  It is not possible
+            for example to pass a property value to a service while starting it with the
+            <literal moreinfo="none">-t</literal> command for example.
+        </para>
+    </section>
+</chapter>

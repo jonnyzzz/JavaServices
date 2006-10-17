@@ -1,0 +1,20 @@
+Whenever the contents of messages.mc are changed, it is necessary to manually
+recreate the binary resource files.
+
+Setup the VC build environment by running:
+"c:\Program Files\Microsoft Visual Studio\VC98\Bin\VCVARS32.BAT"
+
+Generate the message files:
+mc messages.mc
+
+This will create several files:
+messages.h
+messages.rc
+MSG00001.bin
+
+The messages.h file is used by logger.c to reference the messages.
+messages.rc is not used.
+The 3rd file, MSG00001.bin is used in the type "11" resource with Id 1.
+That id and type is required and specifies the Message tables
+used by the Event Log.  The resource is set up to dynamically load the bin
+file, so everything should update on its own.

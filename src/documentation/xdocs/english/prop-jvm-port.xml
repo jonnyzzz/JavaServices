@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-jvm-port">
+    <title>wrapper.jvm.port Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.jvm.port</title>
+        <para>
+            The Wrapper uses a socket to communicate with its Java component running
+            inside a JVM.  This property allows the configuration of the port that the
+            JVM will use to connect back to the Wrapper.  Most applications need not
+            specify this property as the default value of 0, which instructs the JVM
+            to choose its own port, will be sufficient.
+        </para>
+        <para>
+            When a port of 0 is specified, the Wrapper will search for the first
+            available port starting with port number 31000.  If a valid port can
+            not be found within the first 1000 attempts then the Wrapper will fail
+            with an error.  To my knowledge, this has never been seen.  This means
+            that auto allocated ports will fall in the range 31000-31999.
+        </para>
+        <para>
+            If a specific port should be used, then any port in the range 1-65535 may
+            be specified.  Note that on UNIX systems port numbers below 1024 will most
+            likely require root access to be set.  If the specified port is in use then
+            the Wrapper will display a warning to the log and, as with the default
+            case, will search for the first available port.
+        </para>
+        <para>
+            When the Wrapper launches a JVM instance, it will open a server
+            socket listening on the port defined by the
+            <ulink url="prop-port.html">wrapper.port</ulink>
+            property.  The JVM will then connect back to Wrapper, internally
+            using the port specified by this property.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.jvm.port=1778]]></screen>
+        </informalexample>
+        <section>
+            <title>Controlling the port range.</title>
+            <para>
+                In some cases, it is necessary to control the range of ports that
+                the Wrapper will use when choosing a port.  The defaults were chosen
+                to make it very unlikely that they would conflict with any well known
+                ports.  If the default 31000-31999 range is causing problems, it can
+                be changed using the <literal moreinfo="none">wrapper.jvm.port.min</literal>
+                and <literal moreinfo="none">wrapper.jvm.port.max</literal> properties.
+                If these are used, be sure to provide a large enough range to make it
+                unlikely that all of the ports will be in use when the Wrapper attempts
+                to start.
+            </para>
+            <informalexample>
+                <simpara><emphasis>Example:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[wrapper.jvm.port.min=31000
+wrapper.jvm.port.max=31999]]></screen>
+            </informalexample>
+        </section>
+    </section>
+</chapter>

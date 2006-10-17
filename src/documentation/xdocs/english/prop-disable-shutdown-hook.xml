@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-disable-shutdown-hook">
+    <title>wrapper.disable_shutdown_hook Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.disable_shutdown_hook</title>
+        <para>
+            Disable detection of calls to
+            <literal moreinfo="none">System.exit()</literal>.  If disabled,
+            calls to <literal moreinfo="none">System.exit()</literal> will be
+            treated as if the JVM had crashed and the Service will be
+            restarted.
+        </para>
+        <para>
+            The Wrapper registers a shutdown hook by default.  If an
+            application ever calls
+            <literal moreinfo="none">System.exit()</literal> rather than
+            calling <literal moreinfo="none">WrapperManager.stop()</literal>
+            to stop the service, then the Wrapper will correctly shutdown the
+            server.
+        </para>
+        <para>
+            You may wish to disable the shutdown hook for a number of reasons.
+        </para>
+        <para>
+            If an application contains code which sometimes fails and calls
+            System.exit(), this property can be useful to make sure that the
+            server comes back up.   In most cases however, the
+            <ulink url="prop-on-exit-n.html">wrapper.on_exit.&lt;n&gt;</ulink>
+            is better suited for resolving this problem.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.disable_shutdown_hook=TRUE]]></screen>
+        </informalexample>
+        <warning>
+            <simpara>
+                When the Wrapper detects that
+                <literal moreinfo="none">System.exit()</literal> has been
+                called, it will call the
+                <literal moreinfo="none">stop()</literal> method on your
+                application if it implements the WrapperListener method.
+                You must be careful that your application does not call
+                <literal moreinfo="none">System.exit()</literal> again or call
+                the <literal moreinfo="none">dispose()</literal> method on an
+                AWT frame or window.  Either one of these actions will result
+                in a deadlock when called from within a ShutdownHook thread
+                due to the way Java has implemented these methods.  If
+                either of these cases can not be avoided, then the shutdown
+                hook should be disabled.
+            </simpara>
+            <simpara>
+                If you have control over whether the
+                <literal moreinfo="none">System.exit()</literal> or
+                <literal moreinfo="none">dispose()</literal> methods are
+                called, you may be able to make use of the
+                <literal moreinfo="none">WrapperManager.hasShutdownHookBeenTriggered()</literal>
+                method to avoid the deadlock issue.
+            </simpara>
+            <simpara>
+                For more information on the AWT deadlock bug, see the full
+                description of
+                <ulink url="http://developer.java.sun.com/developer/bugParade/bugs/4712342.html">bug #4712342</ulink>
+                on Sun's site.
+            </simpara>
+        </warning>
+    </section>
+</chapter>

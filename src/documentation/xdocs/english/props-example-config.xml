@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="props-example-config"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xml:base="context://xdocs/english">
+    <title>Example Configuration File</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>Example Configuration File</title>
+        <para>
+            The Wrapper configuration file contains the following information.  This
+            example assumes that the <literal moreinfo="none">'@app.name@'</literal>,
+            <literal moreinfo="none">'@app.long.name@'</literal>, and
+            <literal moreinfo="none">'@app.description@'</literal> tokens
+            will be replaced with the name of your application on installation.
+            Good values are <literal moreinfo="none">'testwrapper'</literal>
+            for <literal moreinfo="none">'@app.name@'</literal> and
+            <literal moreinfo="none">'Test Wrapper Application'</literal> for
+            <literal moreinfo="none">'@app.long.name@'</literal>.  A template
+            <literal moreinfo="none">wrapper.conf</literal> file can be found
+            in the <literal moreinfo="none">src/conf</literal> directory,
+            named <literal moreinfo="none">wrapper.conf.in</literal>.
+        </para>
+        <programlisting format="linespecific"><xi:include href="wrapper.conf.in" parse="text"/></programlisting>
+        <para>
+            Additional properties, not found in the default configuration file
+            above, are described below in the
+            <ulink url="props-advanced.html">Advanced Configuration Properties</ulink>
+            section.
+        </para>
+    </section>
+</chapter>

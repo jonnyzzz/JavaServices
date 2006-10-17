@@ -1,0 +1,150 @@
+To do list for the Wrapper.
+
+Add a property to disable to the force exit on double CTRL-C feature.
+It is easy to forget and accidently force shut an application to shutdown
+hard when it shouldn't be possible.
+
+The new feature to hide the java console when running as a service which is
+interactive does not work correctly when rebooting the machine because the
+console does not actually show itself until the user logs on.  By that time
+the wrapper has given up on hiding the console.  This leads to the console
+remaining open.  We probably need to add a check in the main event loop
+so we atempt to hide it until we have succeeded.
+
+Documentation:
+
+Add instructions on how to integrate with an application which is normally run
+from a bundled jar file.  Ie the main class is specified using the
+Main-Class: {classname} entry in the META-INF/MANIFEST.MF file.
+
+Add instructions/feature to show users how to get the Wrapper to launch an
+application when the machine reboots.  There for Windows, but not yet for
+UNIX.
+Debian: update-rc.d
+RedHat: chkconfig
+?: insserv
+
+For Debian, do the following:
+ln -s /home/leif/dev/sourceforge/wrapper/bin/testwrapper /etc/init.d/testwrapper
+update-rc.d testwrapper defaults 21
+(See http://www.debian.org/doc/debian-policy/ch-opersys.html#s-sysvinit)
+
+Add a section giving examples of how to integrate the Wrapper with a project
+at build time.  Show how to make platform specific builds etc using Ant.
+
+Add tests to make sure that wrapper.java.additional.n and wrapper.app.parameter.n
+properties do not contain unquoted spaces.
+
+Add tests to make sure that wrapper.java.library.path.n and
+wrapper.java.classpath.n properties do not contain quotes.
+
+When a thread dump is requested on a failed exit, the dump shows
+up after the message about the JVM being killed.  Rework that part
+of the state engine so that the dump is logged right after it is
+requested.  THEN wait for a few seconds before killing the JVM.  I
+have a feeling that truncated dumps are still possible the way it
+is now.
+
+
+Look into what happens when a second instance of the WrapperManager
+class is loaded to due to a different class loader.  See if there
+is a way to catch this and display a useful error.
+
+
+Notes on how to detect a user login:
+http://www.experts-exchange.com/Programming/Programming_Languages/MFC/Q_20714147.html
+NetUserGetInfo returns information about a user once the username is known.
+GetUserName returns the current user name.  But this won't help from a service as we want
+  the logged in user.
+OpenInputDesktop??
+
+Iterate of all Threads calling GetThreadDesktop on each one.  Then compare
+it with the value returned by OpenInputDesktop.
+http://www.experts-exchange.com/Programming/Programming_Platforms/Win_Prog/Q_20592976.html
+
+The DisplayLocalLogons function in loggedon.c of the source from the psloggedon
+utility gets us to the point of having a list of all logged on local users.
+On XP, there can be more than one so we need to go a little farther.
+Also need to check the license of the code to see if we can borrow it.
+http://www.sysinternals.com/ntw2k/freeware/psloggedon.shtml
+
+How a service can access a user desktop.
+http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dllproc/base/interacting_with_the_user_in_a_service.asp
+
+How to impersonate a logged on user.
+http://www.experts-exchange.com/Programming/Programming_Platforms/Win_Prog/Q_20084175.html
+
+http://www.pcmag.com/article2/0,4149,1160841,00.asp
+
+If the interactive flag is off, the correct desktop returns access denied 0x5.
+The other desktops return 0x57, invalid parameter.
+
+If the interactive flag is on, the correct desktop can be opened and the other
+desktops return 0x57.
+
+
+The "ant clean doc" target fails when run under JDK 1.4.2  May need to
+upgrade Cocoon?
+
+What happens if I set the O_NDELAY bit on the pipe from the JVM?
+
+Great overview at http://www.microsoft.com/msj/archive/S402.aspx
+Look at GetProcessMemoryInfo as a way to get memory info about the Wrapper and Java processes.
+Look at GetProcessTimes to get CPU usage of a process.
+
+The prstat command shows all of the info needed to get memory and cpu usage.  if necessary look at its source.
+The times function can be used to get the CPU usage for the current process or its children.
+The getrusage function gives us lots of info, but also just for the current process or its children.
+
+See getrusage, getrlimit, setrlimit, GETRLIMIT
+
+See: http://www.die.net/doc/linux/man/man7/posixoptions.7.html
+pthread_getcpuclockid(),
+clock_getres(),
+clock_gettime(),
+clock_settime(),
+timer_create().
+
+clock_getcpuclockid();
+http://www.qnx.com/developers/docs/momentics621_docs/neutrino/lib_ref/c/clock_getcpuclockid.html
+
+mail libraries:
+http://libsmtp.berlios.de/
+
+Register with:
+www.versiontracker.com
+
+Look at ChangeServiceConfig2.  It appears to make it possible to set the error recovery
+actions for an NT service.
+
+
+Get full path name on UNIX.
+http://cvs.sourceforge.net/viewcvs.py/djvu/DjVu2_2b/libdjvu++/GOS.cpp?rev=1.3
+// cwd([dirname])
+// -- changes directory to dirname (when specified).
+//    returns the full path name of the current directory. 
+GString 
+GOS::cwd(const char *dirname)
+{
+#ifdef UNIX
+  if (dirname && chdir(dirname)==-1)
+    THROW(errmsg());
+  GString temp;
+  char *string_buffer = temp.getbuf(MAXPATHLEN+1);
+  char *result = getcwd(string_buffer,MAXPATHLEN);
+  if (!result)
+    THROW(errmsg());
+  return result;
+#endif
+#ifdef WIN32
+  char drv[2];
+  if (dirname && _chdir(dirname)==-1)
+    THROW(errmsg());
+  drv[0]='.'; drv[1]=0;
+  GString temp;
+  char *string_buffer = temp.getbuf(MAXPATHLEN+1);
+  char *result = getcwd(string_buffer,MAXPATHLEN);
+  GetFullPathName(drv, MAXPATHLEN, string_buffer, &result);
+  return string_buffer;
+#endif 
+}

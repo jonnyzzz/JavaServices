@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-working-dir">
+    <title>wrapper.working.dir Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.working.dir</title>
+        <warning>
+            <para>
+                You will save yourself a lot of time by reading this page BEFORE
+                playing with this property.
+            </para>
+        </warning>
+        <section>
+            <title>Overview of How The Working Dir Works</title>
+            <para>
+                When the Wrapper is launched it is very careful about making sure that the
+                working directory is in a known and constant state.  This helps to
+                guarantee that there will be no path related problems caused
+                by a user launching the Wrapper from an unexpected location.
+            </para>
+            <para>
+                On Windows platforms, the <literal moreinfo="none">Wrapper.exe</literal>
+                sets its own working directory immediately on startup to the directory
+                where it is located.  This is especially critical on Windows platforms.
+                When running in a console the working directory is normally set to the
+                current directory when an application is launched.  This means that it
+                would be different if the Wrapper was launched as
+                <literal moreinfo="none">bin\Wrapper.exe</literal> versus
+                <literal moreinfo="none">.\Wrapper.exe</literal> versus
+                <literal moreinfo="none">..\bin\Wrapper.exe</literal>.   In addition,
+                when running as an NT service, the working directory is normally set
+                to the Windows <literal moreinfo="none">system32</literal> directory.
+                By always forcing the working directory to the location of the
+                <literal moreinfo="none">Wrapper.exe</literal>, integrators can reliably
+                make use of relative path references.
+            </para>
+            <para>
+                Things work a little differently on UNIX platforms.  There, the wrapper
+                binary does not set its own working directory by default.  This is left
+                up to the script used to launch the Wrapper.  While this has traditionally
+                given more flexibility to UNIX users, the same issues as exist on the
+                Windows platform also exist on UNIX.  By using the scripts shipped with
+                the Wrapper distribution all path issue should be taken care of.
+            </para>
+            <para>
+                There are times however where having the working directory set to the
+                location of the Wrapper binary makes it impossible to run some
+                applications cleanly.   An example is an application which expects the
+                working directory to be at the root of the file system.   The only way
+                to run such an application under the Wrapper would be to place the
+                Wrapper binary and scripts in the root directory.  Not something that
+                most system administrators would want to do.
+            </para>
+            <para>
+                To allow such cases, the <literal moreinfo="none">wrapper.working.dir</literal>
+                property was added.  It is very important to understand exactly how
+                this property works to avoid problems.
+            </para>
+            <para>
+                The <literal moreinfo="none">wrapper.working.dir</literal> property
+                can be specified either in the <literal moreinfo="none">wrapper.conf</literal>
+                or as a parameter to the Wrapper binary.  However, the property does not take
+                effect until AFTER all of the Wrapper's properties have been completely
+                parsed.   This means that the location of the
+                <literal moreinfo="none">wrapper.conf</literal> file and any include
+                files referenced therein must still be referenced using locations
+                relative to the Wrapper binary.   This is necessary to make sure
+                that the configuration file can be loaded reliably.
+            </para>
+            <para>
+                Any and all paths defined in OTHER properties specified either from the
+                command line or within the <literal moreinfo="none">wrapper.conf</literal>
+                file will then be relative to the location specified by the
+                <literal moreinfo="none">wrapper.working.dir</literal> property.
+            </para>
+            <para>
+                Confused yet?  An example or two is in order.
+            </para>
+        </section>
+        <section>
+            <title>Example Without Setting wrapper.working.dir</title>
+            <para>
+                Windows will be used as an example, but the issues are all the same
+                for UNIX platforms.
+            </para>
+            <informalexample>
+                <simpara><emphasis>Sample Directory Structure:</emphasis></simpara>
+                <screen format="linespecific"><![CDATA[C:\myapp\
+    bin\
+        Wrapper.exe
+    conf\
+        wrapper.conf
+        include.conf
+    lib\
+        Wrapper.dll
+        wrapper.jar
+        myapp.jar
+    logs\
+        wrapper.log]]></screen>
+            </informalexample>
+            <para>
+                Without using the <literal moreinfo="none">wrapper.working.dir</literal>
+                property, the working directory will be located in the
+                <literal moreinfo="none">C:\myapp\bin</literal> directory.
+                The Wrapper would be launched using the following command.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[Wrapper.exe -c ../conf/wrapper.conf]]></screen>
+            </informalexample>
+            <para>
+                Paths in the <literal moreinfo="none">wrapper.conf</literal> file
+                would be configured as follows. (Note this is not a complete
+                configuration file.):
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[#include ../conf/include.conf
+wrapper.java.classpath.1=../lib/wrapper.jar
+wrapper.java.classpath.2=../lib/myapp.jar
+wrapper.java.library.path.1=../lib
+wrapper.pidfile=./wrapper.pid
+wrapper.java.pidfile=./java.pid
+wrapper.logfile=../logs/wrapper.log]]></screen>
+            </informalexample>
+            <para>
+                Note that all paths are relative to the location of the
+                <literal moreinfo="none">Wrapper.exe</literal> file.
+            </para>
+        </section>
+        <section>
+            <title>Example Setting wrapper.working.dir</title>
+            <para>
+                The same directory structure used in the previous example will
+                be reused.
+            </para>
+            <para>
+                This time the <literal moreinfo="none">wrapper.working.dir</literal>
+                property will be set the parent of the
+                <literal moreinfo="none">bin</literal> directory in which
+                the <literal moreinfo="none">Wrapper.exe</literal> file is
+                located.  This is a location that is commonly referred to as the
+                application HOME.  <literal moreinfo="none">C:\myapp</literal>
+                in this case.
+            </para>
+            <para>
+                The <literal moreinfo="none">wrapper.working.dir</literal>
+                property can be specified either on the command line
+                used to launch the Wrapper, or within the wrapper.conf file.
+                In either case, the specified directory can be absolute or
+                relative.  In the case of a relative directory, the directory
+                will be relative to the location of the Wrapper binary.
+            </para>
+            <para>
+                This example will specify the new working directory within
+                the <literal moreinfo="none">wrapper.conf</literal> file.
+                So in this case, the command used to launch the Wrapper is
+                unchanged, meaning that the batch files and scripts that
+                ship with the Wrapper can be used without any modification.
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[Wrapper.exe -c ../conf/wrapper.conf]]></screen>
+            </informalexample>
+            <para>
+                When the Wrapper is launched, it immediately sets its working
+                directory to the location of the Wrapper binary.  Then loads
+                the <literal moreinfo="none">wrapper.conf</literal> file and
+                any include files using that working directory.   Once the
+                configuration is loaded, the working directory will be changed
+                to the new location specified by the
+                <literal moreinfo="none">wrapper.working.dir</literal> property.
+                All future paths including the launching of the JVM will be
+                done using this new working directory.
+            </para>
+            <para>
+                For this example the <literal moreinfo="none">wrapper.conf</literal>
+                fragment used above will be modified as follows:
+            </para>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[wrapper.working.dir=../
+#include ../conf/include.conf
+wrapper.java.classpath.1=lib/wrapper.jar
+wrapper.java.classpath.2=lib/myapp.jar
+wrapper.java.library.path.1=lib
+wrapper.pidfile=bin/wrapper.pid
+wrapper.java.pidfile=bin/java.pid
+wrapper.logfile=logs/wrapper.log]]></screen>
+            </informalexample>
+            <para>
+                Notice that the location of the include file and
+                <literal moreinfo="none">wrapper.working.dir</literal> property
+                are both relative to the Wrapper binary location, but all other
+                paths are now relative to the new working directory.
+            </para>
+            <para>
+                The location of the <literal moreinfo="none">wrapper.working.dir</literal>
+                property in the <literal moreinfo="none">wrapper.conf</literal> file
+                is not important as it is not applied until after the entire
+                configuration file has been parsed.
+            </para>
+            <para>
+                As with any problems configuring the Wrapper.  The first thing that
+                should be done when problems are encountered is to enable the
+                <ulink url="prop-debug.html">wrapper.debug</ulink> property and
+                rerun the application.  Make sure that the application can be run
+                as a console application before attempting to run it as a service
+                or daemon process.
+            </para>
+        </section>
+        <note>
+            <para>
+                <ulink url="prop-restart-reload-configuration.html">Reloading</ulink>
+                the Wrapper configuration will have no effect on the value of this property.
+                Changes will not take effect until the Wrapper has been restarted.
+            </para>
+        </note>
+    </section>
+</chapter>

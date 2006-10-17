@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-java-pidfile">
+    <title>wrapper.java.pidfile Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.java.pidfile</title>
+        <para>
+            File to write the Java process ID to.  If set, a file containing the
+            pid of the Java process will be written to the specified location
+            when the process is launched.  The file will be deleted when the
+            Java process has terminated.  Each time the Wrapper restarts the JVM,
+            the file will be updated with the current java pid.  This property is
+            not set by default.  Common values are
+            <literal moreinfo="none">./myapp.java.pid</literal> or
+            <literal moreinfo="none">/var/run/myapp.java.pid</literal>.
+        </para>
+        <note>
+            <para>
+                If a second instance of the Wrapper is started, the pid file of the
+                first instance will be overwritten by the second instance.  This is
+                done to avoid problems with stale pid files preventing the wrapper
+                and its jvm from starting.
+            </para>
+        </note>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.java.pidfile=./myapp.java.pid]]></screen>
+        </informalexample>
+    </section>
+</chapter>

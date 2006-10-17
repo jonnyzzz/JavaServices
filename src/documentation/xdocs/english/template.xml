@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="template">
+    <title>@@TEMPLATE_TITLE@@</title>
+    @@TEMPLATE_BODY@@
+</chapter>

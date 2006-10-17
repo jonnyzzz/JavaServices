@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-startup-timeout">
+    <title>wrapper.startup.timeout Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.startup.timeout</title>
+        <para>
+            Number of seconds to allow between the time that the Wrapper
+            launches the JVM process and the time that the JVM side of the
+            Wrapper responds that the application has started.  0 means never
+            time out.  Defaults to 30 seconds.
+        </para>
+        <para>
+            If you are experiencing timeout problems as your application is
+            starting up.  The most common cause is a misconfiguration.  Please
+            verify that the <literal moreinfo="none">WrapperManager</literal>
+            is indeed being started.  You should see the following output in
+            the console when you launch the Wrapper.
+        </para>
+        <informalexample>
+            <screen format="linespecific"><![CDATA[wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Wrapper (Version 3.x.x)]]></screen>
+        </informalexample>
+        <para>
+            If you do not see the Wrapper version displayed, then the
+            <literal moreinfo="none">WrapperManager</literal> is not being
+            launched.  Please make sure that you have read over the
+            <ulink url="integrate.html">Integration</ulink>
+            section.  If the configuration looks correct, then try enabling
+            DEBUG level log output to try and narrow in on the problem.
+        </para>
+        <para>
+            If the Wrapper version is being displayed, but the Wrapper is still
+            timing out on startup, then it is most likely being caused by one
+            of two things.  The first is that the start method call is not
+            returning.  This should not be an issue if you are using the
+            <literal moreinfo="none">SimpleWrapperApp</literal> or
+            <literal moreinfo="none">SimpleStartStopApp</literal> classes to
+            launch your application.   If you are implementing the
+            <literal moreinfo="none">WrapperListener</literal> however, please
+            verify that the <literal moreinfo="none">start</literal> method is
+            indeed returning upon completion.  You should be able to see this
+            with <literal moreinfo="none">DEBUG</literal> output enabled.
+        </para>
+        <para>
+            The other possibility is that the startup method is simply taking
+            a while to complete.  In this case, it may be necessary to extend
+            the default startup timeout.  Try setting to to 300 (5 minutes)
+            and see if that makes the problem go away.
+        </para>
+        <para>
+            It is best to choose a value which is long enough to let the
+            application start reliably, but short enough that the Wrapper will
+            react as quickly as possible in the event of an actual JVM hang.
+        </para>
+        <para>
+            If the start procedure sometimes takes a long time.  One
+            alternative to setting a long timeout is to periodically call the 
+            <literal moreinfo="none">WrapperManager.signalStarting(n)</literal>
+            method.  This method gives the application the ability to request
+            more time to startup, while at the same time assuring the Wrapper
+            that the JVM is alive and well.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.startup.timeout=30]]></screen>
+        </informalexample>
+        <warning>
+            <simpara>
+                While the ability is there.  Be aware that
+                setting this property to 0 or some large value will mean
+                that the Wrapper's ability to detect a JVM hang during the
+                startup phase will be disabled.
+            </simpara>
+        </warning>
+    </section>
+</chapter>

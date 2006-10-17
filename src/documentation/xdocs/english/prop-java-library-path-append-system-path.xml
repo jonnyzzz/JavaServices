@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-java-library-path-n">
+    <title>wrapper.java.library.path.append_system_path Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-jvm.html">JVM Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.java.library.path.append_system_path</title>
+        <para>
+            The Java Service Wrapper includes a native library component, and thus
+            requires that the location of that library be specified by passing its
+            location to the JVM using the java.library.path system property.
+        </para>
+        <para>
+            Normally when Java is launched and a library path is not specified, the
+            JVM will default to using the system PATH on Windows and the LD_LIBRARY_PATH
+            on Unix systems to locate any native libraries loaded by the application.
+            This is akin to what happens with the CLASSPATH environment variable when
+            a specific classpath is not specified when launching the JVM.   The use of
+            the CLASSPATH environment variable has fallen out of style because of all
+            the conflict problems which can arise when multiple Java applications are
+            installed on the same machine.  The same issues are all there with the
+            library path as well.  But some applications still make use of the system
+            PATH or LD_LIBRARY_PATH by default.
+        </para>
+        <para>
+            In general, it is advised that you avoid potential problems when your
+            application is deployed by being conservative about which directories
+            will be included in the java library path.   However if there is a need
+            to search the entire PATH, then this property will cause the Wrapper to
+            append the contents of the system PATH or LD_LIBRARY_PATH to the java
+            library path used to launch the JVM.  It is appended rather than
+            prepended so that directories configured using the
+            <ulink url="prop-java-library-path-n.html">wrapper.java.library.path.&lt;n&gt;</ulink>
+            properties will be given priority.  Defaults to false.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.java.library.path.append_system_path=true]]></screen>
+        </informalexample>
+        <note>
+            <simpara>
+                Some native libraries reference other dynamically linked libraries.
+                Java will locate the initial JNI library using the java library path,
+                but the secondary libraries are loaded using the default mechanism
+                for the platform.
+            </simpara>
+            <simpara>
+                On Windows, the system will first look in the current working
+                directory (The location of the wrapper.exe), then it will look in
+                the Windows system32 directory and the Windows directory.  Finally,
+                it will search the entire system PATH.  If both DLLs are located in
+                your application's lib directory, it may be necessary to add its
+                location to your system path as follows.  The PATH is for Windows
+                and the LD_LIBRARY_PATH makes the configuration file cross
+                platform so it works on Unix systems as well.
+            </simpara>
+            <informalexample>
+                <screen format="linespecific"><![CDATA[set.PATH=..%WRAPPER_FILE_SEPARATOR%bin%WRAPPER_PATH_SEPARATOR%%PATH%
+set.LD_LIBRARY_PATH=..%WRAPPER_FILE_SEPARATOR%bin%WRAPPER_PATH_SEPARATOR%%LD_LIBRARY_PATH%]]></screen>
+            </informalexample>
+            <simpara>
+                Not that placing the secondary library on the PATH rather than in the
+                current working directory has a risk that an old version of the library
+                could be encountered first in the Windows system32 directory if it was
+                installed by another application.  This is due to the order in which
+                the system looks for the file.
+            </simpara>
+            <simpara>
+                This problem has been seen when working with SAP's JCO libraries
+                if other SAP applications are also installed on the system.
+            </simpara>
+        </note>
+    </section>
+</chapter>

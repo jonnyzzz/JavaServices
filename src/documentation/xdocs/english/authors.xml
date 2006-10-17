@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="authors">
+    <title>Wrapper Authors</title> 
+
+    <section>
+        <title>Authors</title>
+        <para>
+            The Java Service Wrapper is currently maintained and actively developed by
+            <ulink url="http://sourceforge.net/sendmessage.php?touser=228081">Leif Mortenson</ulink>,
+            who originally created a basic version of the Wrapper exclusively for the Windows
+            platform.
+        </para>
+        <para>
+            <ulink url="http://sourceforge.net/sendmessage.php?touser=9117">Ryan Shaw</ulink>
+            was responsible for originally porting the Wrapper to the Linux, and then Solaris
+            platforms, which was a major task at the time.
+        </para>
+        <para>
+            <ulink url="http://sourceforge.net/sendmessage.php?touser=196697">Johan Sorlin</ulink>
+            contributed much of the current logging system.
+        </para>
+        <para>
+            Many others have also contributed code over the years.  I have tried to mention
+            everyone in the <ulink url="release-notes.html">release notes</ulink>, but many
+            have helped with testing, to patches, to finding and reporting bugs, etc.
+        </para>
+    </section>
+    <section>
+        <title>Releases</title>
+        <para>
+            Several of the platforms that we are able to support and release in binary
+            form would not be possible without the hard work of the following Wrapper
+            users who donate their time every time we do a release to test their
+            platforms and then provide the binary releases.
+        </para>
+        <para>
+            Ashish Gawarikar (AIX, HP-UX 32-bit)
+        </para>
+        <para>
+            Andy Barnett (MAC OSX)
+        </para>
+        <para>
+            Andreas Wendt (DEC OSF1, SGI Irix)
+        </para>
+        <para>
+            Alphonse Bendt (FreeBSD)
+        </para>
+        <para>
+            Venkatesh Sellappa (HP-UX 64-bit)
+        </para>
+    </section>
+</chapter>

@@ -1,0 +1,293 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="sponsors">
+    <title>Java Service Wrapper Supporters</title> 
+    <section>
+        <title>Java Service Wrapper Supporters</title>
+        <para>
+            The following users have generously made contributions to the
+            Java Service Wrapper project.  We thank the donors listed below
+            for their support.
+        </para>
+        <para>
+            You know that you want to be included on this list.  So please
+            visit our easy to use <ulink url="donate.html">donation page</ulink>
+            and show your support.
+        </para>
+        <para>
+            Please send us a note if you wish to have any information on this page
+            modified or removed.
+        </para>
+        <!--
+            Item Number:
+            101: Anonymous
+            102: Named
+            -->
+        <donorlist>
+            <donor>
+                <date>Jun 13, 2006</date>
+                <amount>150.00</amount>
+                <name><ulink url="http://www.cytric.com/">i:FAO Group</ulink></name>
+                <message>i:FAO Group is very happy with the Java Service Wrapper!</message>
+            </donor>
+            <donor>
+                <date>Mar 13, 2006</date>
+                <amount>75.00</amount>
+                <name>Anonymous</name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>Feb 10, 2006</date>
+                <amount>50.00</amount>
+                <name>Gil Adam</name>
+                <message>Excellent quality software. I appreciate your efforts so much! Thank you!</message>
+            </donor>
+            <donor>
+                <date>Feb 2, 2006</date>
+                <amount>100.00</amount>
+                <name>Anonymous</name>
+                <message>This did exactly what we needed it to do and at a very fare cost.</message>
+            </donor>
+            <donor>
+                <date>Dec 21, 2005</date>
+                <amount>100.00</amount>
+                <name>Konstantin</name>
+                <message>I also have had use of the Java Service Wrapper!  Thank you for your great work!</message>
+            </donor>
+            <donor>
+                <date>Oct 28, 2005</date>
+                <amount>250.00</amount>
+                <name>Anonymous</name>
+                <message>Great Product :-)</message>
+            </donor>
+            <donor>
+                <date>Aug 20, 2005</date>
+                <amount>69.00</amount>
+                <name>Anonymous</name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>Aug 12, 2005</date>
+                <amount>50.00</amount>
+                <name><ulink url="http://www.javapipe.com">Java|Pipe</ulink></name>
+                <message>Your wrapper has been awesome!</message>
+            </donor>
+            <donor>
+                <date>Jul 30, 2005</date>
+                <amount>50.00</amount>
+                <name>Anonymous</name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>Jun 10, 2005</date>
+                <amount>50.00</amount>
+                <name>Anonymous</name>
+                <message>I've had great use of the Java Service Wrapper! Thank you for your great work!</message>
+            </donor>
+            <donor>
+                <date>Jun 2, 2005</date>
+                <amount>50.00</amount>
+                <name>Anonymous</name>
+                <message>Great product.</message>
+            </donor>
+            <donor>
+                <date>May 7, 2005</date>
+                <amount>50.00</amount>
+                <name>Olivier Lange</name>
+                <message>Very convenient and easy to use, I feel safe relying on JSwrapper.</message>
+            </donor>
+            <donor>
+                <date>May 6, 2005</date>
+                <amount>50.00</amount>
+                <name>David Amphlett</name>
+                <message>As complicated or simple as you need it to be. Very stable and well documented. Excellent software. Thank you</message>
+            </donor>
+            <donor>
+                <date>Apr 21, 2005</date>
+                <amount>200.00</amount>
+                <name>Peter Makki</name>
+                <message>Great product. Continue the work :o)</message>
+            </donor>
+            <donor>
+                <date>Mar 23, 2005</date>
+                <amount>50.00</amount>
+                <name><ulink url="http://www.javapipe.com">Java|Pipe</ulink></name>
+                <message>Javapipe.com - Finally the solution we've been looking for is RIGHT HERE! - Thanks!</message>
+            </donor>
+            <donor>
+                <date>Mar 17, 2005</date>
+                <amount>50.00</amount>
+                <name>Mauricio Piacentini</name>
+                <message>Works nicely and is well documented. Congratulations!</message>
+            </donor>
+            <donor>
+                <date>Jan 6, 2005</date>
+                <amount>25.00</amount>
+                <name>Anonymous</name>
+                <message>My second donation.  Great solution for deploying Java applications!</message>
+            </donor>
+            <donor>
+                <date>Nov 2, 2004</date>
+                <amount>50.00</amount>
+                <name>Alexsandro Glas</name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>Oct 25, 2004</date>
+                <amount>150.00</amount>
+                <name><ulink url="http://www.eApps.com">eApps Hosting</ulink></name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>Oct 6, 2004</date>
+                <amount>25.00</amount>
+                <name>Sergei Rodionov</name>
+                <message>Thanks for the WRAPPER, a terrific contribution to the Java community.</message>
+            </donor>
+            <donor>
+                <date>Sep 11, 2004</date>
+                <amount>25.00</amount>
+                <name>Cliff Wright</name>
+                <message>Awesome product; awesome documentation; keep up the great work!!</message>
+            </donor>
+            <donor>
+                <date>Sep 2, 2004</date>
+                <amount>150.00</amount>
+                <name><ulink url="http://www.outerthought.org/">Outerthought</ulink></name>
+                <message>Neat little package, which worked out of the box. Good work!</message>
+            </donor>
+            <donor>
+                <date>Aug 26, 2004</date>
+                <amount>50.00</amount>
+                <name><ulink url="http://www.webmastersinc.net/">WebMasters, Inc.</ulink></name>
+                <message>Thank you for providing a professional java service management tool.</message>
+            </donor>
+            <donor>
+                <date>Aug 12, 2004</date>
+                <amount>25.00</amount>
+                <name>Anonymous</name>
+                <message>Thanks so much for a great product.</message>
+            </donor>
+            <donor>
+                <date>Aug 3, 2004</date>
+                <amount>20.00</amount>
+                <name>Anonymous</name>
+                <message>Thanks for providing such useful software!</message>
+            </donor>
+            <donor>
+                <date>Jul 18, 2004</date>
+                <amount>50.00</amount>
+                <name>Edward Hudacko</name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>Jul 12, 2004</date>
+                <amount>250.00</amount>
+                <name>WB Doeksen</name>
+                <message>Great software!  Very well documented and easy to use.  Well done!</message>
+            </donor>
+            <donor>
+                <date>Jun 6, 2004</date>
+                <amount>75.00</amount>
+                <name><ulink url="http://www.tomotherapy.com">TomoTherapy Incorporated</ulink></name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>May 30, 2004</date>
+                <amount>50.00</amount>
+                <name><ulink url="http://www.screen-scraper.com">screen-scraper.com</ulink></name>
+                <message>Incredible work!  Everything else we looked at was unreasonably expensive and didn't have near the feature set.</message>
+            </donor>
+            <donor>
+                <date>May 26, 2004</date>
+                <amount>20.00</amount>
+                <name>Anonymous</name>
+                <message>Thanks for providing such useful software!</message>
+            </donor>
+            <donor>
+                <date>May 13, 2004</date>
+                <amount>10.00</amount>
+                <name>Anonymous</name>
+                <message>Your software it's great, please continue this way...</message>
+            </donor>
+            <donor>
+                <date>Apr 20, 2004</date>
+                <amount>100.00</amount>
+                <name>Gunnar Eketrapp</name>
+                <message>Excellent tool and documentation. The best things in life are free!</message>
+            </donor>
+            <donor>
+                <date>Mar 30, 2004</date>
+                <amount>50.00</amount>
+                <name>Anonymous</name>
+                <message>Great tool.  Saved me from VB programming!</message>
+            </donor>
+            <donor>
+                <date>Mar 25, 2004</date>
+                <amount>25.00</amount>
+                <name>Anonymous</name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>Mar 20, 2004</date>
+                <amount>10.00</amount>
+                <name>Anonymous</name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>Feb 19, 2004</date>
+                <amount>50.00</amount>
+                <name>Daniel Weston</name>
+                <message>Great product, saved me a ton of time, it just worked! Thanks</message>
+            </donor>
+            <donor>
+                <date>Jan 21, 2004</date>
+                <amount>50.00</amount>
+                <name>Brien Williams</name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>Oct 22, 2003</date>
+                <amount>1000.00</amount>
+                <name><ulink url="http://www.sknt.com">Sakonnet Technology</ulink></name>
+                <message>Great customer service and the continual upgrades with the product are excellent.</message>
+            </donor>
+            <donor>
+                <date>Oct 7, 2003</date>
+                <amount>150.00</amount>
+                <name><ulink url="http://www.starlasoft.com">Starlasoft</ulink></name>
+                <message>Excellent work</message>
+            </donor>
+            <donor>
+                <date>Oct 3, 2003</date>
+                <amount>50.00</amount>
+                <name>Cedric Munger</name>
+                <message>Great work, keep this piece of software alive!</message>
+            </donor>
+            <donor>
+                <date>Aug 16, 2003</date>
+                <amount>100.00</amount>
+                <name>Kevin Shih</name>
+                <message>Thanks for all the hard work!</message>
+            </donor>
+            <donor>
+                <date>Jun 18, 2003</date>
+                <amount>250.00</amount>
+                <name><ulink url="http://jp.yamatake.com/">Yamatake Corporation</ulink></name>
+                <message></message>
+            </donor>
+            <donor>
+                <date>May 27, 2003</date>
+                <amount>50.00</amount>
+                <name>Scott Smith</name>
+                <message></message>
+            </donor>
+        </donorlist>
+    </section>
+</chapter>

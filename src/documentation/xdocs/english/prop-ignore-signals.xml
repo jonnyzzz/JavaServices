@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-ignore-signals">
+    <title>wrapper.ignore_signals Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.ignore_signals</title>
+        <para>
+            Controls whether or not the Wrapper should ignore system signals.
+            If this is set to True, the Wrapper will not respond to TERM or INT
+            signals on UNIX or CTRL-C events on Windows.  Defaults to false.
+        </para>
+        <para>
+            On UNIX systems, some backup programs that run as cron jobs will
+            send out system wide TERM signals that can cause the Wrapper to
+            shutdown.  These signals can be ignored by setting this property
+            to true.
+        </para>
+        <para>
+            In most cases, it is not necessary or desirable to manually configure
+            this property.  The sh script that ships with the Wrapper can be
+            configured to stop the wrapper by using an anchor file by simply
+            uncommenting the <literal moreinfo="none">IGNORE_SIGNALS</literal>
+            setting at the top section of the script.  This will cause the
+            script to start and stop the Wrapper with the
+            <ulink url="prop-anchorfile.html">wrapper.anchorfile</ulink>
+            property enabled.  The anchor file makes it possible for the script
+            to cause the Wrapper to shutdown by deleting it.  The normal method
+            is to send the Wrapper a TERM signal.
+        </para>
+        <para>
+            If the script is passed the 'console' command,
+            to run in the current shell, it will still respond to system
+            signals, including CTRL-C.   When the 'start' command is used,
+            the Wrapper will be launched as a daemon process and will ignore
+            all INT and TERM signals.  The Wrapper can then be stopped by
+            executing the sh script with the 'stop' command or by manually
+            deleting the anchor file.
+        </para>
+        <para>
+            On Windows, SHUTDOWN and LOGOFF events are handled normally
+            regardless of the value of this property.  The system would kill
+            the application in any event should it fail to exit in a timely
+            manner.  Note that LOGOFF events are always ignored if the
+            Wrapper is running as an NT service.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.ignore_signals=true]]></screen>
+        </informalexample>
+        <para>
+            If the ignore_signals property is not used in conjunction with
+            the <ulink url="prop-anchorfile.html">wrapper.anchorfile</ulink>
+            property, then the Wrapper will ignore system signals and not
+            have any way to shut it down.  In such cases is it the responsibility
+            of the Java application to provide a mechanism for shutting down
+            the application.  This is done by either calling
+            <literal moreinfo="none">WrapperManager.stop()</literal>
+            or <literal moreinfo="none">System.exit()</literal>.
+        </para>
+        <note>
+            <para>
+                If you are planning on setting this property manually, It is
+                suggested that you wait until your application's ability to
+                reliably shutdown on its own has been fully tested.
+            </para>
+        </note>
+        <warning>
+            <simpara>
+                If this property is set to true then you will not be able to
+                tell the Wrapper to quit externally.  On Windows, CTRL-C will
+                no longer function, and on UNIX systems CTRL-C or regular kill
+                signals will also be ignored.  This means that on UNIX, the
+                scripts provided with the Wrapper will not be able to stop the
+                JVM unless the <literal moreinfo="none">IGNORE_SIGNALS</literal>
+                setting in the script was uncommented before starting the
+                Wrapper.
+            </simpara>
+            <simpara>
+                On UNIX, the process can still be forcibly stopped using a
+                <literal moreinfo="none">kill -9</literal>, but doing so will
+                kill the Wrapper but leave the JVM running.  The JVM will exit
+                on its own after its ping timeout has expired but all console
+                output after the Wrapper was killed will be lost.
+            </simpara>
+            <simpara>
+                On Windows, the Wrapper and its JVM can be forcibly killed from
+                the Task Manager if the Wrapper was run as a console application.
+                If run as a service, the Wrapper can still be stopped normally.
+            </simpara>
+        </warning>
+    </section>
+</chapter>

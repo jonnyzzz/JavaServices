@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-shutdown-timeout">
+    <title>wrapper.shutdown.timeout Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-advanced.html">Advanced Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.shutdown.timeout</title>
+        <para>
+            Number of seconds to allow between the time that the Wrapper asks
+            the JVM to shutdown and the time that the JVM side of the Wrapper
+            responds that it is stopping.  0 means never time out.  Defaults to
+            30 seconds.
+        </para>
+        <para>
+            If you are experiencing timeout problems as your application is
+            shutting down, you may want to consider extending this timeout.
+            This can happen in cases where the shutdown code within the
+            application takes a long time to complete.  As a test, try setting
+            this property to something like 300 (5 minutes) and see if this
+            makes the problem go away.
+        </para>
+        <para>
+            If the application still times out quicker than the 5 minute test
+            timeout, then the problem may be in a later phase of shutdown.
+            Take a look at the
+            <ulink url="prop-jvm-exit-timeout.html">wrapper.jvm_exit.timeout</ulink>
+            property.
+        </para>
+        <para>
+            If the application still times out after waiting the full 5 minutes
+            then you will have to do some debugging of your application to see
+            what is taking so long.  If it is possible to speed up the
+            application's shutdown phase, that would be best.  Otherwise set
+            the timeout to a value that allows the application to shutdown
+            cleanly.
+        </para>
+        <para>
+            It is best to choose a value which is long enough to let the
+            application run reliably, but short enough that the Wrapper will
+            react as quickly as possible in the event of an actual JVM hang.
+        </para>
+        <para>
+            If the shutdown procedure sometimes takes a long time.  One
+            alternative to setting a long timeout is to periodically call the 
+            <literal moreinfo="none">WrapperManager.signalStopping(n)</literal>
+            method.  This method gives the application the ability to request
+            more time to shutdown, while at the same time assuring the Wrapper
+            that the JVM is alive and well.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.shutdown.timeout=30]]></screen>
+        </informalexample>
+        <warning>
+            <simpara>
+                While the ability is there.  Be aware that
+                setting this property to 0 or some large value will mean
+                that the Wrapper's ability to detect a JVM hang during the
+                shutdown phase will be disabled.
+            </simpara>
+        </warning>
+    </section>
+</chapter>

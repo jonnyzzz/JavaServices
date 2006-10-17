@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-java-mainclass">
+    <title>wrapper.java.mainclass Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-jvm.html">JVM Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.java.mainclass</title>
+        <para>
+            Class to execute when the wrapper starts the application.  The
+            value of this property depends on which of the integration methods
+            that were selected.  In most cases this is NOT the main class of
+            your application.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example (WrapperSimpleApp integration method):</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.java.mainclass=org.tanukisoftware.wrapper.WrapperSimpleApp]]></screen>
+        </informalexample>
+    </section>
+</chapter>

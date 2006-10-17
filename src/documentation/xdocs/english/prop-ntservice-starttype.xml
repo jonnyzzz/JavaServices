@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "../dtd/docbook/4.1.2/docbookx.dtd">
+
+<!-- ********************************************************************
+     $Id$
+     ******************************************************************** -->
+
+<chapter id="prop-ntservice-starttype">
+    <title>wrapper.ntservice.starttype Property</title>
+    <section>
+        <title>Configuration Property Overview</title>
+        <itemizedlist>
+            <listitem>
+                <ulink url="properties.html">Configuration Property Overview</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="props-nt.html">Windows NT/2000/XP Configuration Properties</ulink>
+            </listitem>
+            <listitem>
+                <ulink url="properties.html#name">Property List by Name</ulink>
+            </listitem>
+        </itemizedlist>
+    </section>
+    <section>
+        <title>wrapper.ntservice.starttype</title>
+        <para>
+            Mode in which the service is installed.
+            <literal moreinfo="none">AUTO_START</literal> starts the
+            service automatically when the system is rebooted. Or
+            <literal moreinfo="none">DEMAND_START</literal>
+            which requires that the service me started manually.
+        </para>
+        <informalexample>
+            <simpara><emphasis>Example:</emphasis></simpara>
+            <screen format="linespecific"><![CDATA[wrapper.ntservice.starttype=AUTO_START]]></screen>
+        </informalexample>
+        <note>
+            <para>
+                Changes to this property will not take effect until the
+                service is reinstalled.
+            </para>
+        </note>
+    </section>
+</chapter>
