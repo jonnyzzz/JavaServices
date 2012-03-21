@@ -428,21 +428,14 @@
         <exec executable="${msbuild}"
             dir="${src.dir}/c"
             failonerror="true">
-            <arg value="wrapper${bits}_VC8.vcxproj"/>
+            <arg value="wrapper${bits}_VC8.sln"/>
             <arg value="/t:Rebuild"/>
             <arg value="/p:Platform=Win32;Configuration=Release"/>
-        </exec>
-        
-        <!-- Build the JNI DLL -->
-        <echo message="Build Wrapper DLL..."/>
-        <exec executable="${msbuild}"
-            dir="${src.dir}/c"
-            failonerror="true">
-            <arg value="wrapperJNI${bits}_VC8.vcxproj"/>
-            <arg value="/t:Rebuild"/>
-            <arg value="/p:Platform=Win32;Configuration=Release"/>
-        </exec>
-        
+        </exec>        
+
+        <copy file="${src.dir}/c/Release/wrapper32_VC8.exe" tofile="${bin.dir}/wrapper.exe" overwrite="true" preservelastmodified="true"/>
+        <copy file="${src.dir}/c/Release/decoderJNI_VC8.dll" tofile="${lib.dir}/wrapper.dll" overwrite="true" preservelastmodified="true"/>
+
         <!--
         <copy file="${bin.dir}/${wrapper.bin.name}" tofile="${bin.dir}/${wrapper.bin.long.name}" overwrite="true" preservelastmodified="true"/>
         <copy file="${lib.dir}/${wrapper.lib.name}" tofile="${lib.dir}/${wrapper.lib.long.name}" overwrite="true" preservelastmodified="true"/>
