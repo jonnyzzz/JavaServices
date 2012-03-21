@@ -410,13 +410,9 @@
         <echo message="  msbuild = ${msbuild}"/>
         <echo message="**********************************************************************"/>
     </target>
-    <target name="compile-c-windows-vcbuild" depends="msvc-missing" if="msvc.use.msbuild">
+    <target name="compile-c-windows-impl" if="msvc.use.msbuild">
         <mkdir dir="${bin.dir}"/>        
         <mkdir dir="${lib.dir}"/>
-
-        <fail message="Only x86 is supported">
-          <condition><not><equals arg1="${bits}" arg2="32" /></not></condition>
-        </fail>
         
         <echo message="Java.vendor=${java.vendor}"/>
         
@@ -426,25 +422,40 @@
                 <filter token="java.home" value="${java.home}\..\"/>
             </filterset>
         </copy>
+  
+        <condition property="msbuild-platform" value="Win32"><equals arg1="${bits}" arg2="32" /></condition>
+        <condition property="msbuild-platform" value="x64"><equals arg1="${bits}" arg2="64" /></condition>
 
         <!-- Build the wrapper binary -->
         <echo message="Build Wrapper binary..."/>
         <exec executable="${msbuild}"
             dir="${src.dir}/c"
             failonerror="true">
-            <arg value="wrapper${bits}_VC8.sln"/>
+            <arg value="wrapper32_VC8.sln"/>
             <arg value="/t:Rebuild"/>
-            <arg value="/p:Platform=Win32;Configuration=Release"/>
+            <arg value="/p:Platform=${msbuild-platform};Configuration=Release"/>
         </exec>        
-
-        <copy file="${src.dir}/c/Release/wrapper32_VC8.exe" tofile="${bin.dir}/${wrapper.bin.long.name}" overwrite="true" preservelastmodified="true"/>
-        <copy file="${src.dir}/c/Release/decoderJNI_VC8.dll" tofile="${lib.dir}/${wrapper.lib.long.name}" overwrite="true" preservelastmodified="true"/>
 
         <!--
         <copy file="${bin.dir}/${wrapper.bin.name}" tofile="${bin.dir}/${wrapper.bin.long.name}" overwrite="true" preservelastmodified="true"/>
         <copy file="${lib.dir}/${wrapper.lib.name}" tofile="${lib.dir}/${wrapper.lib.long.name}" overwrite="true" preservelastmodified="true"/>
         -->
     </target>
+    <condition property="copy-c-windows-x86" value="true">
+       <equals arg1="${bits}" arg2="32" />
+    </condition>
+    <condition property="copy-c-windows-x64" value="true">
+       <equals arg1="${bits}" arg2="64" />
+    </condition>
+    <target name="compile-c-windows-copy-x86" if="copy-c-windows-x86">
+        <copy file="${src.dir}/c/Release/wrapper32_VC8.exe" tofile="${bin.dir}/${wrapper.bin.long.name}" overwrite="true" preservelastmodified="true"/>
+        <copy file="${src.dir}/c/Release/decoderJNI_VC8.dll" tofile="${lib.dir}/${wrapper.lib.long.name}" overwrite="true" preservelastmodified="true"/>
+    </target>
+    <target name="compile-c-windows-copy-x64" if="copy-c-windows-x64">
+        <copy file="${src.dir}/c/x64/Release/wrapper32_VC8.exe" tofile="${bin.dir}/${wrapper.bin.long.name}" overwrite="true" preservelastmodified="true"/>
+        <copy file="${src.dir}/c/x64/Release/decoderJNI_VC8.dll" tofile="${lib.dir}/${wrapper.lib.long.name}" overwrite="true" preservelastmodified="true"/>
+    </target>
+    <target name="compile-c-windows-vcbuild" depends="msvc-missing, compile-c-windows-impl,compile-c-windows-copy-x64,compile-c-windows-copy-x86" if="msvc.use.msbuild"/>
     <target name="compile-c-windows-make" depends="msvc-missing" if="msvc.use.make">
         <mkdir dir="${bin.dir}"/>        
         <mkdir dir="${lib.dir}"/>

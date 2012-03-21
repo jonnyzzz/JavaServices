@@ -5,6 +5,7 @@ src/c/wrapperinfo.c
 src/c/wrapper32_*
 src/c/decoderJNI_*
 src/c/Release/*
+src/c/x64/*
 src/c/Debug/*
 src/c/_Resharper*
 src/c/wrapper32*props
