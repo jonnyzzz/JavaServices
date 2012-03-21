@@ -473,24 +473,22 @@
 
         <!-- Build the wrapper binary -->
         <echo message="Build Wrapper binary..."/>
-        <exec executable="${msvc.home}\VC\vcpackages\vcbuild.exe"
+        <exec executable="${msbuild}"
             dir="${src.dir}/c"
             failonerror="true">
-            <arg value="wrapper${bits}_VC8.vcproj"/>
-            <arg value="/rebuild"/>
-            <arg value="/time"/>
-            <arg value="Release|Win32"/>
+            <arg value="wrapper${bits}_VC8.vcxproj"/>
+            <arg value="/t:Rebuild"/>
+            <arg value="/p:Platform=Win32;Configuration=Release"/>
         </exec>
         
         <!-- Build the JNI DLL -->
         <echo message="Build Wrapper DLL..."/>
-        <exec executable="${msvc.home}\VC\vcpackages\vcbuild.exe"
+        <exec executable="${msbuild}"
             dir="${src.dir}/c"
             failonerror="true">
-            <arg value="wrapperJNI${bits}_VC8.vcproj"/>
-            <arg value="/rebuild"/>
-            <arg value="/time"/>
-            <arg value="Release|Win32"/>
+            <arg value="wrapperJNI${bits}_VC8.vcxproj"/>
+            <arg value="/t:Rebuild"/>
+            <arg value="/p:Platform=Win32;Configuration=Release"/>
         </exec>
         
         <!--
