@@ -465,7 +465,7 @@
         <echo message="Java.vendor=${java.vendor}"/>
         
         <!-- Initialize the wrapper32.vsprops file -->
-        <copy file="${src.dir}/c/wrapper32.vsprops.in" tofile="${src.dir}/c/wrapper32.vsprops" overwrite="true" encoding="Shift_JIS">
+        <copy file="${src.dir}/c/wrapper32.props.in" tofile="${src.dir}/c/wrapper32.props" overwrite="true">
             <filterset>
                 <filter token="java.home" value="${java.home}\..\"/>
             </filterset>
