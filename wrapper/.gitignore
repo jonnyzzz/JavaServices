@@ -5,6 +5,8 @@ src/c/wrapperinfo.c
 src/c/wrapper32_*
 src/c/decoderJNI_*
 src/c/Release/*
+src/c/Debug/*
+src/c/_Resharper*
 src/c/wrapper32*props
 src/java/org/tanukisoftware/wrapper/WrapperInfo.java
 src/c/org_tanukisoftware_wrapper_WrapperManager.h
