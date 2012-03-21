@@ -8,6 +8,7 @@ src/c/Release/*
 src/c/Debug/*
 src/c/_Resharper*
 src/c/wrapper32*props
+src/c/ipch/*
 src/java/org/tanukisoftware/wrapper/WrapperInfo.java
 src/c/org_tanukisoftware_wrapper_WrapperManager.h
 bin
