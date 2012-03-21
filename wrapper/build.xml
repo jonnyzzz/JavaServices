@@ -413,6 +413,10 @@
     <target name="compile-c-windows-vcbuild" depends="msvc-missing" if="msvc.use.msbuild">
         <mkdir dir="${bin.dir}"/>        
         <mkdir dir="${lib.dir}"/>
+
+        <fail message="Only x86 is supported">
+          <condition><not><equals arg1="${bits}" arg2="32" /></not></condition>
+        </fail>
         
         <echo message="Java.vendor=${java.vendor}"/>
         
@@ -433,8 +437,8 @@
             <arg value="/p:Platform=Win32;Configuration=Release"/>
         </exec>        
 
-        <copy file="${src.dir}/c/Release/wrapper32_VC8.exe" tofile="${bin.dir}/wrapper.exe" overwrite="true" preservelastmodified="true"/>
-        <copy file="${src.dir}/c/Release/decoderJNI_VC8.dll" tofile="${lib.dir}/wrapper.dll" overwrite="true" preservelastmodified="true"/>
+        <copy file="${src.dir}/c/Release/wrapper32_VC8.exe" tofile="${bin.dir}/${wrapper.bin.long.name}" overwrite="true" preservelastmodified="true"/>
+        <copy file="${src.dir}/c/Release/decoderJNI_VC8.dll" tofile="${lib.dir}/${wrapper.lib.long.name}" overwrite="true" preservelastmodified="true"/>
 
         <!--
         <copy file="${bin.dir}/${wrapper.bin.name}" tofile="${bin.dir}/${wrapper.bin.long.name}" overwrite="true" preservelastmodified="true"/>
