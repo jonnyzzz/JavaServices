@@ -66,7 +66,6 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>advapi32.lib user32.lib %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(ProjectDir)\..\..\lib\wrapper.dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -86,7 +85,6 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>advapi32.lib user32.lib %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(ProjectDir)\..\..\lib\wrapper.dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>

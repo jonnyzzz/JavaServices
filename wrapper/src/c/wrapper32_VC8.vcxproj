@@ -64,7 +64,6 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>wsock32.lib shlwapi.lib advapi32.lib user32.lib %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(ProjectDir)\..\..\bin\wrapper.exe</OutputFile>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -84,7 +83,6 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>wsock32.lib shlwapi.lib advapi32.lib user32.lib %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(ProjectDir)\..\..\bin\wrapper.exe</OutputFile>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
