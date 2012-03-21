@@ -199,58 +199,21 @@
         <property name="wrapper.lib.name" value="wrapper.dll"/>
         <property name="wrapper.lib.long.name" value="wrapper-${dist.os}-${dist.arch}-${bits}.dll"/>
 
-        <!-- Decide on the MSVC version being used. -->
-        <condition property="msvc.home" value="${msvc.home.v8_32_c}">
-            <and>
-                <equals arg1="${bits}" arg2="32"/>
-                <available file="${msvc.home.v8_32_c}"/>
-            </and>
-        </condition>
-        <condition property="msvc.home" value="${msvc.home.v8_32_d}">
-            <and>
-                <equals arg1="${bits}" arg2="32"/>
-                <available file="${msvc.home.v8_32_d}"/>
-            </and>
-        </condition>
-        <condition property="msvc.home" value="${msvc.home.v8_64_c}">
-            <and>
-                <equals arg1="${bits}" arg2="64"/>
-                <available file="${msvc.home.v8_64_c}"/>
-            </and>
-        </condition>
-        <condition property="msvc.home" value="${msvc.home.v8_64_d}">
-            <and>
-                <equals arg1="${bits}" arg2="64"/>
-                <available file="${msvc.home.v8_64_d}"/>
-            </and>
-        </condition>
-        <property name="msvc.home" value="${msvc.home.98}"/>
-
-        <condition property="msvc.use.vcbuild" value="true">
-            <available file="${msvc.home}\VC\vcpackages\vcbuild.exe"/>
-        </condition>
-        <condition property="msvc.vcvars" value="${msvc.home}\VC\BIN\amd64\VCVARSamd64.BAT">
-            <or>
-                <equals arg1="${msvc.home}" arg2="${msvc.home.v8_64_c}"/>
-                <equals arg1="${msvc.home}" arg2="${msvc.home.v8_64_d}"/>
-            </or>
-        </condition>
-        <property name="msvc.vcvars" value="${msvc.home}\VC98\BIN\VCVARS32.BAT"/>
-        <condition property="msvc.use.make" value="true">
-            <and>
-                <not><isset property="msvc.use.vcbuild"/></not>
-                <available file="${msvc.vcvars}"/>
-            </and>
-        </condition>
         <condition property="msvc.missing" value="true">
             <not>
                 <or>
-                    <isset property="msvc.use.vcbuild"/>
-                    <isset property="msvc.use.make"/>
+                    <isset property="msbuild"/>
+                    <available file="${msbuild}"/>
                 </or>
             </not>
         </condition>
-        
+
+        <condition property="msvc.use.msbuild" value="true">
+            <or>
+                <isset property="msbuild"/>
+                <available file="${msbuild}"/>
+            </or>
+        </condition>        
     </target>
     <target name="init-unix" depends="init-setup" if="is.unix">
         <!-- Decide on the type of script to generate. -->
@@ -434,20 +397,9 @@
         </javah>
     </target>
     <target name="msvc-missing" depends="init:msg" if="msvc.missing">
-        <condition property="msvc.home.v8_c" value="${msvc.home.v8_64_c}">
-            <equals arg1="${bits}" arg2="64"/>
-        </condition>
-        <property name="msvc.home.v8_c" value="${msvc.home.v8_32_c}"/>
-        <condition property="msvc.home.v8_d" value="${msvc.home.v8_64_d}">
-            <equals arg1="${bits}" arg2="64"/>
-        </condition>
-        <property name="msvc.home.v8_d" value="${msvc.home.v8_32_d}"/>
-
         <echo message="**********************************************************************"/>
         <echo message="Microsoft Visual Studio was not found at any of the following locations:"/>
-        <echo message="  ${msvc.home.98}"/>
-        <echo message="  ${msvc.home.v8_c}"/>
-        <echo message="  ${msvc.home.v8_d}"/>
+        <echo message="  ${msbuild}"/>
         <echo message="wrapper.exe and wrapper.dll will be rebuilt.  If you do not have MSVC "/>
         <echo message="installed then you can obtain wrapper.exe and wrapper.dll from a "/>
         <echo message="binary release of the project."/>
@@ -455,10 +407,10 @@
         <echo message="If it is installed at a different location, create a file called "/>
         <echo message="  ${user.home}/.ant.properties"/>
         <echo message="Then define a msvc.home property pointing to the MSVC root:"/>
-        <echo message="  msvc.home = ${msvc.home}"/>
+        <echo message="  msbuild = ${msbuild}"/>
         <echo message="**********************************************************************"/>
     </target>
-    <target name="compile-c-windows-vcbuild" depends="msvc-missing" if="msvc.use.vcbuild">
+    <target name="compile-c-windows-vcbuild" depends="msvc-missing" if="msvc.use.msbuild">
         <mkdir dir="${bin.dir}"/>        
         <mkdir dir="${lib.dir}"/>
         
