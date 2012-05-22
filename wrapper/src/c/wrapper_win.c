@@ -2051,7 +2051,6 @@ int wrapperInstall() {
 
     char szPath[512];
     char binaryPath[4096];
-    int i;
     int result = 0;
     HKEY hKey;
     char regPath[ 1024 ];
@@ -2090,20 +2089,6 @@ int wrapperInstall() {
         strcat(binaryPath, "\"");
         strcat(binaryPath, wrapperData->configFile);
         strcat(binaryPath, "\"");
-    }
-
-    /* All other arguments need to be appended as is. */
-    for (i = 0; i < wrapperData->argCount; i++) {
-        strcat(binaryPath, " ");
-
-        /* If the argument contains spaces, it needs to be quoted */
-        if (strchr(wrapperData->argValues[i], ' ') == NULL) {
-            strcat(binaryPath, wrapperData->argValues[i]);
-        } else {
-            strcat(binaryPath, "\"");
-            strcat(binaryPath, wrapperData->argValues[i]);
-            strcat(binaryPath, "\"");
-        }
     }
 
     if (wrapperData->isDebugging) {
