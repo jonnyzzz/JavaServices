@@ -1084,7 +1084,7 @@ int wrapperParseArguments(int argc, char **argv) {
                 /* Syntax 3 */
                 /* Only a command was specified.  Assume a default config file name. */
                 argConfFileBase = wrapperGetFileBase(argv[0]);
-                wrapperData->argConfFile = malloc((strlen(argConfFileBase) + 4 + 1) * sizeof(char));
+                wrapperData->argConfFile = malloc((strlen(argConfFileBase) + 4 + 1 + 1) * sizeof(char));
                 sprintf(wrapperData->argConfFile, "%s.conf", argConfFileBase);
                 wrapperData->argConfFileDefault = TRUE;
                 wrapperData->argCount = argc - 2;
@@ -1104,7 +1104,7 @@ int wrapperParseArguments(int argc, char **argv) {
         wrapperData->argCommand = "c";
 
         argConfFileBase = wrapperGetFileBase(argv[0]);
-        wrapperData->argConfFile = malloc((strlen(argConfFileBase) + 4 + 1) * sizeof(char));
+        wrapperData->argConfFile = malloc((strlen(argConfFileBase) + 4 + 1 + 1) * sizeof(char));
         sprintf(wrapperData->argConfFile, "%s.conf", argConfFileBase);
         wrapperData->argConfFileDefault = TRUE;
         wrapperData->argCount = argc - 1;
